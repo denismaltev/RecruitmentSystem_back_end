@@ -79,17 +79,25 @@ namespace RecruitmentSystemAPI.Controllers
                 fetchedSkill.PayAmount = skillsVM.ChargeAmount;
                 fetchedSkill.IsActive = skillsVM.IsActive;
                 _context.SaveChanges();
+                return new ObjectResult(fetchedSkill);
             }
             return Ok();
         }
-    
 
-        //    // DELETE: api/ApiWithActions/5
-        //    [HttpDelete("{id}")]
-        //    public void Delete(int id)
-        //    {
 
-        //    }
-        //}
+        // DELETE: api/ApiWithActions/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var fetchedSkill = _context.Skills.Where(s => s.Id == id).FirstOrDefault();
+            if(fetchedSkill == null)
+            {
+                return NotFound();
+            }
+            _context.Skills.Remove(fetchedSkill);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
+
