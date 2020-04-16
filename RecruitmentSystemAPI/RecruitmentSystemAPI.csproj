@@ -10,12 +10,19 @@
     <Compile Remove="Migrations\20200416055652_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20200416061834_InitialCreate.cs" />
     <Compile Remove="Migrations\20200416061834_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200416070934_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200416070934_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200416165537_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200416165537_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200416165735_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200416165735_InitialCreate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
   </ItemGroup>
 
   <ItemGroup>

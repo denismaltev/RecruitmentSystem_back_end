@@ -228,14 +228,7 @@ namespace RecruitmentSystemAPI.Models
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            string[] roles = { "Company", "Labourer" };
-            var adminRole = new IdentityRole
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "Admin",
-                NormalizedName = "Admin".ToUpper()
-            };
-            modelBuilder.Entity<IdentityRole>().HasData(adminRole);
+            string[] roles = { "Admin", "Company", "Labourer" };
             foreach (var role in roles)
             {
                 modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
@@ -245,20 +238,6 @@ namespace RecruitmentSystemAPI.Models
                     NormalizedName = role.ToUpper()
                 });
             }
-            var user = new SystemUser
-            {
-                Id = Guid.NewGuid().ToString(),
-                UserName = "Admin",
-                Email = "admin@admin.com",
-                NormalizedEmail = "admin@admin.com".ToUpper(),
-                NormalizedUserName = "Admin".ToUpper(),
-            };
-            modelBuilder.Entity<SystemUser>().HasData(user);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
-            {
-                UserId = user.Id,
-                RoleId = adminRole.Id
-            });
         }
     }
 }
