@@ -360,17 +360,27 @@ namespace RecruitmentSystemAPI.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae0462e6-24db-4785-8c71-1cecfb0139b1", "12a484d1-71b8-4043-a243-6ae5417571c0", "Admin", null });
+                values: new object[] { "ca31e678-9fd7-4a6f-bd4c-93678c567829", "7dc33e2e-7169-4dee-90be-8021b3e64536", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "5e279342-a563-4590-a79a-f4d4d9e926ed", "460cac34-cb2a-467f-8f50-2f4bf05d9c14", "Company", null });
+                values: new object[] { "5ed858a0-26f8-4bdd-aab7-98ad98f00bd2", "b1d4bd6e-29db-4e96-bbf5-e38ddcc32f2c", "Company", "COMPANY" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a2b37c2c-2b3d-4d8f-a93b-cca1b2c444fb", "21ea9a39-8173-4af8-8c97-fa64ac732727", "Labourer", null });
+                values: new object[] { "e323afe8-0376-44c6-ae40-4351219f6118", "0f33df84-5e26-4f2e-b9d2-13b475848f02", "Labourer", "LABOURER" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "ae3aaeb7-2c33-468d-a5dd-8482d695b4fb", 0, "1735c1d3-703d-4ff9-b788-4baaf579d407", "admin@admin.com", false, false, null, "ADMIN@ADMIN.COM", "ADMIN", null, null, false, null, false, "Admin" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[] { "ae3aaeb7-2c33-468d-a5dd-8482d695b4fb", "ca31e678-9fd7-4a6f-bd4c-93678c567829" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
