@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using RecruitmentSystemAPI.ViewModels;
 
 namespace RecruitmentSystemAPI.Models
 {
@@ -239,5 +240,7 @@ namespace RecruitmentSystemAPI.Models
                 });
             }
         }
+
+        public DbSet<RecruitmentSystemAPI.ViewModels.LabourerVM> LabourerVM { get; set; }
     }
 }
