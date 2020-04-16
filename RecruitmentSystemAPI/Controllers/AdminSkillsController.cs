@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentSystemAPI.Models;
+using RecruitmentSystemAPI.ViewModels;
 
 namespace RecruitmentSystemAPI.Controllers
 {
@@ -37,32 +38,49 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(skill);
         }
 
-        // POST: api/AdminSkills
+        //POST: api/AdminSkills
         [HttpPost]
-        public IActionResult Create([FromBody] Skill newSkill)
+        public IActionResult Create([FromBody] AdminSkillsVM skillsVM)
         {
-            if ((newSkill.Name == null) ||
-                (newSkill.Name == " ") ||
-                (newSkill.ChargeAmount <= 0) ||
-                (newSkill.PayAmount <= 0))
+            if (ModelState.IsValid)
             {
-                return BadRequest();
+                //if ((newSkill.Name == " ") ||
+                //(newSkill.ChargeAmount <= 0) ||
+                //(newSkill.PayAmount <= 0))
+                //{
+                //    return BadRequest();
+                //}
+                Skill skill = new Skill();
+                skill.Name = skillsVM.Name;
+                skill.ChargeAmount = skillsVM.ChargeAmount;
+                skill.PayAmount = skillsVM.PayAmount;
+                skill.IsActive = skillsVM.IsActive;
+
+                _context.Skills.Add(skill);
+                _context.SaveChanges();
+                return new ObjectResult(skill);
             }
-            _context.Skills.Add(newSkill);
-            _context.SaveChanges();
-            return new ObjectResult(newSkill);
+            return BadRequest();
         }
 
         // PUT: api/AdminSkills/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        //    [HttpPut("{id}")]
+        //    public IActionResult Put(int id, [FromBody] Skill fetchedSkill)
+        //    {
+        //        var fetchedSkill = _context.Skills.Where(s => s.Id == id).FirstOrDefault();
+        //        if(fetchedSkill == null)
+        //        {
+        //            return NotFound();
+        //        }
+        //        _context.Skills.Save
+        //    }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        //    // DELETE: api/ApiWithActions/5
+        //    [HttpDelete("{id}")]
+        //    public void Delete(int id)
+        //    {
+
+        //    }
+        //}
     }
 }
