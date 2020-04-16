@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentSystemAPI.Models;
@@ -9,6 +10,7 @@ using RecruitmentSystemAPI.ViewModels;
 
 namespace RecruitmentSystemAPI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminSkillsController : ControllerBase
@@ -44,12 +46,6 @@ namespace RecruitmentSystemAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                //if ((newSkill.Name == " ") ||
-                //(newSkill.ChargeAmount <= 0) ||
-                //(newSkill.PayAmount <= 0))
-                //{
-                //    return BadRequest();
-                //}
                 Skill skill = new Skill();
                 skill.Name = skillsVM.Name;
                 skill.ChargeAmount = skillsVM.ChargeAmount;
