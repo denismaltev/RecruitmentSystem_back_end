@@ -35,7 +35,6 @@ namespace RecruitmentSystemAPI.Controllers
             _config = config;
         }
 
-        // POST: api/Auth
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult> Login([FromBody]SystemUserVM userVM)
@@ -49,10 +48,7 @@ namespace RecruitmentSystemAPI.Controllers
                     var user = await userManager.FindByEmailAsync(userVM.Email);
                     if (user != null)
                     {
-                        var tokenString = GenerateJSONWebToken(user);
-                        var userRepo = new SystemUserRepo(_context);
-                        var userRole = userRepo.GetUserRoleName(user.Id);
-                        return Ok(new { token = tokenString, username = user.UserName, role = userRole?.ToLower(), status = "OK" });
+                        return BuildLoginOkResponse(user);
                     }
                 }
                 else if (result.IsLockedOut)
@@ -65,6 +61,26 @@ namespace RecruitmentSystemAPI.Controllers
                 }
             }
             return BadRequest();
+        }
+
+        private ActionResult BuildLoginOkResponse(SystemUser user)
+        {
+            var tokenString = GenerateJSONWebToken(user);
+            var userRepo = new SystemUserRepo(_context);
+            var userRole = userRepo.GetUserRoleName(user.Id);
+            int? profileId = null;
+            if (userRole?.ToLower() == "company")
+            {
+                var companyRepo = new CompanyRepo(_context);
+                profileId = companyRepo.GetUserCompanyId(user.Id);
+            }
+            else if (userRole?.ToLower() == "labourer")
+            {
+                var labourerRepo = new LabourerRepo(_context);
+                profileId = labourerRepo.GetUserLabourerId(user.Id);
+            }
+
+            return Ok(new { token = tokenString, username = user.UserName, role = userRole?.ToLower(), profileId = profileId, status = "OK" });
         }
 
         [HttpPost]
