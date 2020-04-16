@@ -63,17 +63,26 @@ namespace RecruitmentSystemAPI.Controllers
             return BadRequest();
         }
 
-        // PUT: api/AdminSkills/5
-        //    [HttpPut("{id}")]
-        //    public IActionResult Put(int id, [FromBody] Skill fetchedSkill)
-        //    {
-        //        var fetchedSkill = _context.Skills.Where(s => s.Id == id).FirstOrDefault();
-        //        if(fetchedSkill == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        _context.Skills.Save
-        //    }
+        //PUT: api/AdminSkills/5
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] AdminSkillsVM skillsVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var fetchedSkill = _context.Skills.Where(s => s.Id == id).FirstOrDefault();
+                if (fetchedSkill == null)
+                {
+                    return NotFound();
+                }
+                fetchedSkill.Name = skillsVM.Name;
+                fetchedSkill.ChargeAmount = skillsVM.ChargeAmount;
+                fetchedSkill.PayAmount = skillsVM.ChargeAmount;
+                fetchedSkill.IsActive = skillsVM.IsActive;
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
+    
 
         //    // DELETE: api/ApiWithActions/5
         //    [HttpDelete("{id}")]
