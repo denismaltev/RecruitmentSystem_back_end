@@ -41,22 +41,22 @@ namespace RecruitmentSystemAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ca31e678-9fd7-4a6f-bd4c-93678c567829",
-                            ConcurrencyStamp = "7dc33e2e-7169-4dee-90be-8021b3e64536",
+                            Id = "eb6f260a-c0ed-43af-a9b3-bac807074990",
+                            ConcurrencyStamp = "76fcfcb6-959d-4c24-b3a8-cd4ebc234c1c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "5ed858a0-26f8-4bdd-aab7-98ad98f00bd2",
-                            ConcurrencyStamp = "b1d4bd6e-29db-4e96-bbf5-e38ddcc32f2c",
+                            Id = "c58a6a4f-d9e6-4a66-bb84-8a8cf6bd7e3a",
+                            ConcurrencyStamp = "176de32a-fabc-46ec-9f73-32a63cfa3859",
                             Name = "Company",
                             NormalizedName = "COMPANY"
                         },
                         new
                         {
-                            Id = "e323afe8-0376-44c6-ae40-4351219f6118",
-                            ConcurrencyStamp = "0f33df84-5e26-4f2e-b9d2-13b475848f02",
+                            Id = "21d24935-996f-4673-9906-fe5f87d871cc",
+                            ConcurrencyStamp = "8adef531-9c3b-4163-9de1-35d4d08f3f68",
                             Name = "Labourer",
                             NormalizedName = "LABOURER"
                         });
@@ -131,13 +131,6 @@ namespace RecruitmentSystemAPI.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "ae3aaeb7-2c33-468d-a5dd-8482d695b4fb",
-                            RoleId = "ca31e678-9fd7-4a6f-bd4c-93678c567829"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -470,22 +463,6 @@ namespace RecruitmentSystemAPI.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ae3aaeb7-2c33-468d-a5dd-8482d695b4fb",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "1735c1d3-703d-4ff9-b788-4baaf579d407",
-                            Email = "admin@admin.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@ADMIN.COM",
-                            NormalizedUserName = "ADMIN",
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false,
-                            UserName = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
