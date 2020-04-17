@@ -53,14 +53,14 @@ namespace RecruitmentSystemAPI.Repositories
         {
             var labourer = _context.Labourers.FirstOrDefault(l => l.Id == labourerVM.Id);
             if (labourer == null) throw new KeyNotFoundException();
-            labourer.FirstName = labourerVM.FirstName == null ? labourer.FirstName : labourerVM.FirstName;
-            labourer.LastName = labourerVM.LastName == null ? labourer.LastName : labourerVM.LastName;
-            labourer.PersonalId = labourerVM.PersonalId == null ? labourer.PersonalId : labourerVM.PersonalId;
-            labourer.City = labourerVM.City == null ? labourer.City : labourerVM.City;
-            labourer.Province = labourerVM.Province == null ? labourer.Province : labourerVM.Province;
-            labourer.Country = labourerVM.Country == null ? labourer.Country : labourerVM.Country;
-            labourer.Address = labourerVM.Address == null ? labourer.Address : labourerVM.Address;
-            labourer.Phone = labourerVM.Phone == null ? labourer.Phone : labourerVM.Phone;
+            labourer.FirstName = labourerVM.FirstName;
+            labourer.LastName =  labourerVM.LastName;
+            labourer.PersonalId = labourerVM.PersonalId;
+            labourer.City =  labourerVM.City;
+            labourer.Province = labourerVM.Province;
+            labourer.Country =  labourerVM.Country;
+            labourer.Address =  labourerVM.Address;
+            labourer.Phone =  labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
 
             _context.Update(labourer);
