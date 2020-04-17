@@ -21,7 +21,7 @@ namespace RecruitmentSystemAPI.Models
         public string Address { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int Weekdays { get; set; }
+        public Weekdays Weekdays { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public bool IsActive { get; set; }
