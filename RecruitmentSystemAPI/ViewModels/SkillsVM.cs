@@ -9,6 +9,8 @@ namespace RecruitmentSystemAPI.ViewModels
 {
     public class SkillsVM
     {
+        public int? Id { get; set; }
+
         [Required]
         [DisplayName("Name of Skill")]
         public string Name { get; set; }
