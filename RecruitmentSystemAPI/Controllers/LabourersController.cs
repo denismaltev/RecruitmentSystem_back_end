@@ -34,6 +34,15 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(result);
         }
 
+        // GET: api/Labourers/5
+        [HttpGet("{id}")]
+        public ActionResult<LabourerVM> GetLabourer(int id)
+        {
+            var labourerRepo = new LabourerRepo(_context);
+            var result = labourerRepo.GetLabourerById(id);
+            return Ok(result);
+        }
+
        
     }
 }
