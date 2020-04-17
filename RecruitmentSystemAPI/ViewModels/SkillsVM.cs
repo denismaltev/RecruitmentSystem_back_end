@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.ViewModels
 {
-    public class AdminSkillsVM
+    public class SkillsVM
     {
         [Required]
         [DisplayName("Name of Skill")]

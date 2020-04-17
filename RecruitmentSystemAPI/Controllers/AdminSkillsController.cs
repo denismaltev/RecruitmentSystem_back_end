@@ -10,7 +10,6 @@ using RecruitmentSystemAPI.ViewModels;
 
 namespace RecruitmentSystemAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminSkillsController : ControllerBase
@@ -41,8 +40,9 @@ namespace RecruitmentSystemAPI.Controllers
         }
 
         //POST: api/AdminSkills
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Create([FromBody] AdminSkillsVM skillsVM)
+        public IActionResult Create([FromBody] SkillsVM skillsVM)
         {
             if (ModelState.IsValid)
             {
@@ -60,8 +60,9 @@ namespace RecruitmentSystemAPI.Controllers
         }
 
         //PUT: api/AdminSkills/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] AdminSkillsVM skillsVM)
+        public IActionResult Put(int id, [FromBody] SkillsVM skillsVM)
         {
             if (ModelState.IsValid)
             {
@@ -77,21 +78,6 @@ namespace RecruitmentSystemAPI.Controllers
                 _context.SaveChanges();
                 return new ObjectResult(fetchedSkill);
             }
-            return Ok();
-        }
-
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var fetchedSkill = _context.Skills.Where(s => s.Id == id).FirstOrDefault();
-            if(fetchedSkill == null)
-            {
-                return NotFound();
-            }
-            _context.Skills.Remove(fetchedSkill);
-            _context.SaveChanges();
             return Ok();
         }
     }
