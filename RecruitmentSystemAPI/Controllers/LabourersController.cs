@@ -44,6 +44,26 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(result);
         }
 
-       
+        // PUT: api/Labourers/5
+        [HttpPut("{id}")]
+        public IActionResult PutLabourer(int id, LabourerVM labourerVM)
+        {
+            if (id != labourerVM.Id)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                var labourerRepo = new LabourerRepo(_context);
+                labourerRepo.UpdateLabourer(labourerVM);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+
+        }
+
     }
 }
