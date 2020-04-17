@@ -66,6 +66,25 @@ namespace RecruitmentSystemAPI.Repositories
             _context.Update(labourer);
             _context.SaveChanges();
         }
+        public LabourerVM AddLabourer(LabourerVM labourerVM, string userId)
+        {
+            var labourer = new Labourer
+            {
+                UserId = userId,
+                FirstName = labourerVM.FirstName,
+                LastName = labourerVM.LastName,
+                PersonalId = labourerVM.PersonalId,
+                City = labourerVM.City,
+                Province = labourerVM.Province,
+                Country = labourerVM.Country,
+                Address = labourerVM.Address,
+                Phone = labourerVM.Phone,
+                IsActive = labourerVM.IsActive
+            };
+            _context.Add(labourer);
+            _context.SaveChanges();
+            return labourerVM;
+        }
 
         public int? GetUserLabourerId(string userId)
         {

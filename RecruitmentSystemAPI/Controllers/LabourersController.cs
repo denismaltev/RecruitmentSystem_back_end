@@ -60,10 +60,34 @@ namespace RecruitmentSystemAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(new { message = e.Message });
             }
 
         }
 
+        // POST: api/Companies
+        [HttpPost]
+        public ActionResult<CompanyVM> PostLabourer(LabourerVM labourerVM)
+        {
+
+            try
+            {
+                var labourerRepo = new LabourerRepo(_context);
+                var userId = _userManager.GetUserId(User);
+
+                if (labourerRepo.GetUserLabourerId(userId).HasValue)
+                {
+                    return BadRequest(new { message = "Labourer already exist" });
+                }
+
+                var result = labourerRepo.AddLabourer(labourerVM, userId);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+
+        }
     }
 }
