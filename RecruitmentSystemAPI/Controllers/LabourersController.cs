@@ -40,6 +40,7 @@ namespace RecruitmentSystemAPI.Controllers
         {
             var labourerRepo = new LabourerRepo(_context);
             var result = labourerRepo.GetLabourerById(id);
+            if (result == null) return NotFound();
             return Ok(result);
         }
 
