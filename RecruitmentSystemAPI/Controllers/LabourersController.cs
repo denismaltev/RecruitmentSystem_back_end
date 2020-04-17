@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ namespace RecruitmentSystemAPI.Controllers
 
         // GET: api/Labourers
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<LabourerVM>> GetLabourers()
         {
             var labourerRepo = new LabourerRepo(_context);
@@ -36,6 +38,7 @@ namespace RecruitmentSystemAPI.Controllers
 
         // GET: api/Labourers/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Labourer")]
         public ActionResult<LabourerVM> GetLabourer(int id)
         {
             var labourerRepo = new LabourerRepo(_context);
@@ -46,6 +49,7 @@ namespace RecruitmentSystemAPI.Controllers
 
         // PUT: api/Labourers/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Labourer")]
         public IActionResult PutLabourer(int id, LabourerVM labourerVM)
         {
             if (id != labourerVM.Id)
@@ -67,6 +71,7 @@ namespace RecruitmentSystemAPI.Controllers
 
         // POST: api/Companies
         [HttpPost]
+        [Authorize(Roles = "Labourer")]
         public ActionResult<CompanyVM> PostLabourer(LabourerVM labourerVM)
         {
 
