@@ -240,7 +240,5 @@ namespace RecruitmentSystemAPI.Models
                 });
             }
         }
-
-        public DbSet<RecruitmentSystemAPI.ViewModels.LabourerVM> LabourerVM { get; set; }
     }
 }
