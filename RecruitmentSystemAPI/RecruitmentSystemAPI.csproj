@@ -16,6 +16,30 @@
     <Compile Remove="Migrations\20200416165537_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20200416165735_InitialCreate.cs" />
     <Compile Remove="Migrations\20200416165735_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200416170708_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200416170708_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418051106_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418051106_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418052032_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418052032_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418052524_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418052524_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418052551_test.cs" />
+    <Compile Remove="Migrations\20200418052551_test.Designer.cs" />
+    <Compile Remove="Migrations\20200418052840_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418052840_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418052858_test.cs" />
+    <Compile Remove="Migrations\20200418052858_test.Designer.cs" />
+    <Compile Remove="Migrations\20200418053230_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418053230_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418053241_test.cs" />
+    <Compile Remove="Migrations\20200418053241_test.Designer.cs" />
+    <Compile Remove="Migrations\20200418054114_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418054114_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418055653_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418055653_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418055705_test.cs" />
+    <Compile Remove="Migrations\20200418055705_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

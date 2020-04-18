@@ -360,17 +360,17 @@ namespace RecruitmentSystemAPI.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "eb6f260a-c0ed-43af-a9b3-bac807074990", "76fcfcb6-959d-4c24-b3a8-cd4ebc234c1c", "Admin", "ADMIN" });
+                values: new object[] { "1", "1", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "c58a6a4f-d9e6-4a66-bb84-8a8cf6bd7e3a", "176de32a-fabc-46ec-9f73-32a63cfa3859", "Company", "COMPANY" });
+                values: new object[] { "2", "2", "Company", "COMPANY" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "21d24935-996f-4673-9906-fe5f87d871cc", "8adef531-9c3b-4163-9de1-35d4d08f3f68", "Labourer", "LABOURER" });
+                values: new object[] { "3", "3", "Labourer", "LABOURER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
