@@ -92,6 +92,7 @@ namespace RecruitmentSystemAPI.Repositories
                 UserId = userId
             });
             _context.SaveChanges();
+            companyVM.Id = company.Id;
             return companyVM;
         }
     }

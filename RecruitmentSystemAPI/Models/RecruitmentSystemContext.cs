@@ -229,16 +229,25 @@ namespace RecruitmentSystemAPI.Models
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            string[] roles = { "Admin", "Company", "Labourer" };
-            foreach (var role in roles)
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
             {
-                modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = role,
-                    NormalizedName = role.ToUpper()
-                });
-            }
+                Id = "1",
+                Name = "Admin",
+                ConcurrencyStamp = "1",
+                NormalizedName = "Admin".ToUpper()
+            }, new IdentityRole
+            {
+                Id = "2",
+                Name = "Company",
+                ConcurrencyStamp = "2",
+                NormalizedName = "Company".ToUpper()
+            }, new IdentityRole
+            {
+                Id = "3",
+                Name = "Labourer",
+                ConcurrencyStamp = "3",
+                NormalizedName = "Labourer".ToUpper()
+            });
         }
     }
 }

@@ -9,7 +9,7 @@ using RecruitmentSystemAPI.Models;
 namespace RecruitmentSystemAPI.Migrations
 {
     [DbContext(typeof(RecruitmentSystemContext))]
-    [Migration("20200416170708_InitialCreate")]
+    [Migration("20200418063149_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,22 +43,22 @@ namespace RecruitmentSystemAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eb6f260a-c0ed-43af-a9b3-bac807074990",
-                            ConcurrencyStamp = "76fcfcb6-959d-4c24-b3a8-cd4ebc234c1c",
+                            Id = "1",
+                            ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c58a6a4f-d9e6-4a66-bb84-8a8cf6bd7e3a",
-                            ConcurrencyStamp = "176de32a-fabc-46ec-9f73-32a63cfa3859",
+                            Id = "2",
+                            ConcurrencyStamp = "2",
                             Name = "Company",
                             NormalizedName = "COMPANY"
                         },
                         new
                         {
-                            Id = "21d24935-996f-4673-9906-fe5f87d871cc",
-                            ConcurrencyStamp = "8adef531-9c3b-4163-9de1-35d4d08f3f68",
+                            Id = "3",
+                            ConcurrencyStamp = "3",
                             Name = "Labourer",
                             NormalizedName = "LABOURER"
                         });
