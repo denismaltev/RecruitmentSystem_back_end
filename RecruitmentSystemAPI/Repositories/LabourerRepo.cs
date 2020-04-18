@@ -28,8 +28,10 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = l.Country,
                 Address = l.Address,
                 Phone = l.Phone,
-                IsActive = l.IsActive
-            });
+                IsActive = l.IsActive,
+                SafetyRating = l.SafetyRating,
+                QualityRating = l.QualityRating,
+    });
         }
         public LabourerVM GetLabourerById(int id)
         {
@@ -44,7 +46,10 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = l.Country,
                 Address = l.Address,
                 Phone = l.Phone,
-                IsActive = l.IsActive
+                IsActive = l.IsActive,
+                SafetyRating = l.SafetyRating,
+                QualityRating = l.QualityRating,
+
             }).FirstOrDefault();
         }
 
@@ -62,6 +67,8 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.Address =  labourerVM.Address;
             labourer.Phone =  labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
+            labourer.SafetyRating = labourerVM.SafetyRating;
+            labourer.QualityRating = labourerVM.QualityRating;
 
             _context.Update(labourer);
             _context.SaveChanges();
@@ -79,8 +86,10 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = labourerVM.Country,
                 Address = labourerVM.Address,
                 Phone = labourerVM.Phone,
-                IsActive = labourerVM.IsActive
-            };
+                IsActive = labourerVM.IsActive,
+               SafetyRating = labourerVM.SafetyRating,
+               QualityRating = labourerVM.QualityRating,
+        };
             _context.Add(labourer);
             _context.SaveChanges();
             return labourerVM;
