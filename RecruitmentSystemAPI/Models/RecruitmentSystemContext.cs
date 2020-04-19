@@ -62,6 +62,11 @@ namespace RecruitmentSystemAPI.Models
                 entity.Property(e => e.Province)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(450)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CompanyUser>(entity =>

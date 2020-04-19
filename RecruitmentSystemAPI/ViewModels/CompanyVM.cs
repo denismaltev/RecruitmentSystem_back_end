@@ -20,6 +20,10 @@ namespace RecruitmentSystemAPI.ViewModels
         public string Address { get; set; }
         [Required]
         public string Phone { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
         public bool IsActive { get; set; }
     }
 }
