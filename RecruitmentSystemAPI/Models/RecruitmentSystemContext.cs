@@ -176,6 +176,16 @@ namespace RecruitmentSystemAPI.Models
                     .HasMaxLength(450)
                     .IsUnicode(false);
 
+                entity.Property(e => e.QualityRating)
+                   .IsRequired()
+                   .HasMaxLength(450)
+                   .IsUnicode(false);
+
+                entity.Property(e => e.SafetyRating)
+                   .IsRequired()
+                   .HasMaxLength(450)
+                   .IsUnicode(false);
+
                 entity.Property(e => e.City)
                     .IsRequired()
                     .HasMaxLength(50)
