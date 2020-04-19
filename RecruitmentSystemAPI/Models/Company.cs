@@ -19,6 +19,7 @@ namespace RecruitmentSystemAPI.Models
         public string Address { get; set; }
         public string Phone { get; set; }
         public bool IsActive { get; set; }
+        public string Email { get; set; }
 
         public virtual ICollection<CompanyUser> CompanyUsers { get; set; }
         public virtual ICollection<Job> Jobs { get; set; }

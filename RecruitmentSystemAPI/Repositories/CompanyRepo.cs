@@ -32,7 +32,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = c.Country,
                 Address = c.Address,
                 IsActive = c.IsActive,
-                Phone = c.Phone
+                Phone = c.Phone,
+                Email = c.Email
             });
         }
 
@@ -47,7 +48,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = c.Country,
                 Address = c.Address,
                 IsActive = c.IsActive,
-                Phone = c.Phone
+                Phone = c.Phone,
+                Email = c.Email
             }).FirstOrDefault();
         }
 
@@ -63,6 +65,7 @@ namespace RecruitmentSystemAPI.Repositories
             company.Address = companyVM.Address;
             company.Phone = companyVM.Phone;
             company.IsActive = companyVM.IsActive;
+            company.Email = companyVM.Email;
 
             _context.Update(company);
             _context.SaveChanges();
@@ -83,7 +86,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = companyVM.Country,
                 Address = companyVM.Address,
                 IsActive = true,
-                Phone = companyVM.Phone
+                Phone = companyVM.Phone,
+                Email = companyVM.Email
             };
             _context.Companies.Add(company);
             _context.CompanyUsers.Add(new CompanyUser
