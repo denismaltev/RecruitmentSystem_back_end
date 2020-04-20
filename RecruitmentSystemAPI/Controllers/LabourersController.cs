@@ -33,7 +33,7 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<LabourerVM>> GetLabourers()
         {
-            var labourerRepo = new LabourerRepo(_context);
+            var labourerRepo = new LabourerRepo(_context, _userManager);
             var result = labourerRepo.GetLabourers();
             return Ok(result);
         }
@@ -43,7 +43,7 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Admin, Labourer")]
         public ActionResult<LabourerVM> GetLabourer(int id)
         {
-            var labourerRepo = new LabourerRepo(_context);
+            var labourerRepo = new LabourerRepo(_context, _userManager);
             var result = labourerRepo.GetLabourerById(id);
             if (result == null) return NotFound();
             return Ok(result);
@@ -52,7 +52,7 @@ namespace RecruitmentSystemAPI.Controllers
         // PUT: api/Labourers/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Labourer")]
-        public IActionResult PutLabourer(int id, LabourerVM labourerVM)
+        public async Task<IActionResult> PutLabourer(int id, LabourerVM labourerVM)
         {
             if (id != labourerVM.Id)
             {
@@ -60,8 +60,8 @@ namespace RecruitmentSystemAPI.Controllers
             }
             try
             {
-                var labourerRepo = new LabourerRepo(_context);
-                labourerRepo.UpdateLabourer(labourerVM);
+                var labourerRepo = new LabourerRepo(_context, _userManager);
+                await labourerRepo.UpdateLabourer(labourerVM);
                 return Ok();
             }
             catch (Exception e)
@@ -74,12 +74,12 @@ namespace RecruitmentSystemAPI.Controllers
         // POST: api/Companies
         [HttpPost]
         [Authorize(Roles = "Labourer")]
-        public ActionResult<CompanyVM> PostLabourer(LabourerVM labourerVM)
+        public async Task<ActionResult<CompanyVM>> PostLabourer(LabourerVM labourerVM)
         {
 
             try
             {
-                var labourerRepo = new LabourerRepo(_context);
+                var labourerRepo = new LabourerRepo(_context, _userManager);
                 var userId = _userManager.GetUserId(User);
 
                 if (labourerRepo.GetUserLabourerId(userId).HasValue)
@@ -87,7 +87,7 @@ namespace RecruitmentSystemAPI.Controllers
                     return BadRequest(new { message = "Labourer already exist" });
                 }
 
-                var result = labourerRepo.AddLabourer(labourerVM, userId);
+                var result = await labourerRepo.AddLabourer(labourerVM, userId);
                 return Ok(result);
             }
             catch (Exception e)

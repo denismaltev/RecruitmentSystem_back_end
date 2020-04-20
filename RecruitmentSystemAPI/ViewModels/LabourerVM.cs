@@ -16,6 +16,8 @@ namespace RecruitmentSystemAPI.ViewModels
         [Required]
         public string PersonalId { get; set; }
         [Required]
+        public string Email { get; set; }
+        [Required]
         public string City { get; set; }
         [Required]
         public string Province { get; set; }

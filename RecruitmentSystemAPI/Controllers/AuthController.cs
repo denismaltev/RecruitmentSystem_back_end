@@ -76,7 +76,7 @@ namespace RecruitmentSystemAPI.Controllers
             }
             else if (userRole?.ToLower() == "labourer")
             {
-                var labourerRepo = new LabourerRepo(_context);
+                var labourerRepo = new LabourerRepo(_context, null);
                 profileId = labourerRepo.GetUserLabourerId(user.Id);
             }
 
