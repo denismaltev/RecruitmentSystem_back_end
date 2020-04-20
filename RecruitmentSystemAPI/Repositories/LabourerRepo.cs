@@ -1,4 +1,6 @@
-﻿using RecruitmentSystemAPI.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using RecruitmentSystemAPI.Models;
 using RecruitmentSystemAPI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,19 +12,23 @@ namespace RecruitmentSystemAPI.Repositories
     public class LabourerRepo
     {
         RecruitmentSystemContext _context;
-        public LabourerRepo(RecruitmentSystemContext context)
+        private readonly UserManager<SystemUser> _userManager;
+
+        public LabourerRepo(RecruitmentSystemContext context, UserManager<SystemUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public IQueryable<LabourerVM> GetLabourers()
         {
-            return _context.Labourers.Select(l => new LabourerVM
+            return _context.Labourers.Include(l=>l.User).Select(l => new LabourerVM
             {
                 Id = l.Id,
                 FirstName = l.FirstName,
                 LastName = l.LastName,
                 PersonalId = l.PersonalId,
+                Email = l.User.Email,
                 City = l.City,
                 Province = l.Province,
                 Country = l.Country,
@@ -35,12 +41,13 @@ namespace RecruitmentSystemAPI.Repositories
         }
         public LabourerVM GetLabourerById(int id)
         {
-            return _context.Labourers.Where(l => l.Id == id).Select(l => new LabourerVM
+            return _context.Labourers.Where(l => l.Id == id).Include(l=>l.User).Select(l => new LabourerVM
             {
                 Id = l.Id,
                 FirstName = l.FirstName,
                 LastName = l.LastName,
                 PersonalId = l.PersonalId,
+                Email = l.User.Email,
                 City = l.City,
                 Province = l.Province,
                 Country = l.Country,
@@ -54,26 +61,28 @@ namespace RecruitmentSystemAPI.Repositories
         }
 
 
-        public void UpdateLabourer(LabourerVM labourerVM)
+        public async Task UpdateLabourer(LabourerVM labourerVM)
         {
             var labourer = _context.Labourers.FirstOrDefault(l => l.Id == labourerVM.Id);
             if (labourer == null) throw new KeyNotFoundException();
             labourer.FirstName = labourerVM.FirstName;
-            labourer.LastName =  labourerVM.LastName;
+            labourer.LastName = labourerVM.LastName;
             labourer.PersonalId = labourerVM.PersonalId;
-            labourer.City =  labourerVM.City;
+            labourer.City = labourerVM.City;
             labourer.Province = labourerVM.Province;
-            labourer.Country =  labourerVM.Country;
-            labourer.Address =  labourerVM.Address;
-            labourer.Phone =  labourerVM.Phone;
+            labourer.Country = labourerVM.Country;
+            labourer.Address = labourerVM.Address;
+            labourer.Phone = labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
             labourer.SafetyRating = labourerVM.SafetyRating;
             labourer.QualityRating = labourerVM.QualityRating;
 
+            await UpdateUserEmail(labourer.UserId, labourerVM.Email);
+
             _context.Update(labourer);
             _context.SaveChanges();
         }
-        public LabourerVM AddLabourer(LabourerVM labourerVM, string userId)
+        public async Task<LabourerVM> AddLabourer(LabourerVM labourerVM, string userId)
         {
             var labourer = new Labourer
             {
@@ -87,12 +96,28 @@ namespace RecruitmentSystemAPI.Repositories
                 Address = labourerVM.Address,
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
-               SafetyRating = labourerVM.SafetyRating,
-               QualityRating = labourerVM.QualityRating,
-        };
+                SafetyRating = labourerVM.SafetyRating,
+                QualityRating = labourerVM.QualityRating,
+            };
+            await UpdateUserEmail(userId, labourerVM.Email);
             _context.Add(labourer);
             _context.SaveChanges();
             return labourerVM;
+        }
+
+        private async Task UpdateUserEmail(string userId, string email)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user.Email != email)
+            {
+                if (_context.Users.Any(u => u.Email.ToLower() == email.ToLower()))
+                {
+                    throw new Exception($"Email {email} is already taken");
+                }
+                user.Email = email;
+                user.UserName = email;
+            }
+            await _userManager.UpdateAsync(user);
         }
 
         public int? GetUserLabourerId(string userId)
