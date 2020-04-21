@@ -40,6 +40,8 @@
     <Compile Remove="Migrations\20200418055653_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20200418055705_test.cs" />
     <Compile Remove="Migrations\20200418055705_test.Designer.cs" />
+    <Compile Remove="Migrations\20200421200131_AddLabourerAvailabilitySkills.cs" />
+    <Compile Remove="Migrations\20200421200131_AddLabourerAvailabilitySkills.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
