@@ -12,6 +12,7 @@ namespace RecruitmentSystemAPI.Models
         public int? QualityRating { get; set; }
         public DateTime Date { get; set; }
         public int? JobRating { get; set; }
+        public decimal WageAmount { get; set; }
 
         public virtual Job Job { get; set; }
         public virtual LabourerSkill LabourerSkill { get; set; }

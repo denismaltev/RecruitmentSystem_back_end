@@ -146,6 +146,8 @@ namespace RecruitmentSystemAPI.Models
             {
                 entity.Property(e => e.Date).HasColumnType("datetime");
 
+                entity.Property(e => e.WageAmount).HasColumnType("decimal(18, 0)");
+
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.LabourerSkillJobs)
                     .HasForeignKey(d => d.JobId)
