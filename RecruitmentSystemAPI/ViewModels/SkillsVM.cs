@@ -17,12 +17,10 @@ namespace RecruitmentSystemAPI.ViewModels
 
         [Required]
         [DisplayName("Amount to charge client")]
-        [RegularExpression(@"^\d+\.\d{0,2}$")]
         public decimal ChargeAmount { get; set; }
 
         [Required]
         [DisplayName("Amount to pay labourer")]
-        [RegularExpression(@"^\d+\.\d{0,2}$")]
         public decimal PayAmount { get; set; }
 
         [Required]
