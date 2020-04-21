@@ -34,7 +34,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = l.Country,
                 Address = l.Address,
                 Phone = l.Phone,
-                IsActive = l.IsActive,
+                IsActive = l.IsActive
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
     });
