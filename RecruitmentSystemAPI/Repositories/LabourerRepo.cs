@@ -74,8 +74,6 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.Address = labourerVM.Address;
             labourer.Phone = labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
-            labourer.SafetyRating = labourerVM.SafetyRating;
-            labourer.QualityRating = labourerVM.QualityRating;
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
@@ -96,8 +94,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Address = labourerVM.Address,
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
-                SafetyRating = labourerVM.SafetyRating,
-                QualityRating = labourerVM.QualityRating,
+                SafetyRating = 0,
+                QualityRating = 0,
             };
             await UpdateUserEmail(userId, labourerVM.Email);
             _context.Add(labourer);
