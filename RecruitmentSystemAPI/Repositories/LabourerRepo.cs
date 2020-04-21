@@ -102,6 +102,7 @@ namespace RecruitmentSystemAPI.Repositories
             await UpdateUserEmail(userId, labourerVM.Email);
             _context.Add(labourer);
             _context.SaveChanges();
+            labourerVM.Id = labourer.Id;
             return labourerVM;
         }
 
