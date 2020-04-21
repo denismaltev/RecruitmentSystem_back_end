@@ -66,12 +66,13 @@ namespace RecruitmentSystemAPI.Repositories
             };
             _context.Skills.Add(skill);
             _context.SaveChanges();
+            skillsVM.Id = skill.Id;
             return skillsVM;
         }
 
-        public bool SkillAlreadyExists(string name)
+        public bool SkillAlreadyExists(string name, int? id = null)
         {
-            return _context.Skills.Any(s => s.Name == name);
+            return _context.Skills.Any(s => s.Name == name && (!id.HasValue || s.Id != id));
         }
 
         public bool SkillExists(int id)

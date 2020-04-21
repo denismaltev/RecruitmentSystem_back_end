@@ -58,7 +58,7 @@ namespace RecruitmentSystemAPI.Controllers
                     var skillRepo = new SkillsRepo(_context);
                     if (skillRepo.SkillAlreadyExists(skillVM.Name))
                     {
-                        return BadRequest(new { message = "Skill already exists" });
+                        return BadRequest(new { message = $"Skill {skillVM.Name} already exists" });
                     }
                     var result = skillRepo.AddSkill(skillVM);
                     return Ok(result);
@@ -87,6 +87,10 @@ namespace RecruitmentSystemAPI.Controllers
                 var skillRepo = new SkillsRepo(_context);
                 try
                 {
+                    if (skillRepo.SkillAlreadyExists(skillsVM.Name, id))
+                    {
+                        return BadRequest(new { message = $"Skill {skillsVM.Name} already exists" });
+                    }
                     skillRepo.UpdateSkill(skillsVM);
                     return Ok();
                 }
