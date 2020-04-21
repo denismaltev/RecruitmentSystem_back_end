@@ -96,25 +96,7 @@ namespace RecruitmentSystemAPI.Repositories
             _context.SaveChanges();
         }
 
-        private Weekdays ConvertWeekdaysToEnum(LabourerVM labourerVM)
-        {
-            Weekdays weekdays = 0;
-            if (labourerVM.Sunday)
-                weekdays |= Weekdays.Sunday;
-            if (labourerVM.Monday)
-                weekdays |= Weekdays.Monday;
-            if (labourerVM.Tuesday)
-                weekdays |= Weekdays.Tuesday;
-            if (labourerVM.Wednesday)
-                weekdays |= Weekdays.Wednesday;
-            if (labourerVM.Thursday)
-                weekdays |= Weekdays.Thursday;
-            if (labourerVM.Friday)
-                weekdays |= Weekdays.Friday;
-            if (labourerVM.Saturday)
-                weekdays |= Weekdays.Saturday;
-            return weekdays;
-        }
+
         public async Task<LabourerVM> AddLabourer(LabourerVM labourerVM, string userId)
         {
             var labourer = new Labourer
@@ -129,7 +111,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Address = labourerVM.Address,
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
-                Availability = ConvertWeekdaysToEnum(labourerVM)
+                Availability = ConvertWeekdaysToEnum(labourerVM),
                 SafetyRating = 0,
                 QualityRating = 0,
             };
@@ -160,7 +142,7 @@ namespace RecruitmentSystemAPI.Repositories
             return _context.Labourers.Where(l => l.UserId == userId).FirstOrDefault()?.Id;
         }
 
-        private Weekdays ConvertJobWeekdaysToEnum(LabourerVM labourerVM)
+        private Weekdays ConvertWeekdaysToEnum(LabourerVM labourerVM)
         {
             Weekdays weekdays = 0;
             if (labourerVM.Sunday)
