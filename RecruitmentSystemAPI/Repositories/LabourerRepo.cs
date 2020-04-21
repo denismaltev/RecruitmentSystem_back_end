@@ -34,11 +34,19 @@ namespace RecruitmentSystemAPI.Repositories
                 Country = l.Country,
                 Address = l.Address,
                 Phone = l.Phone,
-                IsActive = l.IsActive
+                IsActive = l.IsActive,
+                Sunday = l.Availability.HasFlag(Weekdays.Sunday),
+                Monday = l.Availability.HasFlag(Weekdays.Monday),
+                Tuesday = l.Availability.HasFlag(Weekdays.Tuesday),
+                Wednesday = l.Availability.HasFlag(Weekdays.Wednesday),
+                Thursday = l.Availability.HasFlag(Weekdays.Thursday),
+                Friday = l.Availability.HasFlag(Weekdays.Friday),
+                Saturday = l.Availability.HasFlag(Weekdays.Saturday),
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
-    });
+            });
         }
+
         public LabourerVM GetLabourerById(int id)
         {
             return _context.Labourers.Where(l => l.Id == id).Include(l=>l.User).Select(l => new LabourerVM
@@ -54,9 +62,15 @@ namespace RecruitmentSystemAPI.Repositories
                 Address = l.Address,
                 Phone = l.Phone,
                 IsActive = l.IsActive,
+                Sunday = l.Availability.HasFlag(Weekdays.Sunday),
+                Monday = l.Availability.HasFlag(Weekdays.Monday),
+                Tuesday = l.Availability.HasFlag(Weekdays.Tuesday),
+                Wednesday = l.Availability.HasFlag(Weekdays.Wednesday),
+                Thursday = l.Availability.HasFlag(Weekdays.Thursday),
+                Friday = l.Availability.HasFlag(Weekdays.Friday),
+                Saturday = l.Availability.HasFlag(Weekdays.Saturday),
                 SafetyRating = l.SafetyRating,
-                QualityRating = l.QualityRating,
-
+                QualityRating = l.QualityRating
             }).FirstOrDefault();
         }
 
@@ -74,11 +88,32 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.Address = labourerVM.Address;
             labourer.Phone = labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
+            labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
             _context.Update(labourer);
             _context.SaveChanges();
+        }
+
+        private Weekdays ConvertWeekdaysToEnum(LabourerVM labourerVM)
+        {
+            Weekdays weekdays = 0;
+            if (labourerVM.Sunday)
+                weekdays |= Weekdays.Sunday;
+            if (labourerVM.Monday)
+                weekdays |= Weekdays.Monday;
+            if (labourerVM.Tuesday)
+                weekdays |= Weekdays.Tuesday;
+            if (labourerVM.Wednesday)
+                weekdays |= Weekdays.Wednesday;
+            if (labourerVM.Thursday)
+                weekdays |= Weekdays.Thursday;
+            if (labourerVM.Friday)
+                weekdays |= Weekdays.Friday;
+            if (labourerVM.Saturday)
+                weekdays |= Weekdays.Saturday;
+            return weekdays;
         }
         public async Task<LabourerVM> AddLabourer(LabourerVM labourerVM, string userId)
         {
@@ -94,6 +129,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Address = labourerVM.Address,
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
+                Availability = ConvertWeekdaysToEnum(labourerVM)
                 SafetyRating = 0,
                 QualityRating = 0,
             };
@@ -122,6 +158,26 @@ namespace RecruitmentSystemAPI.Repositories
         public int? GetUserLabourerId(string userId)
         {
             return _context.Labourers.Where(l => l.UserId == userId).FirstOrDefault()?.Id;
+        }
+
+        private Weekdays ConvertJobWeekdaysToEnum(LabourerVM labourerVM)
+        {
+            Weekdays weekdays = 0;
+            if (labourerVM.Sunday)
+                weekdays |= Weekdays.Sunday;
+            if (labourerVM.Monday)
+                weekdays |= Weekdays.Monday;
+            if (labourerVM.Tuesday)
+                weekdays |= Weekdays.Tuesday;
+            if (labourerVM.Wednesday)
+                weekdays |= Weekdays.Wednesday;
+            if (labourerVM.Thursday)
+                weekdays |= Weekdays.Thursday;
+            if (labourerVM.Friday)
+                weekdays |= Weekdays.Friday;
+            if (labourerVM.Saturday)
+                weekdays |= Weekdays.Saturday;
+            return weekdays;
         }
     }
 }
