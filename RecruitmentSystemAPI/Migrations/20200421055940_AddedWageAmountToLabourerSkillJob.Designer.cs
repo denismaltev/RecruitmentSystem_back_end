@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitmentSystemAPI.Models;
 
 namespace RecruitmentSystemAPI.Migrations
 {
     [DbContext(typeof(RecruitmentSystemContext))]
-    partial class RecruitmentSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20200421055940_AddedWageAmountToLabourerSkillJob")]
+    partial class AddedWageAmountToLabourerSkillJob
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304,8 +306,6 @@ namespace RecruitmentSystemAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(450)
                         .IsUnicode(false);
-
-                    b.Property<int>("Availability");
 
                     b.Property<string>("City")
                         .IsRequired()
