@@ -42,7 +42,15 @@ namespace RecruitmentSystemAPI.Repositories
                 Thursday = l.Availability.HasFlag(Weekdays.Thursday),
                 Friday = l.Availability.HasFlag(Weekdays.Friday),
                 Saturday = l.Availability.HasFlag(Weekdays.Saturday),
-                //LabourerSkills = l.LabourerSkills,
+                Skills = _context.LabourerSkills.Where(ls => ls.LabourerId == l.Id)
+                                                .Select(ls => new SkillsVM
+                                                {
+                                                    Id = ls.Id,
+                                                    Name = ls.Skill.Name,
+                                                    ChargeAmount = ls.Skill.ChargeAmount,
+                                                    PayAmount = ls.Skill.PayAmount,
+                                                    IsActive = ls.IsActive
+                                                }).ToList(),
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
             });
@@ -99,7 +107,8 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.Phone = labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
             labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
-            //labourer.LabourerSkills = labourerVM.LabourerSkills;
+            //send an array of skills
+            //labourer.Skills = labourerVM.
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
