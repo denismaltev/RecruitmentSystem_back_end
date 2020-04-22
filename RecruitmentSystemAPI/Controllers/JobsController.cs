@@ -42,7 +42,7 @@ namespace RecruitmentSystemAPI.Controllers
         // GET: api/Jobs/5
         [HttpGet("{id}")]
         [Authorize(Roles = "Company")]
-        public ActionResult<Job> GetJob(int id)
+        public ActionResult<JobVM> GetJob(int id)
         {
             var jobRepo = new JobRepo(_context);
             var result = jobRepo.GetJobById(id);
@@ -92,7 +92,7 @@ namespace RecruitmentSystemAPI.Controllers
         // POST: api/Jobs
         [HttpPost]
         [Authorize(Roles = "Company")]
-        public ActionResult<Job> PostJob([FromBody]JobVM jobVM)
+        public ActionResult<JobVM> PostJob([FromBody]JobVM jobVM)
         {
             if (ModelState.IsValid)
             {
