@@ -95,7 +95,7 @@ namespace RecruitmentSystemAPI.Repositories
 
         public async Task UpdateLabourer(LabourerVM labourerVM)
         {
-            var labourer = _context.Labourers.FirstOrDefault(l => l.Id == labourerVM.Id);
+            var labourer = _context.Labourers.Include(l=>l.LabourerSkills).FirstOrDefault(l => l.Id == labourerVM.Id);
             if (labourer == null) throw new KeyNotFoundException();
             labourer.FirstName = labourerVM.FirstName;
             labourer.LastName = labourerVM.LastName;
@@ -107,8 +107,29 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.Phone = labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
             labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
-            //send an array of skills
-            //labourer.Skills = labourerVM.
+
+
+            var existingSkills = labourerVM.Skills.Where(s  => labourer.LabourerSkills.Any(ls  =>  ls.SkillId == s.Id));
+            foreach(var skill in existingSkills)
+            {
+                var oldSkill = labourer.LabourerSkills.FirstOrDefault(s  =>  s.SkillId == skill.Id.Value);
+                oldSkill.IsActive = skill.IsActive;
+                _context.Update(oldSkill);
+            }
+
+
+            var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id));
+            foreach (var skill in newSkills)
+            {
+                var newSkill = new LabourerSkill
+                {
+                    LabourerId = labourer.Id,
+                    IsActive = skill.IsActive,
+                    SkillId = skill.Id.Value
+                };
+                _context.Add(newSkill);
+            }
+
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
@@ -131,11 +152,25 @@ namespace RecruitmentSystemAPI.Repositories
                 Address = labourerVM.Address,
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
-                Availability = ConvertWeekdaysToEnum(labourerVM),
-                //LabourerSkills = labourerVM.LabourerSkills
+                Availability = ConvertWeekdaysToEnum(labourerVM)
+                
             };
-            await UpdateUserEmail(userId, labourerVM.Email);
+
             _context.Add(labourer);
+            var labourerSkills = new List<LabourerSkill>();
+            foreach(var skill in labourerVM.Skills)
+            {
+                var newSkill = new LabourerSkill
+                {
+                    IsActive = skill.IsActive,
+                    Labourer = labourer,
+                    SkillId = skill.Id.Value
+                };
+                labourerSkills.Add(newSkill);
+                _context.LabourerSkills.Add(newSkill);
+            }
+            labourer.LabourerSkills = labourerSkills;
+            await UpdateUserEmail(userId, labourerVM.Email);
             _context.SaveChanges();
             labourerVM.Id = labourer.Id;
             return labourerVM;
