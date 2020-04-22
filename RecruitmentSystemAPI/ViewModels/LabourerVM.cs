@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RecruitmentSystemAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace RecruitmentSystemAPI.ViewModels
         public bool Friday { get; set; }
         [Required]
         public bool Saturday { get; set; }
-        public List<SkillsVM> Skills { get; set; }
+        public ICollection<LabourerSkill> LabourerSkills { get; set; }
         public float SafetyRating { get; set; }
         public float QualityRating { get; set; }
     }

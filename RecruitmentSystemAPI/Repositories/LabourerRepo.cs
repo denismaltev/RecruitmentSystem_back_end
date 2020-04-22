@@ -42,6 +42,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Thursday = l.Availability.HasFlag(Weekdays.Thursday),
                 Friday = l.Availability.HasFlag(Weekdays.Friday),
                 Saturday = l.Availability.HasFlag(Weekdays.Saturday),
+                LabourerSkills = l.LabourerSkills,
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
             });
@@ -89,6 +90,9 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.Phone = labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
             labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
+            labourer.LabourerSkills = labourerVM.LabourerSkills;
+            labourer.SafetyRating = labourerVM.SafetyRating;
+            labourer.QualityRating = labourerVM.QualityRating;
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
@@ -112,8 +116,9 @@ namespace RecruitmentSystemAPI.Repositories
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
                 Availability = ConvertWeekdaysToEnum(labourerVM),
-                SafetyRating = 0,
-                QualityRating = 0,
+                LabourerSkills = labourerVM.LabourerSkills,
+                SafetyRating = labourerVM.SafetyRating,
+                QualityRating = labourerVM.QualityRating,
             };
             await UpdateUserEmail(userId, labourerVM.Email);
             _context.Add(labourer);
@@ -161,5 +166,7 @@ namespace RecruitmentSystemAPI.Repositories
                 weekdays |= Weekdays.Saturday;
             return weekdays;
         }
+
+        //private GetListOfSkills()
     }
 }
