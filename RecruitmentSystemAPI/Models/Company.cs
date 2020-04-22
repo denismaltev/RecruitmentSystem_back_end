@@ -21,6 +21,8 @@ namespace RecruitmentSystemAPI.Models
         public bool IsActive { get; set; }
         public string Email { get; set; }
 
+        public float Rating { get; set; }
+
         public virtual ICollection<CompanyUser> CompanyUsers { get; set; }
         public virtual ICollection<Job> Jobs { get; set; }
     }
