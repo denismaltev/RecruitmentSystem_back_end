@@ -67,6 +67,10 @@ namespace RecruitmentSystemAPI.Models
                     .IsRequired()
                     .HasMaxLength(450)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Rating)
+                    .IsRequired()
+                    .HasColumnType("float");
             });
 
             modelBuilder.Entity<CompanyUser>(entity =>
