@@ -42,7 +42,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Thursday = l.Availability.HasFlag(Weekdays.Thursday),
                 Friday = l.Availability.HasFlag(Weekdays.Friday),
                 Saturday = l.Availability.HasFlag(Weekdays.Saturday),
-                LabourerSkills = l.LabourerSkills,
+                //LabourerSkills = l.LabourerSkills,
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
             });
@@ -71,9 +71,18 @@ namespace RecruitmentSystemAPI.Repositories
                 Friday = l.Availability.HasFlag(Weekdays.Friday),
                 Saturday = l.Availability.HasFlag(Weekdays.Saturday),
                 SafetyRating = l.SafetyRating,
-                QualityRating = l.QualityRating
+                QualityRating = l.QualityRating,
+                Skills = _context.LabourerSkills.Where(ls => ls.LabourerId == l.Id)
+                                                .Select(ls => new SkillsVM {
+                                                    Id              = ls.Id,
+                                                    Name            = ls.Skill.Name,
+                                                    ChargeAmount    = ls.Skill.ChargeAmount,
+                                                    PayAmount       = ls.Skill.PayAmount,
+                                                    IsActive        = ls.IsActive
+                                                }).ToList()
             }).FirstOrDefault();
         }
+
 
 
         public async Task UpdateLabourer(LabourerVM labourerVM)
@@ -90,7 +99,7 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.Phone = labourerVM.Phone;
             labourer.IsActive = labourerVM.IsActive;
             labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
-            labourer.LabourerSkills = labourerVM.LabourerSkills;
+            //labourer.LabourerSkills = labourerVM.LabourerSkills;
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
@@ -114,7 +123,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
                 Availability = ConvertWeekdaysToEnum(labourerVM),
-                LabourerSkills = labourerVM.LabourerSkills
+                //LabourerSkills = labourerVM.LabourerSkills
             };
             await UpdateUserEmail(userId, labourerVM.Email);
             _context.Add(labourer);
@@ -162,5 +171,7 @@ namespace RecruitmentSystemAPI.Repositories
                 weekdays |= Weekdays.Saturday;
             return weekdays;
         }
+
+        
     }
 }
