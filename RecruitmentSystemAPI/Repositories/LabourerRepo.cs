@@ -91,8 +91,6 @@ namespace RecruitmentSystemAPI.Repositories
             labourer.IsActive = labourerVM.IsActive;
             labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
             labourer.LabourerSkills = labourerVM.LabourerSkills;
-            labourer.SafetyRating = labourerVM.SafetyRating;
-            labourer.QualityRating = labourerVM.QualityRating;
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
@@ -116,9 +114,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
                 Availability = ConvertWeekdaysToEnum(labourerVM),
-                LabourerSkills = labourerVM.LabourerSkills,
-                SafetyRating = labourerVM.SafetyRating,
-                QualityRating = labourerVM.QualityRating,
+                LabourerSkills = labourerVM.LabourerSkills
             };
             await UpdateUserEmail(userId, labourerVM.Email);
             _context.Add(labourer);
@@ -166,7 +162,5 @@ namespace RecruitmentSystemAPI.Repositories
                 weekdays |= Weekdays.Saturday;
             return weekdays;
         }
-
-        //private GetListOfSkills()
     }
 }

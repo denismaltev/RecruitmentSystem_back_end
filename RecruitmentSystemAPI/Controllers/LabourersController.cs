@@ -71,7 +71,7 @@ namespace RecruitmentSystemAPI.Controllers
 
         }
 
-        // POST: api/Companies
+        // POST: api/Labourers
         [HttpPost]
         [Authorize(Roles = "Labourer")]
         public async Task<ActionResult<CompanyVM>> PostLabourer(LabourerVM labourerVM)
