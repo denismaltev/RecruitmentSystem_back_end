@@ -29,38 +29,39 @@ namespace RecruitmentSystemAPI.Controllers
         }
 
         // GET: api/Jobs
-        [HttpGet]
-        [Authorize(Roles = "Company")]
-        public ActionResult<IEnumerable<JobVM>> GetJobs()
-        {
-            var jobRepo = new JobRepo(_context);
-            var userId = _userManager.GetUserId(User);
-            var result = jobRepo.GetCompanyJobsByUserId(userId);
-            return Ok(result);
-        }
+        //[HttpGet]
+        //[Authorize(Roles = "Company")]
+        //public ActionResult<IEnumerable<JobVM>> GetJobs()
+        //{
+        //    var jobRepo = new JobRepo(_context);
+        //    var userId = _userManager.GetUserId(User);
+        //    var result = jobRepo.GetCompanyJobsByUserId(userId);
+        //    return Ok(result);
+        //}
 
-        // GET: api/Jobs
+        // GET: api/Jobs/5(companyID)
+        [HttpGet("{id}")]
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<JobVM>> GetJobsByCompanyID(int id)
         {
             var jobRepo = new JobRepo(_context);
             //var userId = _userManager.GetUserId(User);
-            var userId = 4;
-            var result = jobRepo.GetJobByCompanyId(userId);
+            var companyId = 1;
+            var result = jobRepo.GetJobByCompanyId(companyId);
             return Ok(result);
         }
 
-        // GET: api/Jobs/5
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Company")]
-        public ActionResult<JobVM> GetJob(int id)
-        {
-            var jobRepo = new JobRepo(_context);
-            var result = jobRepo.GetJobById(id);
-            if (result == null) return NotFound();
-            return Ok(result);
-        }
+        //// GET: api/Jobs/5
+        //[HttpGet("{id}")]
+        //[Authorize(Roles = "Company")]
+        //public ActionResult<JobVM> GetJob(int id)
+        //{
+        //    var jobRepo = new JobRepo(_context);
+        //    var result = jobRepo.GetJobById(id);
+        //    if (result == null) return NotFound();
+        //    return Ok(result);
+        //}
 
         // PUT: api/Jobs/5
         [HttpPut("{id}")]
