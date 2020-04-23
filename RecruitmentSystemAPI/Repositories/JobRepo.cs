@@ -136,8 +136,20 @@ namespace RecruitmentSystemAPI.Repositories
                 IsActive = jobVM.IsActive,
                 Weekdays = ConvertJobWeekdaysToEnum(jobVM)
             };
-
             _context.Jobs.Add(job);
+
+            List<JobSkillVM> Skills = jobVM.Skills;
+            foreach(var skill in Skills)
+            {
+                var newJobSkill = new JobSkill
+                {
+                    Job = job,
+                    SkillId = skill.Id,
+                    NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded,
+                    IsActive = skill.IsActive
+                };
+                _context.JobSkills.Add(newJobSkill);
+            }
             _context.SaveChanges();
             return jobVM;
         }
