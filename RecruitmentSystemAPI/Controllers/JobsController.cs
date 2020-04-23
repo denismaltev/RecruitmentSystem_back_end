@@ -41,7 +41,7 @@ namespace RecruitmentSystemAPI.Controllers
                 return Ok(result);
             }else
             {
-                int count = 3;
+                int count = 5;
                 int page = 1;
                 //2020 - 04 - 21T00: 00:00
                 var result = jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
