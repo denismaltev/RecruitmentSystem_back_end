@@ -97,14 +97,14 @@ namespace RecruitmentSystemAPI.Repositories
         {
             var labourer = _context.Labourers.Include(l => l.LabourerSkills).FirstOrDefault(l => l.Id == labourerVM.Id);
             if (labourer == null) throw new KeyNotFoundException();
+
             if(labourer != null)
             {
                 labourer.Id = labourer.Id;
-                labourer.UserId = labourer.UserId;
-                //labourer.UserId = _context.Labourers.FirstOrDefault(u => labourer.UserId),
                 labourer.FirstName = labourerVM.FirstName;
                 labourer.LastName = labourerVM.LastName;
                 labourer.PersonalId = labourerVM.PersonalId;
+                
                 labourer.City = labourerVM.City;
                 labourer.Province = labourerVM.Province;
                 labourer.Country = labourerVM.Country;
@@ -112,10 +112,8 @@ namespace RecruitmentSystemAPI.Repositories
                 labourer.Phone = labourerVM.Phone;
                 labourer.IsActive = labourerVM.IsActive;
                 labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
+                //labourer.LabourerSkills = 
             }
-            
-
-
             var existingSkills = labourerVM.Skills.Where(s  => labourer.LabourerSkills.Any(ls  =>  ls.SkillId == s.Id));
             if(existingSkills != null)
             {
@@ -127,8 +125,6 @@ namespace RecruitmentSystemAPI.Repositories
                 }
             }
             
-
-
             var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id));
             if(newSkills != null)
             {
@@ -144,8 +140,6 @@ namespace RecruitmentSystemAPI.Repositories
                 }
             }
            
-
-
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
             _context.Update(labourer);
