@@ -31,7 +31,7 @@ namespace RecruitmentSystemAPI.Controllers
         //GET: api/Jobs
        [HttpGet]
        [Authorize(Roles = "Company, Admin")]
-        public ActionResult<IEnumerable<JobVM>> GetJobs(int? companyId, DateTime? fromDate = null, DateTime? toDate = null)
+        public ActionResult<IEnumerable<JobVM>> GetJobs(int? companyId, int count=20, int page =1, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var jobRepo = new JobRepo(_context);
             var userId = _userManager.GetUserId(User);
@@ -40,9 +40,7 @@ namespace RecruitmentSystemAPI.Controllers
                 var result = jobRepo.GetCompanyJobsByUserId(userId);
                 return Ok(result);
             }else
-            {
-                int count = 5;
-                int page = 1;
+            { 
                 //2020 - 04 - 21T00: 00:00
                 var result = jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
                  return Ok(result);
