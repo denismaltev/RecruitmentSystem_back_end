@@ -90,6 +90,26 @@ namespace RecruitmentSystemAPI.Repositories
             job.IsActive = jobVM.IsActive;
             job.Weekdays = ConvertJobWeekdaysToEnum(jobVM);
 
+            // Delete old skills
+            var jobSkills = _context.JobSkills.Where(js => js.JobId == jobVM.Id);
+            foreach(var jobSkill in jobSkills)
+            {
+                _context.JobSkills.Remove(jobSkill);
+            }
+            // Add skills from client
+            List<JobSkillVM> skillsFromClient = jobVM.Skills;
+            foreach(var skillFromClient in skillsFromClient)
+            {
+                var newJobSkill = new JobSkill
+                {
+                    Job = job,
+                    SkillId = skillFromClient.Id,
+                    NumberOfLabourersNeeded = skillFromClient.NumberOfLabourersNeeded,
+                    IsActive = skillFromClient.IsActive
+                };
+                _context.JobSkills.Add(newJobSkill);
+            }
+
             _context.Update(job);
             _context.SaveChanges();
         }
