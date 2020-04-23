@@ -104,7 +104,6 @@ namespace RecruitmentSystemAPI.Repositories
                 labourer.FirstName = labourerVM.FirstName;
                 labourer.LastName = labourerVM.LastName;
                 labourer.PersonalId = labourerVM.PersonalId;
-                
                 labourer.City = labourerVM.City;
                 labourer.Province = labourerVM.Province;
                 labourer.Country = labourerVM.Country;
@@ -112,7 +111,6 @@ namespace RecruitmentSystemAPI.Repositories
                 labourer.Phone = labourerVM.Phone;
                 labourer.IsActive = labourerVM.IsActive;
                 labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
-                //labourer.LabourerSkills = 
             }
             var existingSkills = labourerVM.Skills.Where(s  => labourer.LabourerSkills.Any(ls  =>  ls.SkillId == s.Id));
             if(existingSkills != null)
@@ -177,6 +175,7 @@ namespace RecruitmentSystemAPI.Repositories
                 labourerSkills.Add(newSkill);
                 _context.LabourerSkills.Add(newSkill);
             }
+
             labourer.LabourerSkills = labourerSkills;
             await UpdateUserEmail(userId, labourerVM.Email);
             _context.SaveChanges();
