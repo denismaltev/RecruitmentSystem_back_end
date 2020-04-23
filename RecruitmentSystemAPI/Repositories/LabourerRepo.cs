@@ -11,7 +11,7 @@ namespace RecruitmentSystemAPI.Repositories
 {
     public class LabourerRepo
     {
-        RecruitmentSystemContext _context;
+        private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
 
         public LabourerRepo(RecruitmentSystemContext context, UserManager<SystemUser> userManager)
@@ -95,41 +95,55 @@ namespace RecruitmentSystemAPI.Repositories
 
         public async Task UpdateLabourer(LabourerVM labourerVM)
         {
-            var labourer = _context.Labourers.Include(l=>l.LabourerSkills).FirstOrDefault(l => l.Id == labourerVM.Id);
+            var labourer = _context.Labourers.Include(l => l.LabourerSkills).FirstOrDefault(l => l.Id == labourerVM.Id);
             if (labourer == null) throw new KeyNotFoundException();
-            labourer.FirstName = labourerVM.FirstName;
-            labourer.LastName = labourerVM.LastName;
-            labourer.PersonalId = labourerVM.PersonalId;
-            //labourer.Email = labourerVM.Email;
-            labourer.City = labourerVM.City;
-            labourer.Province = labourerVM.Province;
-            labourer.Country = labourerVM.Country;
-            labourer.Address = labourerVM.Address;
-            labourer.Phone = labourerVM.Phone;
-            labourer.IsActive = labourerVM.IsActive;
-            labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
+            if(labourer != null)
+            {
+                labourer.Id = labourer.Id;
+                labourer.UserId = labourer.UserId;
+                //labourer.UserId = _context.Labourers.FirstOrDefault(u => labourer.UserId),
+                labourer.FirstName = labourerVM.FirstName;
+                labourer.LastName = labourerVM.LastName;
+                labourer.PersonalId = labourerVM.PersonalId;
+                labourer.City = labourerVM.City;
+                labourer.Province = labourerVM.Province;
+                labourer.Country = labourerVM.Country;
+                labourer.Address = labourerVM.Address;
+                labourer.Phone = labourerVM.Phone;
+                labourer.IsActive = labourerVM.IsActive;
+                labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
+            }
+            
 
 
             var existingSkills = labourerVM.Skills.Where(s  => labourer.LabourerSkills.Any(ls  =>  ls.SkillId == s.Id));
-            foreach(var skill in existingSkills)
+            if(existingSkills != null)
             {
-                var oldSkill = labourer.LabourerSkills.FirstOrDefault(s  =>  s.SkillId == skill.Id.Value);
-                oldSkill.IsActive = skill.IsActive;
-                _context.Update(oldSkill);
+                foreach (var skill in existingSkills)
+                {
+                    var oldSkill = labourer.LabourerSkills.FirstOrDefault(s => s.SkillId == skill.Id.Value);
+                    oldSkill.IsActive = skill.IsActive;
+                    _context.Update(oldSkill);
+                }
             }
+            
 
 
             var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id));
-            foreach (var skill in newSkills)
+            if(newSkills != null)
             {
-                var newSkill = new LabourerSkill
+                foreach (var skill in newSkills)
                 {
-                    LabourerId = labourer.Id,
-                    IsActive = skill.IsActive,
-                    SkillId = skill.Id.Value
-                };
-                _context.Add(newSkill);
+                    var newSkill = new LabourerSkill
+                    {
+                        LabourerId = labourer.Id,
+                        IsActive = skill.IsActive,
+                        SkillId = skill.Id.Value
+                    };
+                    _context.Add(newSkill);
+                }
             }
+           
 
 
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
@@ -154,7 +168,6 @@ namespace RecruitmentSystemAPI.Repositories
                 Phone = labourerVM.Phone,
                 IsActive = labourerVM.IsActive,
                 Availability = ConvertWeekdaysToEnum(labourerVM)
-                
             };
 
             _context.Add(labourer);
