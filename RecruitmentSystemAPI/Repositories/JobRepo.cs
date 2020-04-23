@@ -41,6 +41,32 @@ namespace RecruitmentSystemAPI.Repositories
             }).ToList();
         }
 
+        public List<JobVM> GetJobByCompanyId(int companyId)
+        {
+           // var jobs = _context.CompanyUsers.Where(cu => cu.UserId == userId).Include(cu => cu.Company).ThenInclude(c => c.Jobs).Select(c => c.Company.Jobs).FirstOrDefault();
+           var jobs = _context.Jobs.Where(cId => cId.CompanyId == companyId).Include(cId => cId.Company).ThenInclude(c => c.Jobs).Select(c => c.Company.Jobs).FirstOrDefault();
+            return jobs.Select(j => new JobVM
+            {
+                Id = j.Id,
+                Title = j.Title,
+                Description = j.Description,
+                City = j.City,
+                Province = j.Province,
+                Country = j.Country,
+                Address = j.Address,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                IsActive = j.IsActive,
+                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+            }).ToList();
+        }
+
         public JobVM GetJobById(int id)
         {
             return _context.Jobs.Where(j => j.Id == id).Select(j => new JobVM

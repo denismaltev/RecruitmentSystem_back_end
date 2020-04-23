@@ -39,6 +39,18 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(result);
         }
 
+        // GET: api/Jobs
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<JobVM>> GetJobsByCompanyID(int id)
+        {
+            var jobRepo = new JobRepo(_context);
+            //var userId = _userManager.GetUserId(User);
+            var userId = 4;
+            var result = jobRepo.GetJobByCompanyId(userId);
+            return Ok(result);
+        }
+
         // GET: api/Jobs/5
         [HttpGet("{id}")]
         [Authorize(Roles = "Company")]
