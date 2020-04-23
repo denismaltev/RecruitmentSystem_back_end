@@ -20,7 +20,7 @@ namespace RecruitmentSystemAPI.ViewModels
         [Required]
         public string Address { get; set; }
 
-        public float JobRating { get; set; }
+        public float Rating { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         [Required]

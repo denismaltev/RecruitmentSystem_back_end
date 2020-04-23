@@ -2,12 +2,12 @@
 
 namespace RecruitmentSystemAPI.Migrations
 {
-    public partial class jobRatingAdded : Migration
+    public partial class jobRating : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<float>(
-                name: "JobRating",
+                name: "Rating",
                 table: "Jobs",
                 nullable: false,
                 defaultValue: 0f);
@@ -16,7 +16,7 @@ namespace RecruitmentSystemAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "JobRating",
+                name: "Rating",
                 table: "Jobs");
         }
     }

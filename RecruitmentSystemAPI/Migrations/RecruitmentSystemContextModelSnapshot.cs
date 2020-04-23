@@ -252,11 +252,11 @@ namespace RecruitmentSystemAPI.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<float>("JobRating");
-
                     b.Property<string>("Province")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<float>("Rating");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime");
