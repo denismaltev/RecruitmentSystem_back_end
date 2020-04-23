@@ -43,12 +43,12 @@ namespace RecruitmentSystemAPI.Repositories
 
         public JobVM GetJobById(int id)
         {
-            List<JobSkillVM> skillsList = _context.Skills.Where(s => s.JobSkills.Any(js => js.JobId == id)).Select(s => new JobSkillVM
+            List<JobSkillVM> skillsList = _context.JobSkills.Where(js => js.JobId == id).Select(js => new JobSkillVM
             {
-                Id = s.Id,
-                Name = s.Name,
-                NumberOfLabourersNeeded = 2,
-                IsActive = s.IsActive
+                Id = js.Skill.Id,
+                Name = js.Skill.Name,
+                NumberOfLabourersNeeded = js.NumberOfLabourersNeeded,
+                IsActive = js.Skill.IsActive
             }).ToList();
 
             return _context.Jobs.Where(j => j.Id == id).Select(j => new JobVM
