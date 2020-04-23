@@ -43,6 +43,14 @@ namespace RecruitmentSystemAPI.Repositories
 
         public JobVM GetJobById(int id)
         {
+            List<JobSkillVM> skillsList = _context.Skills.Where(s => s.JobSkills.Any(js => js.JobId == id)).Select(s => new JobSkillVM
+            {
+                Id = s.Id,
+                Name = s.Name,
+                NumberOfLabourersNeeded = 2,
+                IsActive = s.IsActive
+            }).ToList();
+
             return _context.Jobs.Where(j => j.Id == id).Select(j => new JobVM
             {
                 Id = j.Id,
@@ -61,7 +69,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
                 Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
                 Friday = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
+                Skills = skillsList
             }).FirstOrDefault();
         }
 
