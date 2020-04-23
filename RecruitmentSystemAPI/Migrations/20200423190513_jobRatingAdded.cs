@@ -2,15 +2,15 @@
 
 namespace RecruitmentSystemAPI.Migrations
 {
-    public partial class addJobRating : Migration
+    public partial class jobRatingAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "JobRating",
                 table: "Jobs",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

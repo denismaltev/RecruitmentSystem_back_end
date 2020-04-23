@@ -44,6 +44,8 @@
     <Compile Remove="Migrations\20200421200131_AddLabourerAvailabilitySkills.Designer.cs" />
     <Compile Remove="Migrations\20200422204514_companyReating.cs" />
     <Compile Remove="Migrations\20200422204514_companyReating.Designer.cs" />
+    <Compile Remove="Migrations\20200423052145_addJobRating.cs" />
+    <Compile Remove="Migrations\20200423052145_addJobRating.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

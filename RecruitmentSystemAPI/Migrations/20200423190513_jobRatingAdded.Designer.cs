@@ -9,8 +9,8 @@ using RecruitmentSystemAPI.Models;
 namespace RecruitmentSystemAPI.Migrations
 {
     [DbContext(typeof(RecruitmentSystemContext))]
-    [Migration("20200423052145_addJobRating")]
-    partial class addJobRating
+    [Migration("20200423190513_jobRatingAdded")]
+    partial class jobRatingAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -254,7 +254,7 @@ namespace RecruitmentSystemAPI.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<int>("JobRating");
+                    b.Property<float>("JobRating");
 
                     b.Property<string>("Province")
                         .HasMaxLength(50)

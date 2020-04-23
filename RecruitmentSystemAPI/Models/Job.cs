@@ -19,7 +19,7 @@ namespace RecruitmentSystemAPI.Models
         public string Province { get; set; }
         public string Country { get; set; }
         public string Address { get; set; }
-        public int JobRating { get; set; }
+        public float JobRating { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public Weekdays Weekdays { get; set; }

@@ -42,11 +42,9 @@ namespace RecruitmentSystemAPI.Repositories
             }).ToList();
         }
 
-        public List<JobVM> GetJobByCompanyId(int companyId)
+        public List<JobVM> GetJobsByCompanyId(int companyId)
         {
-           // var jobs = _context.CompanyUsers.Where(cu => cu.UserId == userId).Include(cu => cu.Company).ThenInclude(c => c.Jobs).Select(c => c.Company.Jobs).FirstOrDefault();
-           var jobs = _context.Jobs.Where(cId => cId.CompanyId == companyId).Include(cId => cId.Company).ThenInclude(c => c.Jobs).Select(c => c.Company.Jobs).FirstOrDefault();
-            return jobs.Select(j => new JobVM
+           var jobs = _context.Jobs.Where(cId => cId.CompanyId == companyId).Select(j =>  new JobVM
             {
                 Id = j.Id,
                 Title = j.Title,
@@ -67,6 +65,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Friday = j.Weekdays.HasFlag(Weekdays.Friday),
                 Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
             }).ToList();
+            return jobs;
         }
 
         public JobVM GetJobById(int id)
