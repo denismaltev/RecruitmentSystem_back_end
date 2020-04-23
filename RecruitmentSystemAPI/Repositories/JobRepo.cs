@@ -42,9 +42,13 @@ namespace RecruitmentSystemAPI.Repositories
             }).ToList();
         }
 
-        public List<JobVM> GetJobsByCompanyId(int companyId)
+        public List<JobVM> GetJobsByCompanyId(int companyId, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
         {
-           var jobs = _context.Jobs.Where(cId => cId.CompanyId == companyId).Select(j =>  new JobVM
+           var jobs = _context.Jobs
+                 .Where(cId => cId.CompanyId == companyId)
+                 .Where(cId => (!fromDate.HasValue || cId.StartDate >= fromDate) && (!toDate.HasValue || cId.EndDate < toDate))
+                 .OrderByDescending(cId => cId.StartDate).Skip(count * (page - 1)).Take(count)
+                 .Select(j =>  new JobVM
             {
                 Id = j.Id,
                 Title = j.Title,
