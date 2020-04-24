@@ -61,5 +61,6 @@ namespace RecruitmentSystemAPI.Controllers
             }
             return BadRequest();
         }
+        //[HttpPost("lavoourer")]
     }
 }

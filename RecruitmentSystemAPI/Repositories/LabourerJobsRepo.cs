@@ -26,6 +26,8 @@ namespace RecruitmentSystemAPI.Repositories
                     Id = l.Id,
                     JobTitle = l.Job.Title,
                     SkillName = l.Skill.Name,
+                    CompanyName = l.Job.Company.Name,
+                    Address = l.Job.Address,
                     Date = l.Date,
                     SafetyRating = l.SafetyRating,
                     QualityRating = l.QualityRating,
