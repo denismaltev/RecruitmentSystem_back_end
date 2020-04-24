@@ -44,7 +44,7 @@ namespace RecruitmentSystemAPI.Controllers
         // Get all jobs for ONE company
         //GET: api/Jobs
        [HttpGet]
-       [Authorize(Roles = "Company, Admin")]
+       [Authorize(Roles = "Company")]
         public ActionResult<IEnumerable<JobVM>> GetJobs(int? companyId, int count=20, int page =1, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var jobRepo = new JobRepo(_context);
