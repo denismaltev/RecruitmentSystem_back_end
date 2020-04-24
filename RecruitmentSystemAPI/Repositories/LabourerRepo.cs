@@ -49,7 +49,6 @@ namespace RecruitmentSystemAPI.Repositories
                                                     Name = ls.Skill.Name,
                                                     ChargeAmount = ls.Skill.ChargeAmount,
                                                     PayAmount = ls.Skill.PayAmount,
-                                                    IsActive = ls.IsActive
                                                 }).ToList(),
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
@@ -86,7 +85,6 @@ namespace RecruitmentSystemAPI.Repositories
                                                     Name            = ls.Skill.Name,
                                                     ChargeAmount    = ls.Skill.ChargeAmount,
                                                     PayAmount       = ls.Skill.PayAmount,
-                                                    IsActive        = ls.IsActive
                                                 }).ToList()
             }).FirstOrDefault();
         }
@@ -118,7 +116,6 @@ namespace RecruitmentSystemAPI.Repositories
                 foreach (var skill in existingSkills)
                 {
                     var oldSkill = labourer.LabourerSkills.FirstOrDefault(s => s.SkillId == skill.Id.Value);
-                    oldSkill.IsActive = skill.IsActive;
                     _context.Update(oldSkill);
                 }
             }
@@ -131,7 +128,6 @@ namespace RecruitmentSystemAPI.Repositories
                     var newSkill = new LabourerSkill
                     {
                         LabourerId = labourer.Id,
-                        IsActive = skill.IsActive,
                         SkillId = skill.Id.Value
                     };
                     _context.Add(newSkill);
@@ -168,7 +164,6 @@ namespace RecruitmentSystemAPI.Repositories
             {
                 var newSkill = new LabourerSkill
                 {
-                    IsActive = skill.IsActive,
                     Labourer = labourer,
                     SkillId = skill.Id.Value
                 };

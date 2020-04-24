@@ -22,7 +22,7 @@ namespace RecruitmentSystemAPI.Models
         public virtual DbSet<CompanyUser> CompanyUsers { get; set; }
         public virtual DbSet<JobSkill> JobSkills { get; set; }
         public virtual DbSet<Job> Jobs { get; set; }
-        public virtual DbSet<LabourerSkillJob> LabourerSkillJobs { get; set; }
+        public virtual DbSet<LabourerJob> LabourerJobs { get; set; }
         public virtual DbSet<LabourerSkill> LabourerSkills { get; set; }
         public virtual DbSet<Labourer> Labourers { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }
@@ -146,23 +146,29 @@ namespace RecruitmentSystemAPI.Models
                     .HasConstraintName("FK_Jobs_Companies");
             });
 
-            modelBuilder.Entity<LabourerSkillJob>(entity =>
+            modelBuilder.Entity<LabourerJob>(entity =>
             {
                 entity.Property(e => e.Date).HasColumnType("datetime");
 
                 entity.Property(e => e.WageAmount).HasColumnType("decimal(18, 0)");
 
                 entity.HasOne(d => d.Job)
-                    .WithMany(p => p.LabourerSkillJobs)
+                    .WithMany(p => p.LabourerJobs)
                     .HasForeignKey(d => d.JobId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LabourerSkillJob_Jobs");
+                    .HasConstraintName("FK_LabourerJob_Jobs");
 
-                entity.HasOne(d => d.LabourerSkill)
-                    .WithMany(p => p.LabourerSkillJobs)
-                    .HasForeignKey(d => d.LabourerSkillId)
+                entity.HasOne(d => d.Skill)
+                    .WithMany(p => p.LabourerJobs)
+                    .HasForeignKey(d => d.SkillId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LabourerSkillJob_LabourerSkills");
+                    .HasConstraintName("FK_LabourerJob_Skills");
+
+                entity.HasOne(d => d.Labourer)
+                    .WithMany(p => p.LabourerJobs)
+                    .HasForeignKey(d => d.LabourerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LabourerJob_Labourers");
             });
 
             modelBuilder.Entity<LabourerSkill>(entity =>

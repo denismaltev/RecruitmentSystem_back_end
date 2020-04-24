@@ -9,7 +9,6 @@ namespace RecruitmentSystemAPI.Models
         public int JobId { get; set; }
         public int SkillId { get; set; }
         public int NumberOfLabourersNeeded { get; set; }
-        public bool IsActive { get; set; }
 
         public virtual Job Job { get; set; }
         public virtual Skill Skill { get; set; }

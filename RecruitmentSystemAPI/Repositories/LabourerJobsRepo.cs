@@ -18,14 +18,14 @@ namespace RecruitmentSystemAPI.Repositories
 
         public IQueryable<LabourerJobVM> GetLabourerJobsByUserId(string userId, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            return _context.LabourerSkillJobs
+            return _context.LabourerJobs
                 .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date < toDate))
-                .Include(l => l.LabourerSkill).ThenInclude(ls => ls.Skill).Include(l => l.LabourerSkill.Labourer).Where(l => l.LabourerSkill.Labourer.UserId == userId)
+                .Include(l => l.Skill).Include(l => l.Labourer).Where(l => l.Labourer.UserId == userId)
                 .Include(l => l.Job).OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobVM
                 {
                     Id = l.Id,
                     JobTitle = l.Job.Title,
-                    SkillName = l.LabourerSkill.Skill.Name,
+                    SkillName = l.Skill.Name,
                     Date = l.Date,
                     SafetyRating = l.SafetyRating,
                     QualityRating = l.QualityRating,
@@ -34,22 +34,23 @@ namespace RecruitmentSystemAPI.Repositories
                 });
         }
 
-        public LabourerJobVM AddLabourerSkillJob(LabourerJobVM labourerJobVM, string userId)
+        public LabourerJobVM AddLabourerJob(LabourerJobVM labourerJobVM, string userId)
         {
             var labourerSkill = _context.LabourerSkills.Where(ls => ls.SkillId == labourerJobVM.SkillId.Value).Include(ls => ls.Labourer).Where(ls => ls.Labourer.UserId == userId).FirstOrDefault();
-            var labourerSkillJob = new LabourerSkillJob
+            var labourerJob = new LabourerJob
             {
                 JobId = labourerJobVM.JobId.Value,
-                LabourerSkill = labourerSkill,
+                SkillId = labourerSkill.SkillId,
+                Labourer = labourerSkill.Labourer,
                 Date = labourerJobVM.Date,
                 JobRating = labourerJobVM.JobRating,
                 QualityRating = labourerJobVM.QualityRating,
                 SafetyRating = labourerJobVM.SafetyRating,
                 WageAmount = labourerJobVM.WageAmount
             };
-            _context.LabourerSkillJobs.Add(labourerSkillJob);
+            _context.LabourerJobs.Add(labourerJob);
             _context.SaveChanges();
-            labourerJobVM.Id = labourerSkillJob.Id;
+            labourerJobVM.Id = labourerJob.Id;
             return labourerJobVM;
         }
     }

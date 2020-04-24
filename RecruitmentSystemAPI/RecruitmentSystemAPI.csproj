@@ -40,14 +40,34 @@
     <Compile Remove="Migrations\20200418055653_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20200418055705_test.cs" />
     <Compile Remove="Migrations\20200418055705_test.Designer.cs" />
+    <Compile Remove="Migrations\20200418063149_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200418063149_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200418080507_newFieldAdded.cs" />
+    <Compile Remove="Migrations\20200418080507_newFieldAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200419214353_AddCompanyEmail.cs" />
+    <Compile Remove="Migrations\20200419214353_AddCompanyEmail.Designer.cs" />
+    <Compile Remove="Migrations\20200421055940_AddedWageAmountToLabourerSkillJob.cs" />
+    <Compile Remove="Migrations\20200421055940_AddedWageAmountToLabourerSkillJob.Designer.cs" />
     <Compile Remove="Migrations\20200421200131_AddLabourerAvailabilitySkills.cs" />
     <Compile Remove="Migrations\20200421200131_AddLabourerAvailabilitySkills.Designer.cs" />
+    <Compile Remove="Migrations\20200421201617_AddLabourerAvailability.cs" />
+    <Compile Remove="Migrations\20200421201617_AddLabourerAvailability.Designer.cs" />
     <Compile Remove="Migrations\20200422204514_companyReating.cs" />
     <Compile Remove="Migrations\20200422204514_companyReating.Designer.cs" />
+    <Compile Remove="Migrations\20200422205052_companyReating.cs" />
+    <Compile Remove="Migrations\20200422205052_companyReating.Designer.cs" />
     <Compile Remove="Migrations\20200423052145_addJobRating.cs" />
     <Compile Remove="Migrations\20200423052145_addJobRating.Designer.cs" />
     <Compile Remove="Migrations\20200423190513_jobRatingAdded.cs" />
     <Compile Remove="Migrations\20200423190513_jobRatingAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200423193717_jobRating.cs" />
+    <Compile Remove="Migrations\20200423193717_jobRating.Designer.cs" />
+    <Compile Remove="Migrations\20200424060031_RemoveIsActive.cs" />
+    <Compile Remove="Migrations\20200424060031_RemoveIsActive.Designer.cs" />
+    <Compile Remove="Migrations\20200424060757_RemoveIsActive.cs" />
+    <Compile Remove="Migrations\20200424060757_RemoveIsActive.Designer.cs" />
+    <Compile Remove="Migrations\20200424062136_RemoveIsActive.cs" />
+    <Compile Remove="Migrations\20200424062136_RemoveIsActive.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ namespace RecruitmentSystemAPI.Models
         public Job()
         {
             JobSkills = new HashSet<JobSkill>();
-            LabourerSkillJobs = new HashSet<LabourerSkillJob>();
+            LabourerJobs = new HashSet<LabourerJob>();
         }
 
         public int Id { get; set; }
@@ -29,6 +29,6 @@ namespace RecruitmentSystemAPI.Models
 
         public virtual Company Company { get; set; }
         public virtual ICollection<JobSkill> JobSkills { get; set; }
-        public virtual ICollection<LabourerSkillJob> LabourerSkillJobs { get; set; }
+        public virtual ICollection<LabourerJob> LabourerJobs { get; set; }
     }
 }
