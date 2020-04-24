@@ -135,8 +135,7 @@ namespace RecruitmentSystemAPI.Repositories
                 {
                     Job = job,
                     SkillId = skillFromClient.SkillId,
-                    NumberOfLabourersNeeded = skillFromClient.NumberOfLabourersNeeded,
-                    IsActive = skillFromClient.IsActive
+                    NumberOfLabourersNeeded = skillFromClient.NumberOfLabourersNeeded
                 };
                 _context.JobSkills.Add(newJobSkill);
             }
@@ -197,7 +196,6 @@ namespace RecruitmentSystemAPI.Repositories
                     Job = job,
                     SkillId = skill.SkillId,
                     NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded,
-                    IsActive = skill.IsActive
                 };
                 _context.JobSkills.Add(newJobSkill);
             }

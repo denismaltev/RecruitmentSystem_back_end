@@ -9,7 +9,7 @@ using RecruitmentSystemAPI.Models;
 namespace RecruitmentSystemAPI.Migrations
 {
     [DbContext(typeof(RecruitmentSystemContext))]
-    [Migration("20200418063149_InitialCreate")]
+    [Migration("20200424062542_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,6 +172,11 @@ namespace RecruitmentSystemAPI.Migrations
                         .HasMaxLength(250)
                         .IsUnicode(false);
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .IsUnicode(false);
+
                     b.Property<bool>("IsActive");
 
                     b.Property<string>("Name")
@@ -186,6 +191,9 @@ namespace RecruitmentSystemAPI.Migrations
                     b.Property<string>("Province")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<float>("Rating")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -250,6 +258,8 @@ namespace RecruitmentSystemAPI.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<float>("Rating");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime");
 
@@ -275,8 +285,6 @@ namespace RecruitmentSystemAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("IsActive");
-
                     b.Property<int>("JobId");
 
                     b.Property<int>("NumberOfLabourersNeeded");
@@ -301,6 +309,8 @@ namespace RecruitmentSystemAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(450)
                         .IsUnicode(false);
+
+                    b.Property<int>("Availability");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -336,6 +346,14 @@ namespace RecruitmentSystemAPI.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<float>("QualityRating")
+                        .HasMaxLength(450)
+                        .IsUnicode(false);
+
+                    b.Property<float>("SafetyRating")
+                        .HasMaxLength(450)
+                        .IsUnicode(false);
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(450);
@@ -347,12 +365,44 @@ namespace RecruitmentSystemAPI.Migrations
                     b.ToTable("Labourers");
                 });
 
-            modelBuilder.Entity("RecruitmentSystemAPI.Models.LabourerSkill", b =>
+            modelBuilder.Entity("RecruitmentSystemAPI.Models.LabourerJob", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("IsActive");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("JobId");
+
+                    b.Property<int?>("JobRating");
+
+                    b.Property<int>("LabourerId");
+
+                    b.Property<int?>("QualityRating");
+
+                    b.Property<int?>("SafetyRating");
+
+                    b.Property<int>("SkillId");
+
+                    b.Property<decimal>("WageAmount")
+                        .HasColumnType("decimal(18, 0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("LabourerId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("LabourerJobs");
+                });
+
+            modelBuilder.Entity("RecruitmentSystemAPI.Models.LabourerSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("LabourerId");
 
@@ -365,33 +415,6 @@ namespace RecruitmentSystemAPI.Migrations
                     b.HasIndex("SkillId");
 
                     b.ToTable("LabourerSkills");
-                });
-
-            modelBuilder.Entity("RecruitmentSystemAPI.Models.LabourerSkillJob", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("JobId");
-
-                    b.Property<int?>("JobRating");
-
-                    b.Property<int>("LabourerSkillId");
-
-                    b.Property<int?>("QualityRating");
-
-                    b.Property<int?>("SafetyRating");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JobId");
-
-                    b.HasIndex("LabourerSkillId");
-
-                    b.ToTable("LabourerSkillJobs");
                 });
 
             modelBuilder.Entity("RecruitmentSystemAPI.Models.Skill", b =>
@@ -554,6 +577,24 @@ namespace RecruitmentSystemAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("RecruitmentSystemAPI.Models.LabourerJob", b =>
+                {
+                    b.HasOne("RecruitmentSystemAPI.Models.Job", "Job")
+                        .WithMany("LabourerJobs")
+                        .HasForeignKey("JobId")
+                        .HasConstraintName("FK_LabourerJob_Jobs");
+
+                    b.HasOne("RecruitmentSystemAPI.Models.Labourer", "Labourer")
+                        .WithMany("LabourerJobs")
+                        .HasForeignKey("LabourerId")
+                        .HasConstraintName("FK_LabourerJob_Labourers");
+
+                    b.HasOne("RecruitmentSystemAPI.Models.Skill", "Skill")
+                        .WithMany("LabourerJobs")
+                        .HasForeignKey("SkillId")
+                        .HasConstraintName("FK_LabourerJob_Skills");
+                });
+
             modelBuilder.Entity("RecruitmentSystemAPI.Models.LabourerSkill", b =>
                 {
                     b.HasOne("RecruitmentSystemAPI.Models.Labourer", "Labourer")
@@ -565,19 +606,6 @@ namespace RecruitmentSystemAPI.Migrations
                         .WithMany("LabourerSkills")
                         .HasForeignKey("SkillId")
                         .HasConstraintName("FK_LabourerSkills_Skills");
-                });
-
-            modelBuilder.Entity("RecruitmentSystemAPI.Models.LabourerSkillJob", b =>
-                {
-                    b.HasOne("RecruitmentSystemAPI.Models.Job", "Job")
-                        .WithMany("LabourerSkillJobs")
-                        .HasForeignKey("JobId")
-                        .HasConstraintName("FK_LabourerSkillJob_Jobs");
-
-                    b.HasOne("RecruitmentSystemAPI.Models.LabourerSkill", "LabourerSkill")
-                        .WithMany("LabourerSkillJobs")
-                        .HasForeignKey("LabourerSkillId")
-                        .HasConstraintName("FK_LabourerSkillJob_LabourerSkills");
                 });
 #pragma warning restore 612, 618
         }

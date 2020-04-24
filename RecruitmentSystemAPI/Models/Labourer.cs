@@ -29,5 +29,6 @@ namespace RecruitmentSystemAPI.Models
 
         public virtual SystemUser User { get; set; }
         public virtual ICollection<LabourerSkill> LabourerSkills { get; set; }
+        public virtual ICollection<LabourerJob> LabourerJobs { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace RecruitmentSystemAPI.Models
         {
             JobSkills = new HashSet<JobSkill>();
             LabourerSkills = new HashSet<LabourerSkill>();
+            LabourerJobs = new HashSet<LabourerJob>();
         }
 
         public int Id { get; set; }
@@ -19,5 +20,6 @@ namespace RecruitmentSystemAPI.Models
 
         public virtual ICollection<JobSkill> JobSkills { get; set; }
         public virtual ICollection<LabourerSkill> LabourerSkills { get; set; }
+        public virtual ICollection<LabourerJob> LabourerJobs { get; set; }
     }
 }

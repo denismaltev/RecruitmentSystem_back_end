@@ -32,7 +32,7 @@ namespace RecruitmentSystemAPI.Controllers
         // GET: api/LabourerJobs
         [HttpGet]
         [Authorize(Roles = "Labourer")]
-        public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerSkillJobs(int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
+        public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var labourerJobsRepo = new LabourerJobsRepo(_context);
             var userId = _userManager.GetUserId(User);
@@ -43,7 +43,7 @@ namespace RecruitmentSystemAPI.Controllers
         // POST: api/LabourerJobs
         [HttpPost]
         [Authorize(Roles = "Labourer")] //TODO: consider to remove the function, bc there is no option to add labourer's job from client
-        public ActionResult<LabourerJobVM> PostLabourerSkillJob([FromBody]LabourerJobVM labourerJobVM)
+        public ActionResult<LabourerJobVM> PostLabourerJob([FromBody]LabourerJobVM labourerJobVM)
         {
             if (ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace RecruitmentSystemAPI.Controllers
                 {
                     var labourerJobsRepo = new LabourerJobsRepo(_context);
                     var userId = _userManager.GetUserId(User);
-                    var result = labourerJobsRepo.AddLabourerSkillJob(labourerJobVM, userId);
+                    var result = labourerJobsRepo.AddLabourerJob(labourerJobVM, userId);
                     return Ok(result);
                 }
                 catch (Exception e)
