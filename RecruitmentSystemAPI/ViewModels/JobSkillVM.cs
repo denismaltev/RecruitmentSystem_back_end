@@ -11,11 +11,11 @@ namespace RecruitmentSystemAPI.ViewModels
     {
         [Required]
         [DisplayName("Skill Id")]
-        public int Id { get; set; }
+        public int SkillId { get; set; }
 
         [Required]
         [DisplayName("Name of Skill")]
-        public string Name { get; set; }
+        public string SkillName { get; set; }
 
         [Required]
         [DisplayName("Number Of Labourers Needed")]

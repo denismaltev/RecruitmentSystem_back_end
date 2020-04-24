@@ -76,8 +76,8 @@ namespace RecruitmentSystemAPI.Repositories
         {
             List<JobSkillVM> skillsList = _context.JobSkills.Where(js => js.JobId == id).Select(js => new JobSkillVM
             {
-                Id = js.Skill.Id,
-                Name = js.Skill.Name,
+                SkillId = js.Skill.Id,
+                SkillName = js.Skill.Name,
                 NumberOfLabourersNeeded = js.NumberOfLabourersNeeded,
                 IsActive = js.Skill.IsActive
             }).ToList();
@@ -101,7 +101,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
                 Friday = j.Weekdays.HasFlag(Weekdays.Friday),
                 Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
-                Skills = skillsList
+                JobSkills = skillsList
             }).FirstOrDefault();
         }
 
@@ -128,13 +128,13 @@ namespace RecruitmentSystemAPI.Repositories
                 _context.JobSkills.Remove(jobSkill);
             }
             // Add skills from client
-            List<JobSkillVM> skillsFromClient = jobVM.Skills;
+            List<JobSkillVM> skillsFromClient = jobVM.JobSkills;
             foreach(var skillFromClient in skillsFromClient)
             {
                 var newJobSkill = new JobSkill
                 {
                     Job = job,
-                    SkillId = skillFromClient.Id,
+                    SkillId = skillFromClient.SkillId,
                     NumberOfLabourersNeeded = skillFromClient.NumberOfLabourersNeeded,
                     IsActive = skillFromClient.IsActive
                 };
@@ -189,13 +189,13 @@ namespace RecruitmentSystemAPI.Repositories
             };
             _context.Jobs.Add(job);
 
-            List<JobSkillVM> Skills = jobVM.Skills;
+            List<JobSkillVM> Skills = jobVM.JobSkills;
             foreach(var skill in Skills)
             {
                 var newJobSkill = new JobSkill
                 {
                     Job = job,
-                    SkillId = skill.Id,
+                    SkillId = skill.SkillId,
                     NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded,
                     IsActive = skill.IsActive
                 };
