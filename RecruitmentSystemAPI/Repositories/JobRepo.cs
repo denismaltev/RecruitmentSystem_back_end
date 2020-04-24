@@ -16,6 +16,7 @@ namespace RecruitmentSystemAPI.Repositories
             _context = context;
         }
 
+        // This is only for admin:
         public IQueryable<JobVM> GetAllCompanyJobs()
         {
             return _context.Jobs.Select(j => new JobVM
@@ -36,7 +37,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
                 Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
                 Friday = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
+                IsActive = j.IsActive
             });
         }
 

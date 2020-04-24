@@ -28,7 +28,7 @@ namespace RecruitmentSystemAPI.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("admin")]
         [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<JobVM>> GetAllCompanyJobs()
         {
@@ -44,7 +44,7 @@ namespace RecruitmentSystemAPI.Controllers
         // Get all jobs for ONE company
         // GET: api/Jobs
         [HttpGet]
-        [Authorize(Roles = "Company")]
+        [Authorize(Roles = "Company, Admin")]
         public ActionResult<IEnumerable<JobVM>> GetJobs()
         {
             var jobRepo = new JobRepo(_context);
@@ -56,7 +56,7 @@ namespace RecruitmentSystemAPI.Controllers
         // Get ONE job from ONE company
         // GET: api/Jobs/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "Company")]
+        [Authorize(Roles = "Company, Admin")]
         public ActionResult<JobVM> GetJob(int id)
         {
             var jobRepo = new JobRepo(_context);
