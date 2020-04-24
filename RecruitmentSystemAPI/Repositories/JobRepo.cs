@@ -21,50 +21,53 @@ namespace RecruitmentSystemAPI.Repositories
         {
             return _context.Jobs.Select(j => new JobVM
             {
-                Id = j.Id,
-                CompanyId = j.CompanyId,
-                Title = j.Title,
+                Id          = j.Id,
+                CompanyId   = j.CompanyId,
+                Title       = j.Title,
                 Description = j.Description,
-                City = j.City,
-                Province = j.Province,
-                Country = j.Country,
-                Address = j.Address,
-                StartDate = j.StartDate,
-                EndDate = j.EndDate,
-                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
-                IsActive = j.IsActive
+                City        = j.City,
+                Province    = j.Province,
+                Country     = j.Country,
+                Address     = j.Address,
+                Rating      = j.Rating,
+                StartDate   = j.StartDate,
+                EndDate     = j.EndDate,
+                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday),
+                IsActive    = j.IsActive
             });
         }
 
         public List<JobVM> GetCompanyJobsByUserId(string userId)
         {
             var jobs = _context.CompanyUsers.Where(cu => cu.UserId == userId).Include(cu => cu.Company).ThenInclude(c => c.Jobs).Select(c => c.Company.Jobs).FirstOrDefault();
+            //if(jobs == null) 
             return jobs.Select(j => new JobVM
             {
-                Id = j.Id,
-                Title = j.Title,
+                Id          = j.Id,
+                CompanyId   = j.CompanyId,
+                Title       = j.Title,
                 Description = j.Description,
-                City = j.City,
-                Province = j.Province,
-                Country = j.Country,
-                Address = j.Address,
-                Rating = j.Rating,
-                StartDate = j.StartDate,
-                EndDate = j.EndDate,
-                IsActive = j.IsActive,
-                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+                City        = j.City,
+                Province    = j.Province,
+                Country     = j.Country,
+                Address     = j.Address,
+                Rating      = j.Rating,
+                StartDate   = j.StartDate,
+                EndDate     = j.EndDate,
+                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday),
+                IsActive    = j.IsActive
             }).ToList();
         }
 
@@ -76,24 +79,24 @@ namespace RecruitmentSystemAPI.Repositories
                  .OrderByDescending(cId => cId.StartDate).Skip(count * (page - 1)).Take(count)
                  .Select(j =>  new JobVM
             {
-                Id = j.Id,
-                Title = j.Title,
+                Id          = j.Id,
+                Title       = j.Title,
                 Description = j.Description,
-                City = j.City,
-                Province = j.Province,
-                Country = j.Country,
-                Address = j.Address,
-                Rating = j.Rating,
-                StartDate = j.StartDate,
-                EndDate = j.EndDate,
-                IsActive = j.IsActive,
-                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+                City        = j.City,
+                Province    = j.Province,
+                Country     = j.Country,
+                Address     = j.Address,
+                Rating      = j.Rating,
+                StartDate   = j.StartDate,
+                EndDate     = j.EndDate,
+                IsActive    = j.IsActive,
+                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday)
             }).ToList();
             return jobs;
         }
@@ -102,23 +105,24 @@ namespace RecruitmentSystemAPI.Repositories
         {
             return _context.Jobs.Where(j => j.Id == id).Select(j => new JobVM
             {
-                Id = j.Id,
-                Title = j.Title,
+                Id          = j.Id,
+                Title       = j.Title,
                 Description = j.Description,
-                City = j.City,
-                Province = j.Province,
-                Country = j.Country,
-                Address = j.Address,
-                StartDate = j.StartDate,
-                EndDate = j.EndDate,
-                IsActive = j.IsActive,
-                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+                City        = j.City,
+                Province    = j.Province,
+                Country     = j.Country,
+                Address     = j.Address,
+                Rating      = j.Rating,
+                StartDate   = j.StartDate,
+                EndDate     = j.EndDate,
+                IsActive    = j.IsActive,
+                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday)
             }).FirstOrDefault();
         }
 
@@ -127,16 +131,16 @@ namespace RecruitmentSystemAPI.Repositories
             var job = _context.Jobs.FirstOrDefault(c => c.Id == jobVM.Id);
             if (job == null) throw new KeyNotFoundException();
 
-            job.Title = jobVM.Title;
+            job.Title       = jobVM.Title;
             job.Description = jobVM.Description;
-            job.City = jobVM.City;
-            job.Province = jobVM.Province;
-            job.Country = jobVM.Country;
-            job.Address = jobVM.Address;
-            job.StartDate = jobVM.StartDate;
-            job.EndDate = jobVM.EndDate;
-            job.IsActive = jobVM.IsActive;
-            job.Weekdays = ConvertJobWeekdaysToEnum(jobVM);
+            job.City        = jobVM.City;
+            job.Province    = jobVM.Province;
+            job.Country     = jobVM.Country;
+            job.Address     = jobVM.Address;
+            job.StartDate   = jobVM.StartDate;
+            job.EndDate     = jobVM.EndDate;
+            job.IsActive    = jobVM.IsActive;
+            job.Weekdays    = ConvertJobWeekdaysToEnum(jobVM);
 
             _context.Update(job);
             _context.SaveChanges();
@@ -172,17 +176,17 @@ namespace RecruitmentSystemAPI.Repositories
             var companyId = _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId;
             var job = new Job
             {
-                CompanyId = companyId,
-                Title = jobVM.Title,
-                Description = jobVM.Description,
-                City = jobVM.City,
-                Province = jobVM.Province,
-                Country = jobVM.Country,
-                Address = jobVM.Address,
-                StartDate = jobVM.StartDate,
-                EndDate = jobVM.EndDate,
-                IsActive = jobVM.IsActive,
-                Weekdays = ConvertJobWeekdaysToEnum(jobVM)
+                CompanyId    = companyId,
+                Title        = jobVM.Title,
+                Description  = jobVM.Description,
+                City         = jobVM.City,
+                Province     = jobVM.Province,
+                Country      = jobVM.Country,
+                Address      = jobVM.Address,
+                StartDate    = jobVM.StartDate,
+                EndDate      = jobVM.EndDate,
+                IsActive     = jobVM.IsActive,
+                Weekdays     = ConvertJobWeekdaysToEnum(jobVM)
             };
 
             _context.Jobs.Add(job);
