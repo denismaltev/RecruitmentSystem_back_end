@@ -41,5 +41,6 @@ namespace RecruitmentSystemAPI.ViewModels
         [Required]
         public bool Saturday { get; set; }
         public bool IsActive { get; set; }
+        public List<JobSkillVM> JobSkills { get; set; }
     }
 }
