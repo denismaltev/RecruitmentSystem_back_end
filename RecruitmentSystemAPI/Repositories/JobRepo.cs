@@ -74,6 +74,14 @@ namespace RecruitmentSystemAPI.Repositories
 
         public JobVM GetJobById(int id)
         {
+            List<JobSkillVM> skillsList = _context.JobSkills.Where(js => js.JobId == id).Select(js => new JobSkillVM
+            {
+                SkillId = js.Skill.Id,
+                SkillName = js.Skill.Name,
+                NumberOfLabourersNeeded = js.NumberOfLabourersNeeded,
+                IsActive = js.Skill.IsActive
+            }).ToList();
+
             return _context.Jobs.Where(j => j.Id == id).Select(j => new JobVM
             {
                 Id = j.Id,
@@ -92,7 +100,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
                 Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
                 Friday = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
+                JobSkills = skillsList
             }).FirstOrDefault();
         }
 
@@ -111,6 +120,26 @@ namespace RecruitmentSystemAPI.Repositories
             job.EndDate = jobVM.EndDate;
             job.IsActive = jobVM.IsActive;
             job.Weekdays = ConvertJobWeekdaysToEnum(jobVM);
+
+            // Delete old skills
+            var jobSkills = _context.JobSkills.Where(js => js.JobId == jobVM.Id);
+            foreach(var jobSkill in jobSkills)
+            {
+                _context.JobSkills.Remove(jobSkill);
+            }
+            // Add skills from client
+            List<JobSkillVM> skillsFromClient = jobVM.JobSkills;
+            foreach(var skillFromClient in skillsFromClient)
+            {
+                var newJobSkill = new JobSkill
+                {
+                    Job = job,
+                    SkillId = skillFromClient.SkillId,
+                    NumberOfLabourersNeeded = skillFromClient.NumberOfLabourersNeeded,
+                    IsActive = skillFromClient.IsActive
+                };
+                _context.JobSkills.Add(newJobSkill);
+            }
 
             _context.Update(job);
             _context.SaveChanges();
@@ -158,8 +187,20 @@ namespace RecruitmentSystemAPI.Repositories
                 IsActive = jobVM.IsActive,
                 Weekdays = ConvertJobWeekdaysToEnum(jobVM)
             };
-
             _context.Jobs.Add(job);
+
+            List<JobSkillVM> Skills = jobVM.JobSkills;
+            foreach(var skill in Skills)
+            {
+                var newJobSkill = new JobSkill
+                {
+                    Job = job,
+                    SkillId = skill.SkillId,
+                    NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded,
+                    IsActive = skill.IsActive
+                };
+                _context.JobSkills.Add(newJobSkill);
+            }
             _context.SaveChanges();
             return jobVM;
         }
