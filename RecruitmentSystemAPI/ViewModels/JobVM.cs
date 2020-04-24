@@ -20,6 +20,8 @@ namespace RecruitmentSystemAPI.ViewModels
         public string Country { get; set; }
         [Required]
         public string Address { get; set; }
+
+        public float Rating { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         [Required]
