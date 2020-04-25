@@ -9,11 +9,22 @@ namespace RecruitmentSystemAPI.Repositories
 {
     public class SkillsRepo
     {
-        RecruitmentSystemContext _context;
+        private readonly RecruitmentSystemContext _context;
         public SkillsRepo(RecruitmentSystemContext context)
         {
             _context = context;
         }
+
+        public IQueryable<BaseSkillsVM> GetSkillsDDL()
+        {
+            return _context.Skills.Where(s => s.IsActive).Select(s => new BaseSkillsVM
+            {
+                Id = s.Id,
+                Name = s.Name,
+                IsActive = s.IsActive
+            });
+        }
+
 
         // GET all skills list
         public IQueryable<SkillsVM> GetSkills()
@@ -62,11 +73,12 @@ namespace RecruitmentSystemAPI.Repositories
                 Name = skillsVM.Name,
                 ChargeAmount = skillsVM.ChargeAmount,
                 PayAmount = skillsVM.PayAmount,
-                IsActive = skillsVM.IsActive
+                IsActive = true
             };
             _context.Skills.Add(skill);
             _context.SaveChanges();
             skillsVM.Id = skill.Id;
+            skillsVM.IsActive = true;
             return skillsVM;
         }
 

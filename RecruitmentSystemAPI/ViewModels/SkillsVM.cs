@@ -7,23 +7,12 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.ViewModels
 {
-    public class SkillsVM
+    public class SkillsVM : BaseSkillsVM
     {
-        public int? Id { get; set; }
-
         [Required]
-        [DisplayName("Name of Skill")]
-        public string Name { get; set; }
-
-        [Required]
-        [DisplayName("Amount to charge client")]
         public decimal ChargeAmount { get; set; }
 
         [Required]
-        [DisplayName("Amount to pay labourer")]
         public decimal PayAmount { get; set; }
-
-        [Required]
-        public bool IsActive { get; set; }
     }
 }

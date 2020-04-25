@@ -22,7 +22,7 @@ namespace RecruitmentSystemAPI.Repositories
 
         public IQueryable<LabourerVM> GetLabourers()
         {
-            return _context.Labourers.Include(l=>l.User).Select(l => new LabourerVM
+            return _context.Labourers.Include(l => l.User).Select(l => new LabourerVM
             {
                 Id = l.Id,
                 FirstName = l.FirstName,
@@ -43,13 +43,11 @@ namespace RecruitmentSystemAPI.Repositories
                 Friday = l.Availability.HasFlag(Weekdays.Friday),
                 Saturday = l.Availability.HasFlag(Weekdays.Saturday),
                 Skills = _context.LabourerSkills.Where(ls => ls.LabourerId == l.Id)
-                                                .Select(ls => new SkillsVM
-                                                {
-                                                    Id = ls.Id,
-                                                    Name = ls.Skill.Name,
-                                                    ChargeAmount = ls.Skill.ChargeAmount,
-                                                    PayAmount = ls.Skill.PayAmount,
-                                                }).ToList(),
+                  .Select(ls => new BaseSkillsVM
+                  {
+                      Id = ls.Id,
+                      Name = ls.Skill.Name
+                  }).ToList(),
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
             });
@@ -57,7 +55,7 @@ namespace RecruitmentSystemAPI.Repositories
 
         public LabourerVM GetLabourerById(int id)
         {
-            return _context.Labourers.Where(l => l.Id == id).Include(l=>l.User).Select(l => new LabourerVM
+            return _context.Labourers.Where(l => l.Id == id).Include(l => l.User).Select(l => new LabourerVM
             {
                 Id = l.Id,
                 FirstName = l.FirstName,
@@ -80,16 +78,13 @@ namespace RecruitmentSystemAPI.Repositories
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
                 Skills = _context.LabourerSkills.Where(ls => ls.LabourerId == l.Id)
-                                                .Select(ls => new SkillsVM {
-                                                    Id              = ls.Id,
-                                                    Name            = ls.Skill.Name,
-                                                    ChargeAmount    = ls.Skill.ChargeAmount,
-                                                    PayAmount       = ls.Skill.PayAmount,
-                                                }).ToList()
+                      .Select(ls => new BaseSkillsVM
+                      {
+                          Id = ls.Id,
+                          Name = ls.Skill.Name
+                      }).ToList()
             }).FirstOrDefault();
         }
-
-
 
         public async Task UpdateLabourer(LabourerVM labourerVM)
         {
