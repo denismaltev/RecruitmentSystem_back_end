@@ -110,8 +110,8 @@ namespace RecruitmentSystemAPI.Repositories
         {
             List<JobSkillVM> skillsList = _context.JobSkills.Where(js => js.JobId == id).Select(js => new JobSkillVM
             {
-                SkillId                 = js.Skill.Id,
-                SkillName               = js.Skill.Name,
+                Id                 = js.Skill.Id,
+                Name               = js.Skill.Name,
                 NumberOfLabourersNeeded = js.NumberOfLabourersNeeded,
                 IsActive                = js.Skill.IsActive
             }).ToList();
@@ -155,24 +155,29 @@ namespace RecruitmentSystemAPI.Repositories
             job.EndDate     = jobVM.EndDate;
             job.IsActive    = jobVM.IsActive;
             job.Weekdays    = ConvertJobWeekdaysToEnum(jobVM);
-
-            // Delete old skills
-            var jobSkills = _context.JobSkills.Where(js => js.JobId == jobVM.Id);
-            foreach(var jobSkill in jobSkills)
+         
+            var jobSkills = _context.JobSkills.Where(js => js.JobId == jobVM.Id).ToList();
+            if (jobSkills != null && jobSkills.Count > 0)
             {
-                _context.JobSkills.Remove(jobSkill);
-            }
-            // Add skills from client
-            List<JobSkillVM> skillsFromClient = jobVM.JobSkills;
-            foreach(var skillFromClient in skillsFromClient)
-            {
-                var newJobSkill = new JobSkill
+                var skillsToDelete = jobSkills.Where(s => !jobVM.JobSkills.Any(ls => ls.Id == s.SkillId)).ToList();
+                if (skillsToDelete != null && skillsToDelete.Count > 0)
                 {
-                    Job = job,
-                    SkillId = skillFromClient.SkillId,
-                    NumberOfLabourersNeeded = skillFromClient.NumberOfLabourersNeeded
-                };
-                _context.JobSkills.Add(newJobSkill);
+                    _context.JobSkills.RemoveRange(skillsToDelete);
+                }
+            }
+
+            var newSkills = jobVM.JobSkills.Where(s => !jobSkills.Any(ls => ls.SkillId == s.Id)).ToList();
+            if (newSkills != null && newSkills.Count > 0)
+            {
+                foreach (var skill in newSkills)
+                {
+                    var newSkill = new JobSkill
+                    {
+                        JobId = job.Id,
+                        SkillId = skill.Id.Value
+                    };
+                    _context.Add(newSkill);
+                }
             }
 
             _context.Update(job);
@@ -229,7 +234,7 @@ namespace RecruitmentSystemAPI.Repositories
                 var newJobSkill = new JobSkill
                 {
                     Job = job,
-                    SkillId = skill.SkillId,
+                    SkillId = skill.Id.Value,
                     NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded,
                 };
                 _context.JobSkills.Add(newJobSkill);
