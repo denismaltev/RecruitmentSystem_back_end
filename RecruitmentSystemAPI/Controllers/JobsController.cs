@@ -28,7 +28,7 @@ namespace RecruitmentSystemAPI.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("admin")]
+        [HttpGet("all")]
         [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<JobVM>> GetAllCompanyJobs()
         {
@@ -43,9 +43,9 @@ namespace RecruitmentSystemAPI.Controllers
 
         // Get all jobs for ONE company
         //GET: api/Jobs
-       [HttpGet]
-       [Authorize(Roles = "Company")]
-        public ActionResult<IEnumerable<JobVM>> GetJobs(int? companyId, int count=20, int page =1, DateTime? fromDate = null, DateTime? toDate = null)
+        [HttpGet]
+        [Authorize(Roles = "Company, Admin")]
+        public ActionResult<IEnumerable<JobVM>> GetJobs(int? companyId, int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var jobRepo = new JobRepo(_context);
             var userId = _userManager.GetUserId(User);
@@ -53,11 +53,12 @@ namespace RecruitmentSystemAPI.Controllers
             {
                 var result = jobRepo.GetCompanyJobsByUserId(userId);
                 return Ok(result);
-            }else
-            { 
+            }
+            else
+            {
                 //2020 - 04 - 21T00: 00:00
                 var result = jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
-                 return Ok(result);
+                return Ok(result);
             }
         }
 

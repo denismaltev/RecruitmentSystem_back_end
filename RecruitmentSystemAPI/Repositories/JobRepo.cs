@@ -45,7 +45,12 @@ namespace RecruitmentSystemAPI.Repositories
 
         public List<JobVM> GetCompanyJobsByUserId(string userId)
         {
-            var jobs = _context.CompanyUsers.Where(cu => cu.UserId == userId).Include(cu => cu.Company).ThenInclude(c => c.Jobs).Select(c => c.Company.Jobs).FirstOrDefault();
+            var jobs = _context.CompanyUsers
+                .Where(cu => cu.UserId == userId)
+                .Include(cu => cu.Company)
+                .ThenInclude(c => c.Jobs)
+                .Select(c => c.Company.Jobs)
+                .FirstOrDefault();
             //if(jobs == null) 
             return jobs.Select(j => new JobVM
             {
@@ -73,31 +78,31 @@ namespace RecruitmentSystemAPI.Repositories
 
         public List<JobVM> GetJobsByCompanyId(int companyId, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
         {
-           var jobs = _context.Jobs
-                 .Where(cId => cId.CompanyId == companyId)
-                 .Where(cId => (!fromDate.HasValue || cId.StartDate >= fromDate) && (!toDate.HasValue || cId.EndDate < toDate))
-                 .OrderByDescending(cId => cId.StartDate).Skip(count * (page - 1)).Take(count)
-                 .Select(j =>  new JobVM
-            {
-                Id          = j.Id,
-                Title       = j.Title,
-                Description = j.Description,
-                City        = j.City,
-                Province    = j.Province,
-                Country     = j.Country,
-                Address     = j.Address,
-                Rating      = j.Rating,
-                StartDate   = j.StartDate,
-                EndDate     = j.EndDate,
-                IsActive    = j.IsActive,
-                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday)
-            }).ToList();
+            var jobs = _context.Jobs
+                  .Where(cId => cId.CompanyId == companyId)
+                  .Where(cId => (!fromDate.HasValue || cId.StartDate >= fromDate) && (!toDate.HasValue || cId.EndDate < toDate))
+                  .OrderByDescending(cId => cId.StartDate).Skip(count * (page - 1)).Take(count)
+                  .Select(j => new JobVM
+                  {
+                      Id = j.Id,
+                      Title = j.Title,
+                      Description = j.Description,
+                      City = j.City,
+                      Province = j.Province,
+                      Country = j.Country,
+                      Address = j.Address,
+                      Rating = j.Rating,
+                      StartDate = j.StartDate,
+                      EndDate = j.EndDate,
+                      IsActive = j.IsActive,
+                      Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
+                      Monday = j.Weekdays.HasFlag(Weekdays.Monday),
+                      Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                      Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                      Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
+                      Friday = j.Weekdays.HasFlag(Weekdays.Friday),
+                      Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
+                  }).ToList();
             return jobs;
         }
 
