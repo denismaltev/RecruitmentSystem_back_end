@@ -64,12 +64,19 @@ namespace RecruitmentSystemAPI.Controllers
         [HttpPut]
         [Route("UpdateJobRating")]
         [Authorize(Roles = "Labourer")]
-        public ActionResult UpdateJobRating([FromQuery]int idToGrade, [FromQuery] int rating)
+        public ActionResult UpdateJobRating(int idToGrade, int rating)
         {
-            var labourerJobsRepo = new LabourerJobsRepo(_context);
-            var usesrId = _userManager.GetUserId(User);
-            labourerJobsRepo.UpdateJobRating(idToGrade, rating, usesrId);
-            return Ok();
+            try
+            {
+                var labourerJobsRepo = new LabourerJobsRepo(_context);
+                var usesrId = _userManager.GetUserId(User);
+                labourerJobsRepo.UpdateJobRating(idToGrade, rating, usesrId);
+                return Ok();
+            }
+                catch (Exception e)
+                {
+                    return StatusCode(500, new { message = e.Message });
+                }
         }
     }
 }
