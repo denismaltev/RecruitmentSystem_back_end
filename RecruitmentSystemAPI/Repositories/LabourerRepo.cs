@@ -110,18 +110,18 @@ namespace RecruitmentSystemAPI.Repositories
                 labourer.IsActive = labourerVM.IsActive;
                 labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
             }
-            var existingSkills = labourerVM.Skills.Where(s  => labourer.LabourerSkills.Any(ls  =>  ls.SkillId == s.Id));
-            if(existingSkills != null)
+
+            if(labourer.LabourerSkills != null)
             {
-                foreach (var skill in existingSkills)
+                var skillsToDelete = labourer.LabourerSkills.Where(s => !labourerVM.Skills.Any(ls => ls.Id == s.SkillId)).ToList();
+                if(skillsToDelete != null && skillsToDelete.Count > 0)
                 {
-                    var oldSkill = labourer.LabourerSkills.FirstOrDefault(s => s.SkillId == skill.Id.Value);
-                    _context.Update(oldSkill);
+                    _context.LabourerSkills.RemoveRange(skillsToDelete);
                 }
             }
             
-            var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id));
-            if(newSkills != null)
+            var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id)).ToList();
+            if(newSkills != null && newSkills.Count > 0)
             {
                 foreach (var skill in newSkills)
                 {
