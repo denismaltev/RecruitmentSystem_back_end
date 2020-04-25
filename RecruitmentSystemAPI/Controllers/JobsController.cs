@@ -66,7 +66,7 @@ namespace RecruitmentSystemAPI.Controllers
             {
                 var jobRepo = new JobRepo(_context);
                 var result = jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
-                if (result == null || result.IsEmpty())
+                if (result.Count == 0 )
                 {
                     return NotFound();
                 }
