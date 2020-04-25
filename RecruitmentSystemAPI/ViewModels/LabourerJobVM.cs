@@ -15,7 +15,7 @@ namespace RecruitmentSystemAPI.ViewModels
         public DateTime Date { get; set; }
         public int? SafetyRating { get; set; }
         public int? QualityRating { get; set; }
-        public int? JobRating { get; set; }
+        public float? JobRating { get; set; }
         public decimal WageAmount { get; set; }
     }
 }
