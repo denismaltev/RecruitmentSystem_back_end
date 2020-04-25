@@ -157,7 +157,20 @@ namespace RecruitmentSystemAPI.Repositories
                 var skillsToDelete = jobSkills.Where(s => !jobVM.JobSkills.Any(ls => ls.Id == s.SkillId)).ToList();
                 if (skillsToDelete != null && skillsToDelete.Count > 0)
                 {
-                    _context.JobSkills.RemoveRange(skillsToDelete);
+                    if (skillsToDelete != null && skillsToDelete.Count > 0)
+                    {
+                        _context.JobSkills.RemoveRange(skillsToDelete);
+                    }
+                }
+
+                var skillsToUpdate = jobSkills.Where(s => jobVM.JobSkills.Any(ls => ls.Id == s.SkillId)).ToList();
+                if(skillsToUpdate != null && skillsToUpdate.Count > 0)
+                {
+                    foreach (var skill in skillsToUpdate)
+                    {
+                        skill.NumberOfLabourersNeeded = jobVM.JobSkills.FirstOrDefault(s => s.Id == skill.SkillId).NumberOfLabourersNeeded;
+                        _context.Update(skill);
+                    }
                 }
             }
 
