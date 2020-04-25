@@ -61,6 +61,15 @@ namespace RecruitmentSystemAPI.Controllers
             }
             return BadRequest();
         }
-        //[HttpPost("lavoourer")]
+        [HttpPut]
+        [Route("UpdateJobRating")]
+        [Authorize(Roles = "Labourer")]
+        public ActionResult UpdateJobRating([FromQuery]int idToGrade, [FromQuery] int rating)
+        {
+            var labourerJobsRepo = new LabourerJobsRepo(_context);
+            var usesrId = _userManager.GetUserId(User);
+            labourerJobsRepo.UpdateJobRating(idToGrade, rating, usesrId);
+            return Ok();
+        }
     }
 }
