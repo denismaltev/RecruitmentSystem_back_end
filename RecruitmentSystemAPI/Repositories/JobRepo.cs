@@ -45,7 +45,12 @@ namespace RecruitmentSystemAPI.Repositories
 
         public List<JobVM> GetCompanyJobsByUserId(string userId)
         {
-            var jobs = _context.CompanyUsers.Where(cu => cu.UserId == userId).Include(cu => cu.Company).ThenInclude(c => c.Jobs).Select(c => c.Company.Jobs).FirstOrDefault();
+            var jobs = _context.CompanyUsers
+                .Where(cu => cu.UserId == userId)
+                .Include(cu => cu.Company)
+                .ThenInclude(c => c.Jobs)
+                .Select(c => c.Company.Jobs)
+                .FirstOrDefault();
             //if(jobs == null) 
             return jobs.Select(j => new JobVM
             {
