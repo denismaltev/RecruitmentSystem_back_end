@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
-    public class LabourerJobsRepo
+    public class LabourerJobsRepo : BaseRepo
     {
-        private readonly RecruitmentSystemContext _context;
-        public LabourerJobsRepo(RecruitmentSystemContext context)
+        public LabourerJobsRepo(RecruitmentSystemContext context) : base(context)
         {
-            _context = context;
         }
 
         public IQueryable<LabourerJobVM> GetLabourerJobsByUserId(string userId, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
