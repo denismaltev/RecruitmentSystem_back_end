@@ -48,44 +48,18 @@ namespace RecruitmentSystemAPI.Controllers
         public ActionResult<IEnumerable<JobVM>> GetJobs(int? companyId, int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var jobRepo = new JobRepo(_context);
-            if (User.IsInRole("Admin"))
+            var userId = _userManager.GetUserId(User);
+            if (!companyId.HasValue)
             {
-                if (companyId == null)
-                {
-                    return NotFound();
-                }
-                else 
-                {
-                    var result = jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
-                    if (result.Count == 0)
-                    {
-                        return NotFound();
-                    } else
-                    {
-                        return Ok(result);
-                    }
-                }
-            }
-            else if (User.IsInRole("Company"))
-            {
-                var userId = _userManager.GetUserId(User);
-                if (!companyId.HasValue)
-                {
-                    var result = jobRepo.GetCompanyJobsByUserId(userId);
-                    return Ok(result);
-                }
-                else
-                {
-                    //2020 - 04 - 21T00: 00:00
-                    var result = jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
-                    return Ok(result);
-                }
+                var result = jobRepo.GetCompanyJobsByUserId(userId);
+                return Ok(result);
             }
             else
             {
-                return Unauthorized();
+                //2020 - 04 - 21T00: 00:00
+                var result = jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
+                return Ok(result);
             }
-            
         }
 
         // Get ONE job from ONE company
