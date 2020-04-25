@@ -169,7 +169,8 @@ namespace RecruitmentSystemAPI.Repositories
                     var newSkill = new JobSkill
                     {
                         JobId = job.Id,
-                        SkillId = skill.Id.Value
+                        SkillId = skill.Id.Value,
+                        NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded
                     };
                     _context.Add(newSkill);
                 }
@@ -223,16 +224,18 @@ namespace RecruitmentSystemAPI.Repositories
             };
             _context.Jobs.Add(job);
 
-            List<JobSkillVM> Skills = jobVM.JobSkills;
-            foreach(var skill in Skills)
+            if (jobVM.JobSkills != null && jobVM.JobSkills.Count > 0)
             {
-                var newJobSkill = new JobSkill
+                foreach (var skill in jobVM.JobSkills)
                 {
-                    Job = job,
-                    SkillId = skill.Id.Value,
-                    NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded,
-                };
-                _context.JobSkills.Add(newJobSkill);
+                    var newJobSkill = new JobSkill
+                    {
+                        Job = job,
+                        SkillId = skill.Id.Value,
+                        NumberOfLabourersNeeded = skill.NumberOfLabourersNeeded,
+                    };
+                    _context.JobSkills.Add(newJobSkill);
+                }
             }
             _context.SaveChanges();
             return jobVM;
