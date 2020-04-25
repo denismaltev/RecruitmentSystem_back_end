@@ -26,6 +26,17 @@ namespace RecruitmentSystemAPI.Controllers
 
         // GET: api/Skills
         [HttpGet]
+        [Route("GetSkillsDDL")]
+        public ActionResult<IEnumerable<BaseSkillsVM>> GetSkillsDDL()
+        {
+            var skillRepo = new SkillsRepo(_context);
+            var skills = skillRepo.GetSkillsDDL();
+            return Ok(skills);
+        }
+
+        // GET: api/Skills
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<SkillsVM>> GetAll()
         {
             var skillRepo = new SkillsRepo(_context);
