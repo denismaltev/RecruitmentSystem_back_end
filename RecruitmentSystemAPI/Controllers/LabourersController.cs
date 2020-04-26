@@ -75,8 +75,7 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Labourer")]
         public async Task<ActionResult<CompanyVM>> PostLabourer(LabourerVM labourerVM)
         {
-
-            try
+           try
             {
                 var userId = _userManager.GetUserId(User);
 
@@ -87,12 +86,11 @@ namespace RecruitmentSystemAPI.Controllers
 
                 var result = await _labourerRepo.AddLabourer(labourerVM, userId);
                 return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new { message = e.Message });
-            }
-
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(new { message = e.Message });
+                }
         }
     }
 }

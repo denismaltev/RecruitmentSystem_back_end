@@ -53,5 +53,21 @@ namespace RecruitmentSystemAPI.Repositories
             labourerJobVM.Id = labourerJob.Id;
             return labourerJobVM;
         }
+
+        public void UpdateJobRating(int idToGrade, int rating, string usesrId)
+        {
+            var x = idToGrade;
+            var jobToRate = _context.LabourerJobs.Where(ls => ls.Id == idToGrade && ls.Labourer.UserId == usesrId).FirstOrDefault();
+            if (jobToRate.JobRating ==null){
+                jobToRate.JobRating = rating;
+                _context.Update(jobToRate);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("You have already graded this job");
+            }
+        
+        }
     }
 }
