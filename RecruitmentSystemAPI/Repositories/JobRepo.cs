@@ -25,7 +25,8 @@ namespace RecruitmentSystemAPI.Repositories
             {
                 CompanyId   = j.CompanyId,
                 CompanyName = j.Company.Name,
-                Title       = j.Title
+                Title       = j.Title,
+                Rating      = j.Rating
             });
         }
 
