@@ -21,11 +21,13 @@ namespace RecruitmentSystemAPI.Controllers
     {
         private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
+        private readonly CompanyRepo _companyRepo;
 
-        public CompaniesController(RecruitmentSystemContext context, UserManager<SystemUser> userManager)
+        public CompaniesController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, CompanyRepo companyRepo)
         {
             _context = context;
             _userManager = userManager;
+            _companyRepo = companyRepo;
         }
 
         // GET: api/Companies
@@ -33,8 +35,7 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<CompanyVM>> GetCompanies()
         {
-            var companyRepo = new CompanyRepo(_context);
-            var result = companyRepo.GetCompanies();
+            var result = _companyRepo.GetCompanies();
             return Ok(result);
         }
 
@@ -42,8 +43,7 @@ namespace RecruitmentSystemAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<Company> GetCompany(int id)
         {
-            var companyRepo = new CompanyRepo(_context);
-            var result = companyRepo.GetCompanyById(id);
+            var result = _companyRepo.GetCompanyById(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
@@ -60,15 +60,14 @@ namespace RecruitmentSystemAPI.Controllers
                     return BadRequest();
                 }
 
-                var companyRepo = new CompanyRepo(_context);
                 try
                 {
-                    companyRepo.UpdateCompany(companyVM);
+                    _companyRepo.UpdateCompany(companyVM);
                     return Ok();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!companyRepo.CompanyExists(id))
+                    if (!_companyRepo.CompanyExists(id))
                     {
                         return NotFound();
                     }
@@ -96,13 +95,12 @@ namespace RecruitmentSystemAPI.Controllers
             {
                 try
                 {
-                    var companyRepo = new CompanyRepo(_context);
                     var userId = _userManager.GetUserId(User);
-                    if (companyRepo.GetUserCompanyId(userId).HasValue)
+                    if (_companyRepo.GetUserCompanyId(userId).HasValue)
                     {
                         return BadRequest(new { message = "Company already exist" });
                     }
-                    var result = companyRepo.AddCompany(companyVM, userId);
+                    var result = _companyRepo.AddCompany(companyVM, userId);
                     return Ok(result);
                 }
                 catch(Exception e)

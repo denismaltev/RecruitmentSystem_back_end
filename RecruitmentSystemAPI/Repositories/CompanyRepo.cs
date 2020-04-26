@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
-    public class CompanyRepo
+    public class CompanyRepo : BaseRepo
     {
-        private readonly RecruitmentSystemContext _context;
-        public CompanyRepo(RecruitmentSystemContext context)
+        public CompanyRepo(RecruitmentSystemContext context) : base(context)
         {
-            _context = context;
         }
 
         public int? GetUserCompanyId(string userId)

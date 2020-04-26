@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
-    public class SystemUserRepo
+    public class SystemUserRepo : BaseRepo
     {
-        RecruitmentSystemContext _context;
-
-        public SystemUserRepo(RecruitmentSystemContext context)
+        public SystemUserRepo(RecruitmentSystemContext context) : base(context)
         {
-            _context = context;
         }
 
         public string GetUserRoleName(string userId)

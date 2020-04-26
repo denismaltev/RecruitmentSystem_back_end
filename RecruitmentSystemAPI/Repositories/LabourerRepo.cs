@@ -9,20 +9,17 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
-    public class LabourerRepo
+    public class LabourerRepo : BaseRepo
     {
-        private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
-
-        public LabourerRepo(RecruitmentSystemContext context, UserManager<SystemUser> userManager)
+        public LabourerRepo(RecruitmentSystemContext context, UserManager<SystemUser> userManager) : base(context)
         {
-            _context = context;
             _userManager = userManager;
         }
 
         public IQueryable<LabourerVM> GetLabourers()
         {
-            return _context.Labourers.Include(l=>l.User).Select(l => new LabourerVM
+            return _context.Labourers.Include(l => l.User).Select(l => new LabourerVM
             {
                 Id = l.Id,
                 FirstName = l.FirstName,
@@ -43,13 +40,11 @@ namespace RecruitmentSystemAPI.Repositories
                 Friday = l.Availability.HasFlag(Weekdays.Friday),
                 Saturday = l.Availability.HasFlag(Weekdays.Saturday),
                 Skills = _context.LabourerSkills.Where(ls => ls.LabourerId == l.Id)
-                                                .Select(ls => new SkillsVM
-                                                {
-                                                    Id = ls.Id,
-                                                    Name = ls.Skill.Name,
-                                                    ChargeAmount = ls.Skill.ChargeAmount,
-                                                    PayAmount = ls.Skill.PayAmount,
-                                                }).ToList(),
+                  .Select(ls => new BaseSkillsVM
+                  {
+                      Id = ls.Id,
+                      Name = ls.Skill.Name
+                  }).ToList(),
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
             });
@@ -57,7 +52,7 @@ namespace RecruitmentSystemAPI.Repositories
 
         public LabourerVM GetLabourerById(int id)
         {
-            return _context.Labourers.Where(l => l.Id == id).Include(l=>l.User).Select(l => new LabourerVM
+            return _context.Labourers.Where(l => l.Id == id).Include(l => l.User).Select(l => new LabourerVM
             {
                 Id = l.Id,
                 FirstName = l.FirstName,
@@ -80,23 +75,20 @@ namespace RecruitmentSystemAPI.Repositories
                 SafetyRating = l.SafetyRating,
                 QualityRating = l.QualityRating,
                 Skills = _context.LabourerSkills.Where(ls => ls.LabourerId == l.Id)
-                                                .Select(ls => new SkillsVM {
-                                                    Id              = ls.Id,
-                                                    Name            = ls.Skill.Name,
-                                                    ChargeAmount    = ls.Skill.ChargeAmount,
-                                                    PayAmount       = ls.Skill.PayAmount,
-                                                }).ToList()
+                      .Select(ls => new BaseSkillsVM
+                      {
+                          Id = ls.Id,
+                          Name = ls.Skill.Name
+                      }).ToList()
             }).FirstOrDefault();
         }
-
-
 
         public async Task UpdateLabourer(LabourerVM labourerVM)
         {
             var labourer = _context.Labourers.Include(l => l.LabourerSkills).FirstOrDefault(l => l.Id == labourerVM.Id);
             if (labourer == null) throw new KeyNotFoundException();
 
-            if(labourer != null)
+            if (labourer != null)
             {
                 labourer.Id = labourer.Id;
                 labourer.FirstName = labourerVM.FirstName;
@@ -110,18 +102,18 @@ namespace RecruitmentSystemAPI.Repositories
                 labourer.IsActive = labourerVM.IsActive;
                 labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
             }
-            var existingSkills = labourerVM.Skills.Where(s  => labourer.LabourerSkills.Any(ls  =>  ls.SkillId == s.Id));
-            if(existingSkills != null)
+
+            if (labourer.LabourerSkills != null)
             {
-                foreach (var skill in existingSkills)
+                var skillsToDelete = labourer.LabourerSkills.Where(s => !labourerVM.Skills.Any(ls => ls.Id == s.SkillId)).ToList();
+                if (skillsToDelete != null && skillsToDelete.Count > 0)
                 {
-                    var oldSkill = labourer.LabourerSkills.FirstOrDefault(s => s.SkillId == skill.Id.Value);
-                    _context.Update(oldSkill);
+                    _context.LabourerSkills.RemoveRange(skillsToDelete);
                 }
             }
-            
-            var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id));
-            if(newSkills != null)
+
+            var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id)).ToList();
+            if (newSkills != null && newSkills.Count > 0)
             {
                 foreach (var skill in newSkills)
                 {
@@ -133,7 +125,7 @@ namespace RecruitmentSystemAPI.Repositories
                     _context.Add(newSkill);
                 }
             }
-           
+
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
             _context.Update(labourer);
@@ -160,7 +152,7 @@ namespace RecruitmentSystemAPI.Repositories
 
             _context.Add(labourer);
             var labourerSkills = new List<LabourerSkill>();
-            foreach(var skill in labourerVM.Skills)
+            foreach (var skill in labourerVM.Skills)
             {
                 var newSkill = new LabourerSkill
                 {
@@ -217,7 +209,5 @@ namespace RecruitmentSystemAPI.Repositories
                 weekdays |= Weekdays.Saturday;
             return weekdays;
         }
-
-        
     }
 }
