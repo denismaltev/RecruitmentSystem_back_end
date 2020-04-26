@@ -17,20 +17,15 @@ namespace RecruitmentSystemAPI.Repositories
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
-        public string GetCompanyName()
-        {
-            return _context.Jobs
-           .Where(j => j.CompanyId == j.Company.Id)
-           .Select(c => c.Company.Name).FirstOrDefault();
-        }
+
         // This is only for admin:
         public IQueryable<JobRatingVM> GetAllCompanyJobs()
         {
             return _context.Jobs.Select(j => new JobRatingVM
             {
-                CompanyId = j.CompanyId,
-                CompanyName = GetCompanyName(),
-                Title = j.Title
+                CompanyId   = j.CompanyId,
+                CompanyName = j.Company.Name,
+                Title       = j.Title
             });
         }
 
