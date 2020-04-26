@@ -11,6 +11,7 @@ namespace RecruitmentSystemAPI.ViewModels
         public int Id { get; set; }
         [Required]
         public int CompanyId { get; set; }
+        public string CompanyName { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         [Required]
