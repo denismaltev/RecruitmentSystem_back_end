@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using RecruitmentSystemAPI.Models;
+using RecruitmentSystemAPI.Services;
 using RecruitmentSystemAPI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
-    public class JobRepo
+    public class JobRepo : BaseRepo
     {
-        private readonly RecruitmentSystemContext _context;
-        public JobRepo(RecruitmentSystemContext context)
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        public JobRepo(RecruitmentSystemContext context, IServiceScopeFactory serviceScopeFactory) : base(context)
         {
-            _context = context;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         // This is only for admin:
@@ -21,25 +23,25 @@ namespace RecruitmentSystemAPI.Repositories
         {
             return _context.Jobs.Select(j => new JobVM
             {
-                Id          = j.Id,
-                CompanyId   = j.CompanyId,
-                Title       = j.Title,
+                Id = j.Id,
+                CompanyId = j.CompanyId,
+                Title = j.Title,
                 Description = j.Description,
-                City        = j.City,
-                Province    = j.Province,
-                Country     = j.Country,
-                Address     = j.Address,
-                Rating      = j.Rating,
-                StartDate   = j.StartDate,
-                EndDate     = j.EndDate,
-                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday),
-                IsActive    = j.IsActive
+                City = j.City,
+                Province = j.Province,
+                Country = j.Country,
+                Address = j.Address,
+                Rating = j.Rating,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
+                IsActive = j.IsActive
             });
         }
 
@@ -54,25 +56,25 @@ namespace RecruitmentSystemAPI.Repositories
             //if(jobs == null) 
             return jobs.Select(j => new JobVM
             {
-                Id          = j.Id,
-                CompanyId   = j.CompanyId,
-                Title       = j.Title,
+                Id = j.Id,
+                CompanyId = j.CompanyId,
+                Title = j.Title,
                 Description = j.Description,
-                City        = j.City,
-                Province    = j.Province,
-                Country     = j.Country,
-                Address     = j.Address,
-                Rating      = j.Rating,
-                StartDate   = j.StartDate,
-                EndDate     = j.EndDate,
-                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday),
-                IsActive    = j.IsActive
+                City = j.City,
+                Province = j.Province,
+                Country = j.Country,
+                Address = j.Address,
+                Rating = j.Rating,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
+                IsActive = j.IsActive
             }).ToList();
         }
 
@@ -110,33 +112,33 @@ namespace RecruitmentSystemAPI.Repositories
         {
             List<JobSkillVM> skillsList = _context.JobSkills.Where(js => js.JobId == id).Select(js => new JobSkillVM
             {
-                Id                 = js.Skill.Id,
-                Name               = js.Skill.Name,
+                Id = js.Skill.Id,
+                Name = js.Skill.Name,
                 NumberOfLabourersNeeded = js.NumberOfLabourersNeeded,
-                IsActive                = js.Skill.IsActive
+                IsActive = js.Skill.IsActive
             }).ToList();
 
             return _context.Jobs.Where(j => j.Id == id).Select(j => new JobVM
             {
-                Id          = j.Id,
-                Title       = j.Title,
+                Id = j.Id,
+                Title = j.Title,
                 Description = j.Description,
-                City        = j.City,
-                Province    = j.Province,
-                Country     = j.Country,
-                Address     = j.Address,
-                Rating      = j.Rating,
-                StartDate   = j.StartDate,
-                EndDate     = j.EndDate,
-                IsActive    = j.IsActive,
-                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday),
-                JobSkills   = skillsList
+                City = j.City,
+                Province = j.Province,
+                Country = j.Country,
+                Address = j.Address,
+                Rating = j.Rating,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                IsActive = j.IsActive,
+                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
+                JobSkills = skillsList
             }).FirstOrDefault();
         }
 
@@ -145,17 +147,17 @@ namespace RecruitmentSystemAPI.Repositories
             var job = _context.Jobs.FirstOrDefault(c => c.Id == jobVM.Id);
             if (job == null) throw new KeyNotFoundException();
 
-            job.Title       = jobVM.Title;
+            job.Title = jobVM.Title;
             job.Description = jobVM.Description;
-            job.City        = jobVM.City;
-            job.Province    = jobVM.Province;
-            job.Country     = jobVM.Country;
-            job.Address     = jobVM.Address;
-            job.StartDate   = jobVM.StartDate;
-            job.EndDate     = jobVM.EndDate;
-            job.IsActive    = jobVM.IsActive;
-            job.Weekdays    = ConvertJobWeekdaysToEnum(jobVM);
-         
+            job.City = jobVM.City;
+            job.Province = jobVM.Province;
+            job.Country = jobVM.Country;
+            job.Address = jobVM.Address;
+            job.StartDate = jobVM.StartDate;
+            job.EndDate = jobVM.EndDate;
+            job.IsActive = jobVM.IsActive;
+            job.Weekdays = ConvertJobWeekdaysToEnum(jobVM);
+
             var jobSkills = _context.JobSkills.Where(js => js.JobId == jobVM.Id).ToList();
             if (jobSkills != null && jobSkills.Count > 0)
             {
@@ -169,7 +171,7 @@ namespace RecruitmentSystemAPI.Repositories
                 }
 
                 var skillsToUpdate = jobSkills.Where(s => jobVM.JobSkills.Any(ls => ls.Id == s.SkillId)).ToList();
-                if(skillsToUpdate != null && skillsToUpdate.Count > 0)
+                if (skillsToUpdate != null && skillsToUpdate.Count > 0)
                 {
                     foreach (var skill in skillsToUpdate)
                     {
@@ -228,17 +230,17 @@ namespace RecruitmentSystemAPI.Repositories
             var companyId = _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId;
             var job = new Job
             {
-                CompanyId    = companyId,
-                Title        = jobVM.Title,
-                Description  = jobVM.Description,
-                City         = jobVM.City,
-                Province     = jobVM.Province,
-                Country      = jobVM.Country,
-                Address      = jobVM.Address,
-                StartDate    = jobVM.StartDate,
-                EndDate      = jobVM.EndDate,
-                IsActive     = jobVM.IsActive,
-                Weekdays     = ConvertJobWeekdaysToEnum(jobVM)
+                CompanyId = companyId,
+                Title = jobVM.Title,
+                Description = jobVM.Description,
+                City = jobVM.City,
+                Province = jobVM.Province,
+                Country = jobVM.Country,
+                Address = jobVM.Address,
+                StartDate = jobVM.StartDate,
+                EndDate = jobVM.EndDate,
+                IsActive = jobVM.IsActive,
+                Weekdays = ConvertJobWeekdaysToEnum(jobVM)
             };
             _context.Jobs.Add(job);
 
@@ -256,7 +258,8 @@ namespace RecruitmentSystemAPI.Repositories
                 }
             }
             _context.SaveChanges();
+            new AutoSchedule(_serviceScopeFactory).MatchLabourers(job);
             return jobVM;
         }
     }
-} 
+}

@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
-    public class SkillsRepo
+    public class SkillsRepo : BaseRepo
     {
-        private readonly RecruitmentSystemContext _context;
-        public SkillsRepo(RecruitmentSystemContext context)
+        public SkillsRepo(RecruitmentSystemContext context) : base(context)
         {
-            _context = context;
         }
 
         public IQueryable<BaseSkillsVM> GetSkillsDDL()

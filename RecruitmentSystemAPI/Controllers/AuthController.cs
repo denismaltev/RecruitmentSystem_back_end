@@ -23,16 +23,22 @@ namespace RecruitmentSystemAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly RecruitmentSystemContext _context;
-        private SignInManager<SystemUser> _signInManager;
-        private IServiceProvider _serviceProvider;
-        private IConfiguration _config;
+        private readonly SignInManager<SystemUser> _signInManager;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IConfiguration _config;
+        private readonly SystemUserRepo _userRepo;
+        private readonly CompanyRepo _companyRepo;
+        private readonly LabourerRepo _labourerRepo;
 
-        public AuthController(RecruitmentSystemContext context, SignInManager<SystemUser> signInManager, IServiceProvider serviceProvider, IConfiguration config)
+        public AuthController(RecruitmentSystemContext context, SignInManager<SystemUser> signInManager, IServiceProvider serviceProvider, IConfiguration config, SystemUserRepo userRepo, CompanyRepo companyRepo, LabourerRepo labourerRepo)
         {
             _context = context;
             _signInManager = signInManager;
             _serviceProvider = serviceProvider;
             _config = config;
+            _userRepo = userRepo;
+            _companyRepo = companyRepo;
+            _labourerRepo = labourerRepo;
         }
 
         [HttpPost]
@@ -66,18 +72,15 @@ namespace RecruitmentSystemAPI.Controllers
         private ActionResult BuildLoginOkResponse(SystemUser user)
         {
             var tokenString = GenerateJSONWebToken(user);
-            var userRepo = new SystemUserRepo(_context);
-            var userRole = userRepo.GetUserRoleName(user.Id);
+            var userRole = _userRepo.GetUserRoleName(user.Id);
             int? profileId = null;
             if (userRole?.ToLower() == "company")
             {
-                var companyRepo = new CompanyRepo(_context);
-                profileId = companyRepo.GetUserCompanyId(user.Id);
+                profileId = _companyRepo.GetUserCompanyId(user.Id);
             }
             else if (userRole?.ToLower() == "labourer")
             {
-                var labourerRepo = new LabourerRepo(_context, null);
-                profileId = labourerRepo.GetUserLabourerId(user.Id);
+                profileId = _labourerRepo.GetUserLabourerId(user.Id);
             }
 
             return Ok(new { token = tokenString, username = user.UserName, role = userRole?.ToLower(), profileId = profileId, status = "OK" });
@@ -91,8 +94,7 @@ namespace RecruitmentSystemAPI.Controllers
             {
                 try
                 {
-                    var userRepo = new SystemUserRepo(_context);
-                    var role = userRepo.GetRoleByName(userVM.RoleName);
+                    var role = _userRepo.GetRoleByName(userVM.RoleName);
                     if (role == null)
                     {
                         return BadRequest(new { message = $"Invalid role {userVM.RoleName}" });
