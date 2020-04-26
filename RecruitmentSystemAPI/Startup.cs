@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RecruitmentSystemAPI.Models;
+using RecruitmentSystemAPI.Repositories;
 
 namespace RecruitmentSystemAPI
 {
@@ -33,6 +34,13 @@ namespace RecruitmentSystemAPI
         {
             services.AddDbContext<RecruitmentSystemContext>(options => options.UseSqlite(Configuration.GetConnectionString("RecruitmentSystemConnection")));
             services.AddDefaultIdentity<SystemUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<RecruitmentSystemContext>();
+
+            services.AddScoped<CompanyRepo>();
+            services.AddScoped<JobRepo>();
+            services.AddScoped<LabourerJobsRepo>();
+            services.AddScoped<LabourerRepo>();
+            services.AddScoped<SkillsRepo>();
+            services.AddScoped<SystemUserRepo>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 

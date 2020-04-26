@@ -19,9 +19,11 @@ namespace RecruitmentSystemAPI.Controllers
     public class SkillsController : ControllerBase
     {
         private readonly RecruitmentSystemContext _context;
-        public SkillsController(RecruitmentSystemContext context)
+        private readonly SkillsRepo _skillsRepo;
+        public SkillsController(RecruitmentSystemContext context, SkillsRepo skillsRepo)
         {
             _context = context;
+            _skillsRepo = skillsRepo;
         }
 
         // GET: api/Skills
@@ -29,8 +31,7 @@ namespace RecruitmentSystemAPI.Controllers
         [Route("GetSkillsDDL")]
         public ActionResult<IEnumerable<BaseSkillsVM>> GetSkillsDDL()
         {
-            var skillRepo = new SkillsRepo(_context);
-            var skills = skillRepo.GetSkillsDDL();
+            var skills = _skillsRepo.GetSkillsDDL();
             return Ok(skills);
         }
 
@@ -39,8 +40,7 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<SkillsVM>> GetAll()
         {
-            var skillRepo = new SkillsRepo(_context);
-            var skills = skillRepo.GetSkills();
+            var skills = _skillsRepo.GetSkills();
             return Ok(skills);
         }
 
@@ -48,8 +48,7 @@ namespace RecruitmentSystemAPI.Controllers
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
         {
-            var skillRepo = new SkillsRepo(_context);
-            var skill = skillRepo.GetSkillById(id);
+            var skill = _skillsRepo.GetSkillById(id);
             if (skill == null)
             {
                 return NotFound();
@@ -66,12 +65,11 @@ namespace RecruitmentSystemAPI.Controllers
             {
                 try
                 {
-                    var skillRepo = new SkillsRepo(_context);
-                    if (skillRepo.SkillAlreadyExists(skillVM.Name))
+                    if (_skillsRepo.SkillAlreadyExists(skillVM.Name))
                     {
                         return BadRequest(new { message = $"Skill {skillVM.Name} already exists" });
                     }
-                    var result = skillRepo.AddSkill(skillVM);
+                    var result = _skillsRepo.AddSkill(skillVM);
                     return Ok(result);
                 }
                 catch (Exception e)
@@ -95,19 +93,18 @@ namespace RecruitmentSystemAPI.Controllers
                     return BadRequest();
                 }
 
-                var skillRepo = new SkillsRepo(_context);
                 try
                 {
-                    if (skillRepo.SkillAlreadyExists(skillsVM.Name, id))
+                    if (_skillsRepo.SkillAlreadyExists(skillsVM.Name, id))
                     {
                         return BadRequest(new { message = $"Skill {skillsVM.Name} already exists" });
                     }
-                    skillRepo.UpdateSkill(skillsVM);
+                    _skillsRepo.UpdateSkill(skillsVM);
                     return Ok();
                 }
                 catch(DbUpdateConcurrencyException)
                 {
-                    if(!skillRepo.SkillExists(id))
+                    if(!_skillsRepo.SkillExists(id))
                     {
                         return NotFound();
                     }
