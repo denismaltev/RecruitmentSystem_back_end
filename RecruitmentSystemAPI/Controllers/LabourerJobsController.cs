@@ -64,7 +64,7 @@ namespace RecruitmentSystemAPI.Controllers
         [HttpPut]
         [Route("UpdateJobRating")]
         [Authorize(Roles = "Labourer")]
-        public ActionResult UpdateJobRating(int idToGrade, float rating)
+        public ActionResult UpdateJobRating(int idToGrade, int rating)
         {
             try
             {

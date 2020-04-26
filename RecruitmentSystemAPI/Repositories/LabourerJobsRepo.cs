@@ -54,7 +54,7 @@ namespace RecruitmentSystemAPI.Repositories
             return labourerJobVM;
         }
 
-        public void UpdateJobRating(int idToGrade, float rating, string usesrId)
+        public void UpdateJobRating(int idToGrade, int rating, string usesrId)
         {
             var x = idToGrade;
             var jobToRate = _context.LabourerJobs.Where(ls => ls.Id == idToGrade && ls.Labourer.UserId == usesrId).FirstOrDefault();

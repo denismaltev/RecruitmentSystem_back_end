@@ -12,7 +12,7 @@ namespace RecruitmentSystemAPI.Models
         public int? SafetyRating { get; set; }
         public int? QualityRating { get; set; }
         public DateTime Date { get; set; }
-        public float? JobRating { get; set; }
+        public int? JobRating { get; set; }
         public decimal WageAmount { get; set; }
 
         public virtual Job Job { get; set; }
