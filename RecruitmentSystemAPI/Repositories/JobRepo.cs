@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using RecruitmentSystemAPI.Models;
+using RecruitmentSystemAPI.Services;
 using RecruitmentSystemAPI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,8 +12,10 @@ namespace RecruitmentSystemAPI.Repositories
 {
     public class JobRepo : BaseRepo
     {
-        public JobRepo(RecruitmentSystemContext context) : base(context)
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        public JobRepo(RecruitmentSystemContext context, IServiceScopeFactory serviceScopeFactory) : base(context)
         {
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         // This is only for admin:
@@ -254,6 +258,7 @@ namespace RecruitmentSystemAPI.Repositories
                 }
             }
             _context.SaveChanges();
+            new AutoSchedule(_serviceScopeFactory).MatchLabourers(job);
             return jobVM;
         }
     }
