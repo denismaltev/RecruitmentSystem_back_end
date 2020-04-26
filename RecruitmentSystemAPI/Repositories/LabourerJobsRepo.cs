@@ -24,8 +24,6 @@ namespace RecruitmentSystemAPI.Repositories
                     Id = l.Id,
                     JobTitle = l.Job.Title,
                     SkillName = l.Skill.Name,
-                    //CompanyName = l.Job.Company.Name,
-                    //Address = l.Job.Address,
                     Date = l.Date,
                     SafetyRating = l.SafetyRating,
                     QualityRating = l.QualityRating,
@@ -60,9 +58,16 @@ namespace RecruitmentSystemAPI.Repositories
         {
             var x = idToGrade;
             var jobToRate = _context.LabourerJobs.Where(ls => ls.Id == idToGrade && ls.Labourer.UserId == usesrId).FirstOrDefault();
-            jobToRate.JobRating = rating;
-            _context.Update(jobToRate);
-            _context.SaveChanges();
+            if (jobToRate.JobRating ==null){
+                jobToRate.JobRating = rating;
+                _context.Update(jobToRate);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("You have already graded this job");
+            }
+        
         }
     }
 }
