@@ -56,12 +56,30 @@ namespace RecruitmentSystemAPI.Repositories
 
         public void UpdateJobRating(int idToGrade, int rating, string usesrId)
         {
-            var x = idToGrade;
             var jobToRate = _context.LabourerJobs.Where(ls => ls.Id == idToGrade && ls.Labourer.UserId == usesrId).FirstOrDefault();
+            var jobId = jobToRate.JobId;
+            var jobInTable = _context.Jobs.Where(j => j.Id == jobId).FirstOrDefault();
+            var previousJobRate = jobInTable.Rating;
+
             if (jobToRate.JobRating ==null){
+                if (previousJobRate == 0)
+                {
+                    jobInTable.Rating = rating;
+                    _context.Update(jobInTable);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    previousJobRate = (previousJobRate + rating) / 2;
+                    jobInTable.Rating = previousJobRate;
+                    _context.Update(jobInTable);
+                    _context.SaveChanges();
+                }
                 jobToRate.JobRating = rating;
                 _context.Update(jobToRate);
                 _context.SaveChanges();
+              
+
             }
             else
             {

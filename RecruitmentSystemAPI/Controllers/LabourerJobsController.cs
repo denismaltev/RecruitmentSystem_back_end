@@ -69,6 +69,7 @@ namespace RecruitmentSystemAPI.Controllers
             try
             {
                 var labourerJobsRepo = new LabourerJobsRepo(_context);
+                
                 var usesrId = _userManager.GetUserId(User);
                 labourerJobsRepo.UpdateJobRating(idToGrade, rating, usesrId);
                 return Ok();
