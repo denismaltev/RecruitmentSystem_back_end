@@ -32,7 +32,7 @@ namespace RecruitmentSystemAPI.Controllers
 
         [HttpGet("all")]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<JobVM>> GetAllCompanyJobs()
+        public ActionResult<IEnumerable<JobRatingVM>> GetAllCompanyJobs()
         {
             var result = _jobRepo.GetAllCompanyJobs();
             if (result == null)
