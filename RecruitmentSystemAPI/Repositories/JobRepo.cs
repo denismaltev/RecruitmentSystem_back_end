@@ -21,12 +21,13 @@ namespace RecruitmentSystemAPI.Repositories
         {
             var companyName = _context.Jobs
                 .Where(j => j.CompanyId == j.Company.Id)
-                .Select(c => c.Company.Name);
+                .Select(c => c.Company.Name).ToString();
 
             return _context.Jobs.Select(j => new JobVM
             {
                 Id = j.Id,
                 CompanyId = j.CompanyId,
+                CompanyName = companyName,
                 Title = j.Title,
                 Description = j.Description,
                 City = j.City,
