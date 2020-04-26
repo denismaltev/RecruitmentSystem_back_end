@@ -15,18 +15,20 @@ namespace RecruitmentSystemAPI.Repositories
         {
             _context = context;
         }
-
+        public string GetCompanyName()
+        {
+            return _context.Jobs
+           .Where(j => j.CompanyId == j.Company.Id)
+           .Select(c => c.Company.Name).FirstOrDefault();
+            //return companyName;
+        }
         // This is only for admin:
         public IQueryable<JobRatingVM> GetAllCompanyJobs()
         {
-            var companyName = _context.Jobs
-                .Where(j => j.CompanyId == j.Company.Id)
-                .Select(c => c.Company.Name).ToString();
-
             return _context.Jobs.Select(j => new JobRatingVM
             {
                 CompanyId = j.CompanyId,
-                CompanyName = companyName,
+                CompanyName = GetCompanyName(),
                 Title = j.Title
             });
         }
