@@ -19,27 +19,31 @@ namespace RecruitmentSystemAPI.Repositories
         // This is only for admin:
         public IQueryable<JobVM> GetAllCompanyJobs()
         {
+            var companyName = _context.Jobs
+                .Where(j => j.CompanyId == j.Company.Id)
+                .Select(c => c.Company.Name);
+
             return _context.Jobs.Select(j => new JobVM
             {
-                Id          = j.Id,
-                CompanyId   = j.CompanyId,
-                Title       = j.Title,
+                Id = j.Id,
+                CompanyId = j.CompanyId,
+                Title = j.Title,
                 Description = j.Description,
-                City        = j.City,
-                Province    = j.Province,
-                Country     = j.Country,
-                Address     = j.Address,
-                Rating      = j.Rating,
-                StartDate   = j.StartDate,
-                EndDate     = j.EndDate,
-                Sunday      = j.Weekdays.HasFlag(Weekdays.Sunday),
-                Monday      = j.Weekdays.HasFlag(Weekdays.Monday),
-                Tuesday     = j.Weekdays.HasFlag(Weekdays.Tuesday),
-                Wednesday   = j.Weekdays.HasFlag(Weekdays.Wednesday),
-                Thursday    = j.Weekdays.HasFlag(Weekdays.Thursday),
-                Friday      = j.Weekdays.HasFlag(Weekdays.Friday),
-                Saturday    = j.Weekdays.HasFlag(Weekdays.Saturday),
-                IsActive    = j.IsActive
+                City = j.City,
+                Province = j.Province,
+                Country = j.Country,
+                Address = j.Address,
+                Rating = j.Rating,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                Sunday = j.Weekdays.HasFlag(Weekdays.Sunday),
+                Monday = j.Weekdays.HasFlag(Weekdays.Monday),
+                Tuesday = j.Weekdays.HasFlag(Weekdays.Tuesday),
+                Wednesday = j.Weekdays.HasFlag(Weekdays.Wednesday),
+                Thursday = j.Weekdays.HasFlag(Weekdays.Thursday),
+                Friday = j.Weekdays.HasFlag(Weekdays.Friday),
+                Saturday = j.Weekdays.HasFlag(Weekdays.Saturday),
+                IsActive = j.IsActive
             });
         }
 
