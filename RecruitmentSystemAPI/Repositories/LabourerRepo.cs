@@ -9,14 +9,11 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
-    public class LabourerRepo
+    public class LabourerRepo : BaseRepo
     {
-        private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
-
-        public LabourerRepo(RecruitmentSystemContext context, UserManager<SystemUser> userManager)
+        public LabourerRepo(RecruitmentSystemContext context, UserManager<SystemUser> userManager) : base(context)
         {
-            _context = context;
             _userManager = userManager;
         }
 
@@ -91,7 +88,7 @@ namespace RecruitmentSystemAPI.Repositories
             var labourer = _context.Labourers.Include(l => l.LabourerSkills).FirstOrDefault(l => l.Id == labourerVM.Id);
             if (labourer == null) throw new KeyNotFoundException();
 
-            if(labourer != null)
+            if (labourer != null)
             {
                 labourer.Id = labourer.Id;
                 labourer.FirstName = labourerVM.FirstName;
@@ -106,17 +103,17 @@ namespace RecruitmentSystemAPI.Repositories
                 labourer.Availability = ConvertWeekdaysToEnum(labourerVM);
             }
 
-            if(labourer.LabourerSkills != null)
+            if (labourer.LabourerSkills != null)
             {
                 var skillsToDelete = labourer.LabourerSkills.Where(s => !labourerVM.Skills.Any(ls => ls.Id == s.SkillId)).ToList();
-                if(skillsToDelete != null && skillsToDelete.Count > 0)
+                if (skillsToDelete != null && skillsToDelete.Count > 0)
                 {
                     _context.LabourerSkills.RemoveRange(skillsToDelete);
                 }
             }
-            
+
             var newSkills = labourerVM.Skills.Where(s => !labourer.LabourerSkills.Any(ls => ls.SkillId == s.Id)).ToList();
-            if(newSkills != null && newSkills.Count > 0)
+            if (newSkills != null && newSkills.Count > 0)
             {
                 foreach (var skill in newSkills)
                 {
@@ -128,7 +125,7 @@ namespace RecruitmentSystemAPI.Repositories
                     _context.Add(newSkill);
                 }
             }
-           
+
             await UpdateUserEmail(labourer.UserId, labourerVM.Email);
 
             _context.Update(labourer);
@@ -155,7 +152,7 @@ namespace RecruitmentSystemAPI.Repositories
 
             _context.Add(labourer);
             var labourerSkills = new List<LabourerSkill>();
-            foreach(var skill in labourerVM.Skills)
+            foreach (var skill in labourerVM.Skills)
             {
                 var newSkill = new LabourerSkill
                 {
@@ -212,7 +209,5 @@ namespace RecruitmentSystemAPI.Repositories
                 weekdays |= Weekdays.Saturday;
             return weekdays;
         }
-
-        
     }
 }

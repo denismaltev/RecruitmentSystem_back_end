@@ -22,11 +22,13 @@ namespace RecruitmentSystemAPI.Controllers
     {
         private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
+        private readonly LabourerJobsRepo _labourerJobsRepo;
 
-        public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager)
+        public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo)
         {
             _context = context;
             _userManager = userManager;
+            _labourerJobsRepo = labourerJobsRepo;
         }
 
         // GET: api/LabourerJobs
@@ -34,9 +36,8 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Labourer")]
         public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var labourerJobsRepo = new LabourerJobsRepo(_context);
             var userId = _userManager.GetUserId(User);
-            var result = labourerJobsRepo.GetLabourerJobsByUserId(userId, count, page, fromDate, toDate);
+            var result = _labourerJobsRepo.GetLabourerJobsByUserId(userId, count, page, fromDate, toDate);
             return Ok(result);
         }
                 
@@ -49,9 +50,8 @@ namespace RecruitmentSystemAPI.Controllers
             {
                 try
                 {
-                    var labourerJobsRepo = new LabourerJobsRepo(_context);
                     var userId = _userManager.GetUserId(User);
-                    var result = labourerJobsRepo.AddLabourerJob(labourerJobVM, userId);
+                    var result = _labourerJobsRepo.AddLabourerJob(labourerJobVM, userId);
                     return Ok(result);
                 }
                 catch (Exception e)
