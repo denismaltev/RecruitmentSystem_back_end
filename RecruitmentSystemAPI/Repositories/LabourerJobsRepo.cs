@@ -28,7 +28,9 @@ namespace RecruitmentSystemAPI.Repositories
                     SafetyRating = l.SafetyRating,
                     QualityRating = l.QualityRating,
                     JobRating = l.JobRating,
-                    WageAmount = l.WageAmount
+                    WageAmount = l.WageAmount,
+                    CompanyAddress = l.Job.Company.Name,
+                    CompanyName = l.Job.Address
                 });
         }
 
