@@ -69,8 +69,9 @@ namespace RecruitmentSystemAPI.Controllers
             try
             {
                 var labourerJobsRepo = new LabourerJobsRepo(_context);
-                var usesrId = _userManager.GetUserId(User);
-                labourerJobsRepo.UpdateJobRating(idToGrade, rating, usesrId);
+                
+                var userId = _userManager.GetUserId(User);
+                labourerJobsRepo.UpdateJobRating(idToGrade, rating, userId);
                 return Ok();
             }
                 catch (Exception e)
