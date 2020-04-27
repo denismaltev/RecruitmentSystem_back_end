@@ -53,5 +53,41 @@ namespace RecruitmentSystemAPI.Repositories
             labourerJobVM.Id = labourerJob.Id;
             return labourerJobVM;
         }
+
+        public void UpdateJobRating(int idToGrade, int rating, string userId)
+        {
+            var jobToRate = _context.LabourerJobs.Where(ls => ls.Id == idToGrade && ls.Labourer.UserId == userId).FirstOrDefault();
+
+            if (jobToRate.JobRating ==null){
+
+                //update rating in labourerjobs table
+                jobToRate.JobRating = rating;
+                _context.Update(jobToRate);
+                _context.SaveChanges();
+
+                //update rating in jobs table
+                var jobId = jobToRate.JobId;
+                var jobInTable = _context.Jobs.Where(j => j.Id == jobId).FirstOrDefault();
+                var previousJobRate = jobInTable.Rating;
+                var allJobWithSameId = _context.LabourerJobs.Where(ls => ls.JobId == jobId).Select(j => j.JobRating).Where(v => v != 0 && v != null).ToArray();
+                var newJobRating = (float)allJobWithSameId.Average();
+                jobInTable.Rating = newJobRating;
+                _context.Update(jobInTable);
+                _context.SaveChanges();
+
+                //update rating in companies table
+                var CompanyToRate = _context.Companies.Where(c => c.Id == jobInTable.CompanyId).FirstOrDefault();
+                var allJobWithSameCompanyId = _context.Jobs.Where(j => j.CompanyId == jobInTable.CompanyId).Select(j => j.Rating).Where(v => v!= 0 && v != null).ToArray();
+                var newCompanyRating = (float)allJobWithSameCompanyId.Average();
+                CompanyToRate.Rating = newCompanyRating;
+                _context.Update(CompanyToRate);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("You have already graded this job");
+            }
+        
+        }
     }
 }
