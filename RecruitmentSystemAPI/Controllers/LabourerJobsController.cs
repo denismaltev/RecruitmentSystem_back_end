@@ -23,22 +23,24 @@ namespace RecruitmentSystemAPI.Controllers
         private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
         private readonly LabourerJobsRepo _labourerJobsRepo;
-        private readonly JobLabourerRepo _jobLabourerRepo;
 
-        public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo, JobLabourerRepo jobLabourerRepo)
+        public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo)
         {
             _context          = context;
             _userManager      = userManager;
             _labourerJobsRepo = labourerJobsRepo;
-            _jobLabourerRepo  = jobLabourerRepo;
         }
+
         //GET: api/LabourerJobs/{jobId}
         // Return a list of labourers for a particular job in one company
-        [HttpGet]
+        [HttpGet("{jobId}")]
         [Authorize(Roles = "Company")]
         public ActionResult<IEnumerable<JobLabourerVM>> GetJobLabourerList(int jobId)
         {
-            var companyId = _userManager.GetUserId(User);
+            //var company = _userManager.GetUserId(User);
+            var result = _labourerJobsRepo.GetLabourersList(jobId);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         // GET: api/LabourerJobs
