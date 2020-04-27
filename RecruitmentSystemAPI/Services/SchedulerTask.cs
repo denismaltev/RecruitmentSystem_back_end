@@ -16,7 +16,7 @@ namespace RecruitmentSystemAPI.Services
     {
         private CrontabSchedule _crontabSchedule;
         private DateTime _nextRun;
-        protected string _schedule => "00 12 * * 5"; //every Friday at 12pm
+        protected string _schedule => "00 24 * * 5"; //every Friday at 12am
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public ScheduledJob(IServiceScopeFactory scopeFactory)
