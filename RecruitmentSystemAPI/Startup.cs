@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RecruitmentSystemAPI.Models;
 using RecruitmentSystemAPI.Repositories;
+using RecruitmentSystemAPI.Services;
 
 namespace RecruitmentSystemAPI
 {
@@ -41,6 +42,8 @@ namespace RecruitmentSystemAPI
             services.AddScoped<LabourerRepo>();
             services.AddScoped<SkillsRepo>();
             services.AddScoped<SystemUserRepo>();
+
+            services.AddHostedService<ScheduledJob>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
