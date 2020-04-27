@@ -13,6 +13,15 @@ namespace RecruitmentSystemAPI.Repositories
         public LabourerJobsRepo(RecruitmentSystemContext context) : base(context)
         {
         }
+        public IQueryable<JobLabourerVM> GetLabourersList(int jobId)
+        {
+            return _context.LabourerJobs
+               .Where(l => l.JobId == jobId)
+               .Include(l => l.Labourer)
+               .Include(l => l.Skill)
+               .Where(l => l.LabourerId == l.Labourer.Id)
+               .Select(l => new JobLabourerVM { JobId = l.JobId, FullName = l.Labourer.FirstName + " " + l.Labourer.LastName, PhoneNumber = l.Labourer.Phone, SkillName = l.Skill.Name });
+        }
 
         public IQueryable<LabourerJobVM> GetLabourerJobsByUserId(string userId, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
         {
