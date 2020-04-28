@@ -63,12 +63,15 @@ namespace RecruitmentSystemAPI.Repositories
             }).ToList();
         }
 
-        public List<JobVM> GetJobsByCompanyId(int companyId, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
+        public List<JobVM> GetJobsByCompanyId(int companyId, int count, int page, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var jobs = _context.Jobs
                   .Where(cId => cId.CompanyId == companyId)
-                  .Where(cId => (!fromDate.HasValue || cId.StartDate >= fromDate) && (!toDate.HasValue || cId.EndDate < toDate))
-                  .OrderByDescending(cId => cId.StartDate).Skip(count * (page - 1)).Take(count)
+                  .Where(cId => (!fromDate.HasValue || cId.StartDate >= fromDate) 
+                  && (!toDate.HasValue || cId.EndDate < toDate)).AsQueryable();
+
+            totalRows = jobs.Count();
+            return jobs.OrderByDescending(cId => cId.StartDate).Skip(count * (page - 1)).Take(count)
                   .Select(j => new JobVM
                   {
                       Id = j.Id,
@@ -90,7 +93,7 @@ namespace RecruitmentSystemAPI.Repositories
                       Friday = j.Weekdays.HasFlag(Weekdays.Friday),
                       Saturday = j.Weekdays.HasFlag(Weekdays.Saturday)
                   }).ToList();
-            return jobs;
+           
         }
 
         public JobVM GetJobById(int id)
