@@ -39,7 +39,7 @@ namespace RecruitmentSystemAPI.Controllers
         {
             //var company = _userManager.GetUserId(User);
             var result = _labourerJobsRepo.GetLabourersList(jobId);
-            if (result == null) return NotFound();
+            //if (result == null) return NotFound();
             return Ok(result);
         }
 
