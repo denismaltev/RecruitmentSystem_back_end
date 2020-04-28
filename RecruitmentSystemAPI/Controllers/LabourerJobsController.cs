@@ -49,7 +49,7 @@ namespace RecruitmentSystemAPI.Controllers
             var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, jobId, out totalRows, fromDate, toDate);
             return Ok(new {result, totalRows});
         }
-                
+
         // POST: api/LabourerJobs
         [HttpPost]
         [Authorize(Roles = "Labourer")] //TODO: consider to remove the function, bc there is no option to add labourer's job from client
@@ -81,10 +81,26 @@ namespace RecruitmentSystemAPI.Controllers
                 _labourerJobsRepo.UpdateJobRating(idToGrade, rating, userId);
                 return Ok();
             }
-                catch (Exception e)
-                {
-                    return StatusCode(500, new { message = e.Message });
-                }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+
+        [HttpPut("{labourerJobId}")]
+        [Authorize(Roles = "Company, Admin")]
+        public ActionResult UpdateLabourerJob(int labourerJobId, int? qualityRating, int? safetyRating)
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                _labourerJobsRepo.UpdateLabourerJob(userId, labourerJobId, User.IsInRole("Admin"), qualityRating, safetyRating);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
         }
     }
 }

@@ -124,5 +124,32 @@ namespace RecruitmentSystemAPI.Repositories
             }
         
         }
+
+        public void UpdateLabourerJob(string userId, int labourerJobId, bool isAdmin, int? qualityRating, int? safetyRating)
+        {
+            var query = _context.LabourerJobs.Where(l => l.Id == labourerJobId);
+            if (!isAdmin)
+            {
+                query = query.Include(l => l.Job).ThenInclude(j => j.Company).ThenInclude(c => c.CompanyUsers).Where(l => l.Job.Company.CompanyUsers.Any(u => u.UserId == userId));
+            }
+            var labourerJob = query.FirstOrDefault();
+            if (labourerJob != null)
+            {
+                if (qualityRating.HasValue)
+                {
+                    labourerJob.QualityRating = qualityRating.Value;
+                }
+                if (safetyRating.HasValue)
+                {
+                    labourerJob.SafetyRating = safetyRating.Value;
+                }
+                _context.Update(labourerJob);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception($"Labourer job {labourerJobId} is not found");
+            }
+        }
     }
 }
