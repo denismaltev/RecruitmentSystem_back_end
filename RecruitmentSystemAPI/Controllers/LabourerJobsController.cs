@@ -37,17 +37,17 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Company")]
         public ActionResult<IEnumerable<JobLabourerVM>> GetJobLabourerList(int jobId)
         {
-            //var company = _userManager.GetUserId(User);
             var result = _labourerJobsRepo.GetLabourersList(jobId);
-            //if (result == null) return NotFound();
             return Ok(result);
         }
 
         // GET: api/LabourerJobs
         [HttpGet]
+        [Authorize(Roles = "Labourer")]
         public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, fromDate, toDate);
+            var userId = _userManager.GetUserId(User);
+            var result = _labourerJobsRepo.GetLabourerJobsByUserId(userId, count, page, fromDate, toDate);
             return Ok(result);
         }
                 
@@ -77,9 +77,11 @@ namespace RecruitmentSystemAPI.Controllers
         public ActionResult UpdateJobRating(int idToGrade, int rating)
         {
             try
-            {                
+            {
+                var labourerJobsRepo = new LabourerJobsRepo(_context);
+                
                 var userId = _userManager.GetUserId(User);
-                _labourerJobsRepo.UpdateJobRating(idToGrade, rating, userId);
+                labourerJobsRepo.UpdateJobRating(idToGrade, rating, userId);
                 return Ok();
             }
                 catch (Exception e)
