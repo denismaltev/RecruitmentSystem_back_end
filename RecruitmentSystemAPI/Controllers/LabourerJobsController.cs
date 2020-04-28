@@ -26,18 +26,18 @@ namespace RecruitmentSystemAPI.Controllers
 
         public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo)
         {
-            _context = context;
-            _userManager = userManager;
+            _context          = context;
+            _userManager      = userManager;
             _labourerJobsRepo = labourerJobsRepo;
         }
 
         // GET: api/LabourerJobs
         [HttpGet]
-        public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
+        public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, int? jobId = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
             int totalRows;
-            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, out totalRows, fromDate, toDate);
-            return Ok(new { result, totalRows });
+            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, jobId, out totalRows, fromDate, toDate);
+            return Ok(new {result, totalRows});
         }
 
         // POST: api/LabourerJobs

@@ -18,8 +18,20 @@ namespace RecruitmentSystemAPI.Repositories
         {
             _userManager = userManager;
         }
+        public IQueryable<JobLabourerVM> GetLabourersList(int jobId)
+        {
+            return _context.LabourerJobs
+               .Where(l => l.JobId == jobId)
+               .Include(l => l.Labourer)
+               .Include(l => l.Skill)
+               .Where(l => l.LabourerId == l.Labourer.Id)
+               .Select(l => new JobLabourerVM { 
+                   JobId        = l.JobId, 
+                   FullName     = l.Labourer.FirstName + " " + l.Labourer.LastName, 
+                   PhoneNumber  = l.Labourer.Phone, SkillName = l.Skill.Name });
+        }
 
-        public IQueryable<LabourerJobVM> GetLabourerJobsByUserRole(ClaimsPrincipal user, int count, int page, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
+        public IQueryable<LabourerJobVM> GetLabourerJobsByUserRole(ClaimsPrincipal user, int count, int page, int? jobId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var userId = _userManager.GetUserId(user);
             var query = _context.LabourerJobs
@@ -34,7 +46,12 @@ namespace RecruitmentSystemAPI.Repositories
             {
                 query = query.Where(l => _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId == l.Job.CompanyId);
             }
+            if (jobId.HasValue)
+            {
+                query = query.Where(l => l.JobId == jobId.Value);
+            }
             totalRows = query.Count();
+
             return query.OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobVM
             {
                 Id = l.Id,
