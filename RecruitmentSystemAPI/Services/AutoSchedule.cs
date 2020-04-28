@@ -72,6 +72,9 @@ namespace RecruitmentSystemAPI.Services
                             });
                             dbContext.LabourerJobs.AddRange(labourerJobs);
                             dbContext.SaveChanges();
+
+                            // send email
+                            new EmailSender().SendMailToLabourers(dbContext, labourerJobs.ToList());
                         }
                     }
                 }

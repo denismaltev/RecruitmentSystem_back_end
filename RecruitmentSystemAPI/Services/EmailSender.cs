@@ -1,4 +1,5 @@
-﻿using RecruitmentSystemAPI.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RecruitmentSystemAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,29 @@ namespace RecruitmentSystemAPI.Services
     public class EmailSender
     {
         private EmailSettings emailSettings;
-        public  EmailSender (EmailSettings emailSettings)
+        public EmailSender()
         {
-            this.emailSettings = emailSettings;
+            this.emailSettings = new EmailSettings();
+        }
+
+        public void SendMailToLabourers(RecruitmentSystemContext dbContext, List<LabourerJob> labourerJobs)
+        {
+            var mailingListOfLabourers = dbContext.Labourers
+                .Where(l => l.LabourerJobs.Any(lj => lj.LabourerId == l.Id))
+                .Include(l => l.User)
+                .Select(l => new { 
+                    email = l.User.Email,
+                    name = $"{ l.FirstName} {l.LastName}"
+                });
+            if (mailingListOfLabourers != null)
+            {
+                foreach (var laborer in mailingListOfLabourers)
+                {
+                    string textOfLetter = $"Dear {laborer.name} You have been assigned to a new job.";
+                    //SendMail(laborer.email, textOfLetter);
+                    SendMail("test08081979@gmail.com", textOfLetter);  // TESTING
+                }
+            }          
         }
 
         public bool SendMail (string recipient, string subject)
@@ -33,8 +54,8 @@ namespace RecruitmentSystemAPI.Services
                 }
 
                 mail.Subject = subject;
-                string text = "Plain text version of a message body. ";
-                string html = @"<p>HTML version of a message body. </p>";
+                string text = "You have been assigned to a new job";
+                string html = @"<p>You have been assigned to a new job</p>";
 
                 mail.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Plain));
                 mail.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
