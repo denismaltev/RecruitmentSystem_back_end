@@ -37,7 +37,7 @@ namespace RecruitmentSystemAPI.Controllers
         [Authorize(Roles = "Company")]
         public ActionResult<IEnumerable<JobLabourerVM>> GetJobLabourerList(int count = 20, int page = 1, int? jobId = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var result = _labourerJobsRepo.GetLabourersList(jobId);
+            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, jobId, fromDate, toDate);
             return Ok(result);
         }
 
