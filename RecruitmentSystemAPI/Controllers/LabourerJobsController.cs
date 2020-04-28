@@ -31,17 +31,6 @@ namespace RecruitmentSystemAPI.Controllers
             _labourerJobsRepo = labourerJobsRepo;
         }
 
-        //GET: api/LabourerJobs/{jobId}
-        // Return a list of labourers for a particular job in one company
-        //[HttpGet("{jobId}")]
-        //[Authorize(Roles = "Company")]
-        //public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, int? jobId = null, DateTime? fromDate = null, DateTime? toDate = null)
-        //{
-        //    int totalRows;
-        //    var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, jobId, out totalRows, fromDate, toDate);
-        //    return Ok(new { result, totalRows });
-        //}
-
         // GET: api/LabourerJobs
         [HttpGet]
         public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, int? jobId = null, DateTime? fromDate = null, DateTime? toDate = null)
