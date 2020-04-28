@@ -45,11 +45,9 @@ namespace RecruitmentSystemAPI.Controllers
 
         // GET: api/LabourerJobs
         [HttpGet]
-        [Authorize(Roles = "Labourer")]
         public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var userId = _userManager.GetUserId(User);
-            var result = _labourerJobsRepo.GetLabourerJobsByUserId(userId, count, page, fromDate, toDate);
+            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, fromDate, toDate);
             return Ok(result);
         }
                 
@@ -79,11 +77,9 @@ namespace RecruitmentSystemAPI.Controllers
         public ActionResult UpdateJobRating(int idToGrade, int rating)
         {
             try
-            {
-                var labourerJobsRepo = new LabourerJobsRepo(_context);
-                
+            {                
                 var userId = _userManager.GetUserId(User);
-                labourerJobsRepo.UpdateJobRating(idToGrade, rating, userId);
+                _labourerJobsRepo.UpdateJobRating(idToGrade, rating, userId);
                 return Ok();
             }
                 catch (Exception e)

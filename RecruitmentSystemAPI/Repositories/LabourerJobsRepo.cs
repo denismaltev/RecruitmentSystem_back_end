@@ -1,17 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RecruitmentSystemAPI.Models;
 using RecruitmentSystemAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.Repositories
 {
     public class LabourerJobsRepo : BaseRepo
     {
-        public LabourerJobsRepo(RecruitmentSystemContext context) : base(context)
+        private readonly UserManager<SystemUser> _userManager;
+        public LabourerJobsRepo(RecruitmentSystemContext context, UserManager<SystemUser> userManager) : base(context)
         {
+            _userManager = userManager;
         }
         public IQueryable<JobLabourerVM> GetLabourersList(int jobId)
         {
@@ -23,26 +28,36 @@ namespace RecruitmentSystemAPI.Repositories
                .Select(l => new JobLabourerVM { JobId = l.JobId, FullName = l.Labourer.FirstName + " " + l.Labourer.LastName, PhoneNumber = l.Labourer.Phone, SkillName = l.Skill.Name });
         }
 
-        public IQueryable<LabourerJobVM> GetLabourerJobsByUserId(string userId, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
+        public IQueryable<LabourerJobVM> GetLabourerJobsByUserRole(ClaimsPrincipal user, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            return _context.LabourerJobs
+            var userId = _userManager.GetUserId(user);
+            var query = _context.LabourerJobs
                 .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date < toDate))
-                .Include(l => l.Skill).Include(l => l.Labourer).Where(l => l.Labourer.UserId == userId)
-                .Include(l => l.Job).OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobVM
-                {
-                    Id = l.Id,
-                    JobTitle = l.Job.Title,
-                    SkillName = l.Skill.Name,
-                    Date = l.Date,
-                    SafetyRating = l.SafetyRating,
-                    QualityRating = l.QualityRating,
-                    JobRating = l.JobRating,
-                    WageAmount = l.WageAmount,
-                    CompanyAddress = l.Job.Company.Name,
-                    CompanyName = l.Job.Address
-                });
+                .Include(l => l.Skill).Include(l => l.Labourer)
+                .Include(l => l.Job).ThenInclude(l => l.Company).AsQueryable();
+            if (user.IsInRole("Labourer"))
+            {
+                query = query.Where(l => l.Labourer.UserId == userId);
+            }
+            else if (user.IsInRole("Company"))
+            {
+                query = query.Where(l => _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId == l.Job.CompanyId);
+            }
+            return query.OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobVM
+            {
+                Id = l.Id,
+                JobTitle = l.Job.Title,
+                SkillName = l.Skill.Name,
+                Date = l.Date,
+                SafetyRating = l.SafetyRating,
+                QualityRating = l.QualityRating,
+                JobRating = l.JobRating,
+                WageAmount = l.WageAmount,
+                CompanyAddress = l.Job.Company.Name,
+                CompanyName = l.Job.Address
+            });
         }
-
+        
         public LabourerJobVM AddLabourerJob(LabourerJobVM labourerJobVM, string userId)
         {
             var labourerSkill = _context.LabourerSkills.Where(ls => ls.SkillId == labourerJobVM.SkillId.Value).Include(ls => ls.Labourer).Where(ls => ls.Labourer.UserId == userId).FirstOrDefault();
