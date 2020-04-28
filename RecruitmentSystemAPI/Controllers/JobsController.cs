@@ -49,16 +49,17 @@ namespace RecruitmentSystemAPI.Controllers
         public ActionResult<IEnumerable<JobVM>> GetJobs(int? companyId, int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var userId = _userManager.GetUserId(User);
+            int totalRows;
             if (!companyId.HasValue)
             {
                 var result = _jobRepo.GetCompanyJobsByUserId(userId);
-                return Ok(result);
+                return Ok(new { result});
             }
             else
             {
                 //2020 - 04 - 21T00: 00:00
-                var result = _jobRepo.GetJobsByCompanyId(companyId.Value, count, page, fromDate, toDate);
-                return Ok(result);
+                var result = _jobRepo.GetJobsByCompanyId(companyId.Value, count, page, out totalRows, fromDate, toDate);
+                return Ok(new { result, totalRows });
             }
         }
 
