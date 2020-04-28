@@ -35,8 +35,9 @@ namespace RecruitmentSystemAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, fromDate, toDate);
-            return Ok(result);
+            int totalRows;
+            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, out totalRows, fromDate, toDate);
+            return Ok(new {result, totalRows});
         }
                 
         // POST: api/LabourerJobs

@@ -19,7 +19,7 @@ namespace RecruitmentSystemAPI.Repositories
             _userManager = userManager;
         }
 
-        public IQueryable<LabourerJobVM> GetLabourerJobsByUserRole(ClaimsPrincipal user, int count, int page, DateTime? fromDate = null, DateTime? toDate = null)
+        public IQueryable<LabourerJobVM> GetLabourerJobsByUserRole(ClaimsPrincipal user, int count, int page, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var userId = _userManager.GetUserId(user);
             var query = _context.LabourerJobs
@@ -34,6 +34,7 @@ namespace RecruitmentSystemAPI.Repositories
             {
                 query = query.Where(l => _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId == l.Job.CompanyId);
             }
+            totalRows = query.Count();
             return query.OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobVM
             {
                 Id = l.Id,
@@ -45,7 +46,9 @@ namespace RecruitmentSystemAPI.Repositories
                 JobRating = l.JobRating,
                 WageAmount = l.WageAmount,
                 CompanyAddress = l.Job.Company.Name,
-                CompanyName = l.Job.Address
+                CompanyName = l.Job.Address,
+                LabourerFullName = $"{l.Labourer.FirstName} {l.Labourer.LastName}",
+                LabourerPhone = l.Labourer.Phone
             });
         }
         

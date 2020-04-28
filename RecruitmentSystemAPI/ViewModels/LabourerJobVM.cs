@@ -12,6 +12,8 @@ namespace RecruitmentSystemAPI.ViewModels
         public string JobTitle { get; set; }
         public string CompanyName { get; set; }
         public string CompanyAddress { get; set; }
+        public string LabourerFullName { get; set; }
+        public string LabourerPhone { get; set; }
         public int? SkillId { get; set; }
         public string SkillName { get; set; }
         public DateTime Date { get; set; }
