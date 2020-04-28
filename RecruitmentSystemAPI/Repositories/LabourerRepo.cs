@@ -77,7 +77,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Skills = _context.LabourerSkills.Where(ls => ls.LabourerId == l.Id)
                       .Select(ls => new BaseSkillsVM
                       {
-                          Id = ls.Id,
+                          Id = ls.SkillId,
                           Name = ls.Skill.Name
                       }).ToList()
             }).FirstOrDefault();
@@ -181,8 +181,8 @@ namespace RecruitmentSystemAPI.Repositories
                 }
                 user.Email = email;
                 user.UserName = email;
+                await _userManager.UpdateAsync(user);
             }
-            await _userManager.UpdateAsync(user);
         }
 
         public int? GetUserLabourerId(string userId)
