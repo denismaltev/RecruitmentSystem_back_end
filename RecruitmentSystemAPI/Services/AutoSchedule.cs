@@ -48,6 +48,7 @@ namespace RecruitmentSystemAPI.Services
 
         public static void MatchLabourersByDates(Job job, RecruitmentSystemContext dbContext, DateTime startDate, DateTime endDate, IOptions<EmailSettings> emailSettings)
         {
+            var labourerJobsList = new List<LabourerJob>();  // Variable to collect labourerJobs
             for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
             {
                 var weekday = (Weekdays)Enum.Parse(typeof(Weekdays), date.DayOfWeek.ToString());
@@ -73,14 +74,14 @@ namespace RecruitmentSystemAPI.Services
                             });
                             dbContext.LabourerJobs.AddRange(labourerJobs);
                             dbContext.SaveChanges();
-
-                            // send email
-                            
-                            new EmailSender(emailSettings.Value).SendMailToLabourers(dbContext, labourerJobs.ToList());
+                            labourerJobsList.AddRange(labourerJobs.ToList());
                         }
                     }
+                    
                 }
             }
+            // send email
+            new EmailSender(emailSettings.Value).SendMailToLabourers(dbContext, job, labourerJobsList);
         }
     }
 }
