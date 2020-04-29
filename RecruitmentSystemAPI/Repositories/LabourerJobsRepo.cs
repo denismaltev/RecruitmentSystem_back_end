@@ -47,11 +47,6 @@ namespace RecruitmentSystemAPI.Repositories
                 query = query.Where(l => _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId == l.Job.CompanyId);
             }
 
-            else if (user.IsInRole("Admin"))
-            {
-                query = query.Where(l => l.QualityRating !=null);
-            }
-
 
             if (jobId.HasValue)
             {
