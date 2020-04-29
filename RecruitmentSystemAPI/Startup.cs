@@ -61,7 +61,7 @@ namespace RecruitmentSystemAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
-
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",

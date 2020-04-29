@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using NCrontab;
 using RecruitmentSystemAPI.Helpers;
 using RecruitmentSystemAPI.Models;
@@ -34,7 +35,8 @@ namespace RecruitmentSystemAPI.Services
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
                         var dbContext = scope.ServiceProvider.GetService<RecruitmentSystemContext>();
-                        CreateSchedule(dbContext);
+                        var emailSettings = scope.ServiceProvider.GetService<IOptions<EmailSettings>>();
+                        CreateSchedule(dbContext, emailSettings);
                     }
                     _nextRun = _crontabSchedule.GetNextOccurrence(DateTime.Now);
                 }
@@ -44,7 +46,7 @@ namespace RecruitmentSystemAPI.Services
             while (!stoppingToken.IsCancellationRequested);
         }
 
-        private void CreateSchedule(RecruitmentSystemContext dbContext)
+        private void CreateSchedule(RecruitmentSystemContext dbContext, IOptions<EmailSettings> emailSettings)
         {
             var startDate = DateHelper.GetDayOfWeekDate(DateTime.Today.AddDays(7), DayOfWeek.Monday);
             var endDate = startDate.AddDays(6);
@@ -56,7 +58,7 @@ namespace RecruitmentSystemAPI.Services
             {
                 foreach(var job in jobs)
                 {
-                    AutoSchedule.MatchLabourersByDates(job, dbContext, startDate, endDate);
+                    AutoSchedule.MatchLabourersByDates(job, dbContext, startDate, endDate, emailSettings);
                 }
             }
         }

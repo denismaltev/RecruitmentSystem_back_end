@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RecruitmentSystemAPI.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace RecruitmentSystemAPI.Services
 {
     public class AutoSchedule
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-
         public AutoSchedule(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
@@ -25,12 +25,13 @@ namespace RecruitmentSystemAPI.Services
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var dbContext = scope.ServiceProvider.GetService<RecruitmentSystemContext>();
-                    MatchLabourersForTheNearestTwoWeeks(job, dbContext);
+                    var emailSettings = scope.ServiceProvider.GetService<IOptions<EmailSettings>>();
+                    MatchLabourersForTheNearestTwoWeeks(job, dbContext, emailSettings);
                 }
             });
         }
 
-        private void MatchLabourersForTheNearestTwoWeeks(Job job, RecruitmentSystemContext dbContext)
+        private void MatchLabourersForTheNearestTwoWeeks(Job job, RecruitmentSystemContext dbContext, IOptions<EmailSettings> emailSettings)
         {
             var startDate = DateTime.Now.AddDays(1); //from tomorrow
             var nextSunday = DateHelper.GetDayOfWeekDate(DateTime.Today, DayOfWeek.Sunday);
@@ -41,12 +42,13 @@ namespace RecruitmentSystemAPI.Services
             }
             if (job.StartDate.Date <= endDate && job.EndDate.Date > startDate)
             {
-                MatchLabourersByDates(job, dbContext, startDate, endDate);
+                MatchLabourersByDates(job, dbContext, startDate, endDate, emailSettings);
             }
         }
 
-        public static void MatchLabourersByDates(Job job, RecruitmentSystemContext dbContext, DateTime startDate, DateTime endDate)
+        public static void MatchLabourersByDates(Job job, RecruitmentSystemContext dbContext, DateTime startDate, DateTime endDate, IOptions<EmailSettings> emailSettings)
         {
+            var labourerJobsList = new List<LabourerJob>();  // Variable to collect labourerJobs
             for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
             {
                 var weekday = (Weekdays)Enum.Parse(typeof(Weekdays), date.DayOfWeek.ToString());
@@ -72,10 +74,14 @@ namespace RecruitmentSystemAPI.Services
                             });
                             dbContext.LabourerJobs.AddRange(labourerJobs);
                             dbContext.SaveChanges();
+                            labourerJobsList.AddRange(labourerJobs.ToList());
                         }
                     }
+                    
                 }
             }
+            // send email
+            new EmailSender(emailSettings.Value).SendMailToLabourers(dbContext, job, labourerJobsList);
         }
     }
 }
