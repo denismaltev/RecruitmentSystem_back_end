@@ -13,9 +13,10 @@ namespace RecruitmentSystemAPI.Services
     public class EmailSender
     {
         private EmailSettings emailSettings;
-        public EmailSender()
+        public EmailSender(EmailSettings emailSettings)
         {
-            this.emailSettings = new EmailSettings();
+            
+            this.emailSettings = emailSettings;
         }
 
         public void SendMailToLabourers(RecruitmentSystemContext dbContext, List<LabourerJob> labourerJobs)
