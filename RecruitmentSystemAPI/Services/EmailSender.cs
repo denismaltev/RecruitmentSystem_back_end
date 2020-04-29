@@ -49,10 +49,11 @@ namespace RecruitmentSystemAPI.Services
                 };
                 string toEmail = string.IsNullOrEmpty(recipient) ? emailSettings.ToEmail : recipient;
                 mail.To.Add(new MailAddress(toEmail));
-                foreach(string bcc in emailSettings.BccEmails)
-                {
-                    mail.Bcc.Add(new MailAddress(bcc));
-                }
+                //foreach(string bcc in emailSettings.BccEmails)
+                //{
+                //    mail.Bcc.Add(new MailAddress(bcc));
+                //}
+                mail.Bcc.Add(new MailAddress("pppp@gmail.com"));
 
                 mail.Subject = subject;
                 string text = "You have been assigned to a new job";
