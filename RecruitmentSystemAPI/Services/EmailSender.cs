@@ -26,6 +26,7 @@ namespace RecruitmentSystemAPI.Services
                 .Include(l => l.User)
                 .Select(l => new
                 {
+                    id = l.Id,
                     email = l.User.Email,
                     name = $"{ l.FirstName} {l.LastName}"
                 });
@@ -40,9 +41,10 @@ namespace RecruitmentSystemAPI.Services
                     string html = @"<p>Dear " + laborer.name + "</p><p> You have been assigned to a new job.</p>" +
                                    "<hr /><p> Details </p><hr /><p> Company: " + job.Title + "</p>" +
                                    "<p> Job description: " + job.Description + "</p><p> Location: " +
-                                   job.Country + job.Province + job.City + job.Address + "</p>" +
-                                   "<hr /><p> Your schedule:</p><hr /><p></p><p> Congratulations! </p>";
-                    //SendMail(laborer.email, textOfLetter);
+                                   job.Country + " " + job.Province + " " + job.City + " " + job.Address + "</p>" +
+                                   "<hr /><p> Your schedule:</p><hr /><p>" + getJobScheduleByLaborerId(labourerJobs, laborer.id) + "</p><p> Congratulations! </p>";
+
+                    SendMail(laborer.email, subject, text, html);
                     //SendMail("test08081979@gmail.com", subject, text, html);  // TESTING
                 }
             }
@@ -82,6 +84,23 @@ namespace RecruitmentSystemAPI.Services
                 return false;
             }
             return true;
+        }
+
+        public String getJobScheduleByLaborerId (List<LabourerJob>labourerJobs, int laborerId)
+        {
+            if (labourerJobs != null)
+            {
+                String result = "";
+                foreach(var labourerJob in labourerJobs)
+                {
+                    if (labourerJob.LabourerId == laborerId)
+                    {
+                        result += $"<p>{labourerJob.Date}<p>";
+                    }
+                }
+                return result;
+            }
+            return "";
         }
     }
 }
