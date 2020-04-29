@@ -95,7 +95,7 @@ namespace RecruitmentSystemAPI.Services
                 {
                     if (labourerJob.LabourerId == laborerId)
                     {
-                        result += $"<p>{labourerJob.Date}<p>";
+                        result += $"<p>{labourerJob.Date.ToString("dddd, dd MMMM yyyy")}<p>";
                     }
                 }
                 return result;
