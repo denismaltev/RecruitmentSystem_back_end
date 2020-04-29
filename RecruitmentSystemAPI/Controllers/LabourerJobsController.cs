@@ -33,10 +33,10 @@ namespace RecruitmentSystemAPI.Controllers
 
         // GET: api/LabourerJobs
         [HttpGet]
-        public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, int? jobId = null, int? labId= null, DateTime? fromDate = null, DateTime? toDate = null)
+        public ActionResult<IEnumerable<LabourerJobVM>> GetLabourerJobs(int count = 20, int page = 1, int? jobId = null, int? labourerId = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
             int totalRows;
-            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, jobId, labId, out totalRows, fromDate, toDate);
+            var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, jobId, labourerId, out totalRows, fromDate, toDate);
             return Ok(new {result, totalRows});
         }
 
