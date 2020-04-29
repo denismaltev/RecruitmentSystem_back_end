@@ -46,14 +46,24 @@ namespace RecruitmentSystemAPI.Repositories
             {
                 query = query.Where(l => _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId == l.Job.CompanyId);
             }
+
             else if (user.IsInRole("Admin"))
             {
-                query = query.Where(l => l.LabourerId == labourerId);
+                query = query.Where(l => l.QualityRating !=null);
             }
+
+
             if (jobId.HasValue)
             {
                 query = query.Where(l => l.JobId == jobId.Value);
             }
+
+            else if (labourerId.HasValue)
+            {
+                query = query.Where(l => l.LabourerId == labourerId);
+            }
+
+
             totalRows = query.Count();
 
             return query.OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobVM
