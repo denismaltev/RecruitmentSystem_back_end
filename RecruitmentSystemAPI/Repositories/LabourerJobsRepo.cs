@@ -31,7 +31,7 @@ namespace RecruitmentSystemAPI.Repositories
                    PhoneNumber  = l.Labourer.Phone, SkillName = l.Skill.Name });
         }
 
-        public IQueryable<LabourerJobVM> GetLabourerJobsByUserRole(ClaimsPrincipal user, int count, int page, int? jobId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
+        public IQueryable<LabourerJobVM> GetLabourerJobsByUserRole(ClaimsPrincipal user, int count, int page, int? jobId, int? labId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var userId = _userManager.GetUserId(user);
             var query = _context.LabourerJobs
@@ -45,6 +45,10 @@ namespace RecruitmentSystemAPI.Repositories
             else if (user.IsInRole("Company"))
             {
                 query = query.Where(l => _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId == l.Job.CompanyId);
+            }
+            else if (user.IsInRole("Admin"))
+            {
+                query = query.Where(l => l.LabourerId == labId);
             }
             if (jobId.HasValue)
             {
