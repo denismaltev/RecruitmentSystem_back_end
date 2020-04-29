@@ -145,11 +145,23 @@ namespace RecruitmentSystemAPI.Repositories
                 }
                 _context.Update(labourerJob);
                 _context.SaveChanges();
+                UpdateLabourerRating(labourerJob.LabourerId);
             }
             else
             {
                 throw new Exception($"Labourer job {labourerJobId} is not found");
             }
+        }
+
+        private void UpdateLabourerRating(int labourerId)
+        {
+            var avgQualityRating = _context.LabourerJobs.Where(lj => lj.LabourerId == labourerId && lj.QualityRating.HasValue).Select(lj=>lj.QualityRating.Value).ToList().DefaultIfEmpty().Average();
+            var avgSafetyRating = _context.LabourerJobs.Where(lj => lj.LabourerId == labourerId && lj.SafetyRating.HasValue).Select(lj => lj.SafetyRating.Value).ToList().DefaultIfEmpty().Average();
+            var labourer = _context.Labourers.FirstOrDefault(l => l.Id == labourerId);
+            labourer.QualityRating = (float)avgQualityRating;
+            labourer.SafetyRating = (float)avgSafetyRating;
+            _context.Update(labourer);
+            _context.SaveChanges();
         }
     }
 }
