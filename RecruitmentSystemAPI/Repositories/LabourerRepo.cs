@@ -17,9 +17,13 @@ namespace RecruitmentSystemAPI.Repositories
             _userManager = userManager;
         }
 
-        public IQueryable<LabourerVM> GetLabourers()
+        public IQueryable<LabourerVM> GetLabourers(int count, int page, out int totalRows)
         {
-            return _context.Labourers.Include(l => l.User).Select(l => new LabourerVM
+            var labourers = _context.Labourers.Include(l => l.User).AsQueryable();
+            totalRows = labourers.Count();
+            return labourers.Skip(count * (page - 1)).Take(count)
+
+               .Select(l => new LabourerVM
             {
                 Id = l.Id,
                 FirstName = l.FirstName,
