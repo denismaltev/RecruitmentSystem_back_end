@@ -39,6 +39,14 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetCompaniesDDL")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<Dictionary<int, string>> GetCompaniesDDL()
+        {
+            var result = _companyRepo.GetCompaniesDDL();
+            return Ok(result);
+        }
+
         // GET: api/Companies/5
         [HttpGet("{id}")]
         public ActionResult<Company> GetCompany(int id)
