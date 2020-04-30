@@ -80,8 +80,8 @@ namespace RecruitmentSystemAPI.Services
                     
                 }
             }
-            // send email
-            new EmailSender(emailSettings.Value).SendMailToLabourers(dbContext, job, labourerJobsList);
+            // send emails
+            new EmailHelper(emailSettings.Value).StartMailing(dbContext, job, labourerJobsList);
         }
     }
 }
