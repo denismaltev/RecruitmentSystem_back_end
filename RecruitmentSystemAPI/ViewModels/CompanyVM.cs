@@ -25,5 +25,6 @@ namespace RecruitmentSystemAPI.ViewModels
         [EmailAddress]
         public string Email { get; set; }
         public bool IsActive { get; set; }
+        public float Rating { get; set; }
     }
 }

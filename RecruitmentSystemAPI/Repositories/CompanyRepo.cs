@@ -31,7 +31,8 @@ namespace RecruitmentSystemAPI.Repositories
                 Address = c.Address,
                 IsActive = c.IsActive,
                 Phone = c.Phone,
-                Email = c.Email
+                Email = c.Email,
+                Rating = c.Rating
             }).AsQueryable();
 
             totalRows = companies.Count();
