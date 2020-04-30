@@ -33,10 +33,11 @@ namespace RecruitmentSystemAPI.Controllers
         // GET: api/Labourers
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<LabourerVM>> GetLabourers()
+        public ActionResult<IEnumerable<LabourerVM>> GetLabourers(int count = 20, int page = 1)
         {
-            var result = _labourerRepo.GetLabourers();
-            return Ok(result);
+            int totalRows;
+            var result = _labourerRepo.GetLabourers(count, page, out totalRows);
+            return Ok(new { result, totalRows });
         }
 
         // GET: api/Labourers/5
