@@ -33,10 +33,11 @@ namespace RecruitmentSystemAPI.Controllers
         // GET: api/Companies
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<CompanyVM>> GetCompanies()
+        public ActionResult<IEnumerable<CompanyVM>> GetCompanies(int count = 20, int page = 1)
         {
-            var result = _companyRepo.GetCompanies();
-            return Ok(result);
+            int totalRows;
+            var result = _companyRepo.GetCompanies(count, page, out totalRows);
+            return Ok(new { result, totalRows });
         }
 
         [HttpGet("GetCompaniesDDL")]

@@ -19,9 +19,9 @@ namespace RecruitmentSystemAPI.Repositories
             return _context.CompanyUsers.Where(cu => cu.UserId == userId).FirstOrDefault()?.CompanyId;
         }
 
-        public IQueryable<CompanyVM> GetCompanies()
+        public IQueryable<CompanyVM> GetCompanies(int count, int page, out int totalRows)
         {
-            return _context.Companies.Select(c => new CompanyVM
+            var companies = _context.Companies.Select(c => new CompanyVM
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -32,7 +32,11 @@ namespace RecruitmentSystemAPI.Repositories
                 IsActive = c.IsActive,
                 Phone = c.Phone,
                 Email = c.Email
-            });
+            }).AsQueryable();
+
+            totalRows = companies.Count();
+            return companies.OrderByDescending(c => c.Id).Skip(count * (page - 1)).Take(count);
+
         }
 
         public CompanyVM GetCompanyById(int id)
