@@ -35,7 +35,7 @@ namespace RecruitmentSystemAPI.Repositories
         {
             var userId = _userManager.GetUserId(user);
             var query = _context.LabourerJobs
-                .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date < toDate))
+                .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate))
                 .Include(l => l.Skill).Include(l => l.Labourer)
                 .Include(l => l.Job).ThenInclude(l => l.Company).AsQueryable();
             if (user.IsInRole("Labourer"))
