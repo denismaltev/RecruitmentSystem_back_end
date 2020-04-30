@@ -21,5 +21,6 @@ namespace RecruitmentSystemAPI.ViewModels
         public int? QualityRating { get; set; }
         public int? JobRating { get; set; }
         public decimal WageAmount { get; set; }
+        public decimal ChargeAmount { get; set; }
     }
 }

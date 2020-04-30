@@ -54,23 +54,24 @@ namespace RecruitmentSystemAPI.Services
                 var weekday = (Weekdays)Enum.Parse(typeof(Weekdays), date.DayOfWeek.ToString());
                 if (date >= job.StartDate && date <= job.EndDate && job.Weekdays.HasFlag(weekday))
                 {
-                    foreach (var skill in job.JobSkills)
+                    foreach (var jobSkill in job.JobSkills)
                     {
                         var labourers = dbContext.Labourers
                             .Where(l => l.IsActive && l.Availability.HasFlag(weekday) && !dbContext.LabourerJobs.Any(lj => lj.LabourerId == l.Id && lj.Date.Date == date))
                             .Include(l => l.LabourerSkills)
-                            .Where(l => l.LabourerSkills.Any(s => s.SkillId == skill.SkillId))
-                            .OrderByDescending(l => l.QualityRating).OrderByDescending(l => l.SafetyRating).Take(skill.NumberOfLabourersNeeded).ToList();
+                            .Where(l => l.LabourerSkills.Any(s => s.SkillId == jobSkill.SkillId))
+                            .OrderByDescending(l => l.QualityRating).OrderByDescending(l => l.SafetyRating).Take(jobSkill.NumberOfLabourersNeeded).ToList();
                         if (labourers != null && labourers.Count > 0)
                         {
-                            var wageAmount = dbContext.Skills.FirstOrDefault(s => s.Id == skill.SkillId).PayAmount;
+                            var skill = dbContext.Skills.FirstOrDefault(s => s.Id == jobSkill.SkillId);
                             var labourerJobs = labourers.Select(l => new LabourerJob
                             {
                                 Date = date,
                                 JobId = job.Id,
                                 LabourerId = l.Id,
-                                SkillId = skill.SkillId,
-                                WageAmount = wageAmount
+                                SkillId = jobSkill.SkillId,
+                                WageAmount = skill.PayAmount,
+                                ChargeAmount = skill.ChargeAmount
                             });
                             dbContext.LabourerJobs.AddRange(labourerJobs);
                             dbContext.SaveChanges();

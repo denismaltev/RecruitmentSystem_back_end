@@ -71,6 +71,7 @@ namespace RecruitmentSystemAPI.Repositories
                 QualityRating = l.QualityRating,
                 JobRating = l.JobRating,
                 WageAmount = l.WageAmount,
+                ChargeAmount = l.ChargeAmount,
                 CompanyAddress = l.Job.Address,
                 CompanyName = l.Job.Company.Name,
                 LabourerFullName = $"{l.Labourer.FirstName} {l.Labourer.LastName}",
