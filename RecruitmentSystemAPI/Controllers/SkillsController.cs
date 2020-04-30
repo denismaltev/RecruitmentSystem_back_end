@@ -38,10 +38,11 @@ namespace RecruitmentSystemAPI.Controllers
         // GET: api/Skills
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<SkillsVM>> GetAll()
+        public ActionResult<IEnumerable<SkillsVM>> GetAll(int count = 20, int page = 1)
         {
-            var skills = _skillsRepo.GetSkills();
-            return Ok(skills);
+            int totalRows;
+            var skills = _skillsRepo.GetSkills(count, page, out totalRows);
+            return Ok(new { skills, totalRows});
         }
 
         // GET: api/Skills/5
