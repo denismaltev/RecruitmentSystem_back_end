@@ -69,6 +69,11 @@ namespace RecruitmentSystemAPI.Repositories
             _context.SaveChanges();
         }
 
+        public Dictionary<int, string> GetCompaniesDDL()
+        {
+            return _context.Companies.ToDictionary(c => c.Id, c => c.Name);
+        }
+
         public bool CompanyExists(int id)
         {
             return _context.Companies.Any(e => e.Id == id);
