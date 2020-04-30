@@ -82,7 +82,7 @@ namespace RecruitmentSystemAPI.Services
             }
             // send emails
             new EmailHelper(emailSettings.Value).BuildEmailBodyForLabourer(dbContext, job, labourerJobsList);
-            //new EmailHelper(emailSettings.Value).BuildEmailBodyForCompany(dbContext, job, labourerJobsList);
+            new EmailHelper(emailSettings.Value).BuildEmailBodyForCompany(dbContext, job, labourerJobsList);
         }
     }
 }
