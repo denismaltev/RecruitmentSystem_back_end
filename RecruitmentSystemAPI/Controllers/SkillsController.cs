@@ -41,8 +41,8 @@ namespace RecruitmentSystemAPI.Controllers
         public ActionResult<IEnumerable<SkillsVM>> GetAll(int count = 20, int page = 1)
         {
             int totalRows;
-            var skills = _skillsRepo.GetSkills(count, page, out totalRows);
-            return Ok(new { skills, totalRows});
+            var result = _skillsRepo.GetSkills(count, page, out totalRows);
+            return Ok(new { result, totalRows});
         }
 
         // GET: api/Skills/5
