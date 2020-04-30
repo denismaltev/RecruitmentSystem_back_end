@@ -105,8 +105,17 @@ namespace RecruitmentSystemAPI.Repositories
         public void UpdateJobRating(int idToGrade, int rating, string userId)
         {
             var jobToRate = _context.LabourerJobs.Where(ls => ls.Id == idToGrade && ls.Labourer.UserId == userId).FirstOrDefault();
+            var jodDate = jobToRate.Date;
+            var today = DateTime.Today;
+            var daysAfterJobDate = (today - jodDate).TotalDays;
 
-            if (jobToRate.JobRating ==null){
+            if (jobToRate.JobRating != null && daysAfterJobDate > 14)
+            {
+                
+                throw new Exception("You are not allowed to change the rating after 14 days");
+            }
+
+            else {
 
                 //update rating in labourerjobs table
                 jobToRate.JobRating = rating;
@@ -131,10 +140,7 @@ namespace RecruitmentSystemAPI.Repositories
                 _context.Update(CompanyToRate);
                 _context.SaveChanges();
             }
-            else
-            {
-                throw new Exception("You have already graded this job");
-            }
+           
         
         }
 
