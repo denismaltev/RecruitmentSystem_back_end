@@ -27,10 +27,14 @@ namespace RecruitmentSystemAPI.Repositories
         // GET all skills list
         public IQueryable<SkillsVM> GetSkills(int count, int page, out int totalRows)
         {
-
             var query = _context.Skills;
             totalRows = query.Count();
-            return query.OrderByDescending(s => s.Name).Skip(count * (page - 1)).Take(count).Select(s => new SkillsVM
+
+            return query
+                .OrderByDescending(s => s.Name)
+                .Skip(count * (page - 1))
+                .Take(count)
+                .Select(s => new SkillsVM
             {
                 Id = s.Id,
                 Name = s.Name,
