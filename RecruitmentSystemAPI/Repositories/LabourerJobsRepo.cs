@@ -176,5 +176,31 @@ namespace RecruitmentSystemAPI.Repositories
             _context.Update(labourer);
             _context.SaveChanges();
         }
+
+        public IQueryable<LabourerJobReportVM> GetLabourerJobReport(ClaimsPrincipal user, int count, int page, int? labourerId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            var query = _context.LabourerJobs
+                .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate))
+                .Include(l => l.Labourer).Where(l=> l.QualityRating>=1).Include(l => l.Job).AsQueryable();
+           
+            if (labourerId.HasValue)
+            {
+                query = query.Where(l => l.LabourerId == labourerId);
+            }
+
+            totalRows = query.Count();
+
+            return query.OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobReportVM
+            {
+                Id = l.Id,
+                JobTitle = l.Job.Title,
+                Date = l.Date,
+                WageAmount = l.WageAmount,
+                ChargeAmount = l.ChargeAmount,
+                LabourerFullName = $"{l.Labourer.FirstName} {l.Labourer.LastName}",
+            });
+        }
+
+
     }
 }
