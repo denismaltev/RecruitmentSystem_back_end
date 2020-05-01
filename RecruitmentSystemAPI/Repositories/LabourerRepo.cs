@@ -60,10 +60,10 @@ namespace RecruitmentSystemAPI.Repositories
             return _context.Labourers.Select(l => new BaseLabourersVM
             {
                 Id = l.Id,
-                FullName = l.FirstName+l.LastName,
+                FullName = l.FirstName +" "+l.LastName +" - "+l.Phone,
                 IsActive = l.IsActive
 
-            });
+            }) ;
         }
 
         
