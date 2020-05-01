@@ -40,6 +40,15 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(new { result, totalRows });
         }
 
+        // GET: api/Labourers
+        [HttpGet]
+        [Route("GetLabourersDDL")]
+        public ActionResult<IEnumerable<BaseLabourersVM>> GetLabourersDDL()
+        {
+            var labourers = _labourerRepo.GetLabourersDDL();
+            return Ok(labourers);
+        }
+
         // GET: api/Labourers/5
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin, Labourer")]
