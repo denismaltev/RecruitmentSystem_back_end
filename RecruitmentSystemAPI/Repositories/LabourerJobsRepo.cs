@@ -105,9 +105,9 @@ namespace RecruitmentSystemAPI.Repositories
         public void UpdateJobRating(int idToGrade, int rating, string userId)
         {
             var jobToRate = _context.LabourerJobs.Where(ls => ls.Id == idToGrade && ls.Labourer.UserId == userId).FirstOrDefault();
-            var jodDate = jobToRate.Date;
+            var jobDate = jobToRate.Date;
             var today = DateTime.Today;
-            var daysAfterJobDate = (today - jodDate).TotalDays;
+            var daysAfterJobDate = (today - jobDate).TotalDays;
 
             if (jobToRate.JobRating != null && daysAfterJobDate > 14)
             {
