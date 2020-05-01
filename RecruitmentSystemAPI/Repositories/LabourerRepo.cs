@@ -54,6 +54,19 @@ namespace RecruitmentSystemAPI.Repositories
             });
         }
 
+
+        public IQueryable<BaseLabourersVM> GetLabourersDDL()
+        {
+            return _context.Labourers.Select(l => new BaseLabourersVM
+            {
+                Id = l.Id,
+                FullName = l.FirstName+l.LastName,
+                IsActive = l.IsActive
+
+            });
+        }
+
+        
         public LabourerVM GetLabourerById(int id)
         {
             return _context.Labourers.Where(l => l.Id == id).Include(l => l.User).Select(l => new LabourerVM
