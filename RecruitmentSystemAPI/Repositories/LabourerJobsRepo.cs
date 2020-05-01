@@ -109,7 +109,7 @@ namespace RecruitmentSystemAPI.Repositories
             var today = DateTime.Today;
             var daysAfterJobDate = (today - jobDate).TotalDays;
 
-            if (jobToRate.JobRating != null && daysAfterJobDate > 14)
+            if (daysAfterJobDate > 14)
             {
                 
                 throw new Exception("You are not allowed to change the rating after 14 days");
