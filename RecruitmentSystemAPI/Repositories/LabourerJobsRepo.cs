@@ -179,7 +179,7 @@ namespace RecruitmentSystemAPI.Repositories
 
         public IQueryable<LabourerJobReportVM> GetLabourerJobReport(ClaimsPrincipal user, int count, int page, int? labourerId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var query = _context.LabourerJobs
+            var query = _context.LabourerJobs.Where(lj => lj.LabourerId == 2)
                 .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate))
                 .Include(l => l.Labourer).Where(l=> l.QualityRating>=1).Include(l => l.Job).AsQueryable();
            
@@ -189,15 +189,19 @@ namespace RecruitmentSystemAPI.Repositories
             }
 
             totalRows = query.Count();
-
             return query.OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobReportVM
             {
-                Id = l.Id,
-                JobTitle = l.Job.Title,
-                Date = l.Date,
-                WageAmount = l.WageAmount,
-                ChargeAmount = l.ChargeAmount,
+                Id = l.LabourerId,
                 LabourerFullName = $"{l.Labourer.FirstName} {l.Labourer.LastName}",
+                Jobs = _context.LabourerJobs.Where(lj => lj.LabourerId == 2)
+                  .Select(bs => new BaseJobsVM
+                  {
+                      JobId = bs.JobId,
+                      JobTitle = bs.Job.Title,
+                      Date = bs.Job.StartDate,
+                      WageAmount = bs.WageAmount
+                     }).ToList(),
+
             });
         }
 
