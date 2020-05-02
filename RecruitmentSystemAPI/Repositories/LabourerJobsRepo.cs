@@ -176,24 +176,24 @@ namespace RecruitmentSystemAPI.Repositories
             _context.Update(labourer);
             _context.SaveChanges();
         }
-
         public IQueryable<LabourerJobReportVM> GetLabourerJobReport(ClaimsPrincipal user, int count, int page, int? labourerId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var query = _context.LabourerJobs
-                .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate))
-                .Include(l => l.Labourer).Where(l=> l.QualityRating>=1).Include(l => l.Job).AsQueryable();
+            var query = _context.LabourerJobs .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate))
+                .Include(l => l.Labourer).Where(l => l.QualityRating >= 1).Include(l => l.Job).GroupBy(x=> x.LabourerId).Select(g=> new { Id = g.Key , Name = _context.Labourers.Where(l=>l.Id==g.Key).Select(n => n.FirstName+n.LastName).SingleOrDefault()
+                ,Jobs = _context.LabourerJobs.Where(l => l.LabourerId == g.Key)
+                }).AsQueryable();
            
             if (labourerId.HasValue)
             {
-                query = query.Where(l => l.LabourerId == labourerId);
+                query = query.Where(l => l.Id == labourerId);
             }
 
             totalRows = query.Count();
-            return query.OrderByDescending(l => l.Date).Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobReportVM
+            return query.Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobReportVM
             {
-                Id = l.LabourerId,
-                LabourerFullName = $"{l.Labourer.FirstName} {l.Labourer.LastName}",
-                Jobs = _context.LabourerJobs.Where(lj => lj.LabourerId == l.LabourerId)
+                Id = l.Id,
+                LabourerFullName = l.Name,
+                Jobs = _context.LabourerJobs.Where(lj => lj.LabourerId == l.Id)
                   .Select(bs => new BaseJobsVM
                   {
                       JobId = bs.JobId,
@@ -201,10 +201,7 @@ namespace RecruitmentSystemAPI.Repositories
                       Date = bs.Job.StartDate,
                       WageAmount = bs.WageAmount
                      }).ToList(),
-
             });
         }
-
-
     }
 }
