@@ -7,8 +7,9 @@ namespace RecruitmentSystemAPI.ViewModels
 {
     public class LabourerJobReportVM
     {
-        public int Id { get; set; }
+        public int LabourerId { get; set; }
         public string LabourerFullName { get; set; }
+        public decimal TotalWage { get; set; }
         public List<BaseJobsVM> Jobs { get; set; }
 
     }

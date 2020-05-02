@@ -176,31 +176,23 @@ namespace RecruitmentSystemAPI.Repositories
             _context.Update(labourer);
             _context.SaveChanges();
         }
-        public IQueryable<LabourerJobReportVM> GetLabourerJobReport(ClaimsPrincipal user, int count, int page, int? labourerId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
+        public IEnumerable<LabourerJobReportVM> GetLabourerJobReport(ClaimsPrincipal user, int count, int page, int? labourerId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var query = _context.LabourerJobs .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate))
-                .Include(l => l.Labourer).Where(l => l.QualityRating >= 1).Include(l => l.Job).GroupBy(x=> x.LabourerId).Select(g=> new { Id = g.Key , Name = _context.Labourers.Where(l=>l.Id==g.Key).Select(n => n.FirstName+n.LastName).SingleOrDefault()
-                ,Jobs = _context.LabourerJobs.Where(l => l.LabourerId == g.Key)
-                }).AsQueryable();
-           
-            if (labourerId.HasValue)
-            {
-                query = query.Where(l => l.Id == labourerId);
-            }
-
+            var query = _context.LabourerJobs
+                .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate) && (!labourerId.HasValue || l.LabourerId == labourerId))
+                .Include(l => l.Labourer).Include(l => l.Job).GroupBy(l => l.Labourer).AsQueryable();
             totalRows = query.Count();
-            return query.Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobReportVM
+            return query.Skip(count * (page - 1)).Take(count).ToDictionary(l => l.Key, l => l.ToList()).Select(l => new LabourerJobReportVM
             {
-                Id = l.Id,
-                LabourerFullName = l.Name,
-                Jobs = _context.LabourerJobs.Where(lj => lj.LabourerId == l.Id)
-                  .Select(bs => new BaseJobsVM
-                  {
-                      JobId = bs.JobId,
-                      JobTitle = bs.Job.Title,
-                      Date = bs.Job.StartDate,
-                      WageAmount = bs.WageAmount
-                     }).ToList(),
+                LabourerId = l.Key.Id,
+                LabourerFullName = $"{l.Key.FirstName} {l.Key.LastName}",
+                TotalWage = l.Value.Sum(j=>j.WageAmount * 8),
+                Jobs = l.Value.GroupBy(j => j.Job).Select(j => new BaseJobsVM
+                {
+                    WageAmount = j.Sum(a => a.WageAmount * 8),
+                    JobId = j.Key.Id,
+                    JobTitle = j.Key.Title
+                }).ToList()
             });
         }
     }

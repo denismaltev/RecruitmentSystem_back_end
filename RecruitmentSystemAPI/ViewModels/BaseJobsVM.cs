@@ -9,7 +9,6 @@ namespace RecruitmentSystemAPI.ViewModels
     {
         public int? JobId { get; set; }
         public string JobTitle { get; set; }
-        public DateTime Date { get; set; }
         public decimal WageAmount { get; set; }
     }
 }
