@@ -61,7 +61,7 @@ namespace RecruitmentSystemAPI.Controllers
 
         // PUT: api/Labourers/5
         [HttpPut("{id}")]
-        [Authorize(Roles = "Labourer")]
+        [Authorize(Roles = "Admin, Labourer")]
         public async Task<IActionResult> PutLabourer(int id, LabourerVM labourerVM)
         {
             if (id != labourerVM.Id)

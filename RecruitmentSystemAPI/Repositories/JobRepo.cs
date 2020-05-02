@@ -19,9 +19,12 @@ namespace RecruitmentSystemAPI.Repositories
         }
 
         // This is only for admin:
-        public IQueryable<JobRatingVM> GetAllCompanyJobs()
+        public IQueryable<JobRatingVM> GetAllCompanyJobs(int count, int page, out int totalRows)
         {
-            return _context.Jobs.Select(j => new JobRatingVM
+            var query = _context.Jobs.AsQueryable();
+            totalRows = query.Count();
+
+            return query.Skip(count * (page - 1)).Take(count).Select(j => new JobRatingVM
             {
                 CompanyId   = j.CompanyId,
                 CompanyName = j.Company.Name,
