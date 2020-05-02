@@ -32,14 +32,15 @@ namespace RecruitmentSystemAPI.Controllers
 
         [HttpGet("all")]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<JobRatingVM>> GetAllCompanyJobs()
+        public ActionResult<IEnumerable<JobRatingVM>> GetAllCompanyJobs(int count = 20, int page = 1)
         {
-            var result = _jobRepo.GetAllCompanyJobs();
+            int totalRows;
+            var result = _jobRepo.GetAllCompanyJobs(count, page, out totalRows);
             if (result == null)
             {
                 return BadRequest("No matches found");
             }
-            return Ok(result);
+            return Ok(new { result, totalRows });
         }
 
         // Get all jobs for ONE company
