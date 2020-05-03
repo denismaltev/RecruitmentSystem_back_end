@@ -226,14 +226,16 @@ namespace RecruitmentSystemAPI.Repositories
             {
                 LabourerId = l.Key.Id,
                 LabourerFullName = $"{l.Key.FirstName} {l.Key.LastName}",
-                TotalWage = l.Value.Sum(j=>j.WageAmount * 8),
-                Jobs = l.Value.GroupBy(j => j.Job).Select(j => new BaseJobsVM
-                {
-                    WageAmount = j.Sum(a => a.WageAmount * 8),
-                    JobId = j.Key.Id,
-                    JobTitle = j.Key.Title
-                }).ToList()
-            });
+                LabourerPhone = l.Key.Phone,
+                LabourerEmail = _context.Users.Where(U => U.Id == l.Key.UserId).Select(le => le.Email).FirstOrDefault(),
+                TotalWage = l.Value.Sum(j => j.WageAmount * 8),
+                //Jobs = l.Value.GroupBy(j => j.Job).Select(j => new BaseJobsVM
+                //{
+                //    WageAmount = j.Sum(a => a.WageAmount * 8),
+                //    JobId = j.Key.Id,
+                //    JobTitle = j.Key.Title
+                //}).ToList()
+            }) ;
         }
     }
 }

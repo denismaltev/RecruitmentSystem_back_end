@@ -50,7 +50,23 @@ namespace RecruitmentSystemAPI.Controllers
             var result = _labourerJobsRepo.GetLabourerJobReport(User, count, page, labourerId, out totalRows, fromDate, toDate);
             return Ok(new { result, totalRows });
         }
-       
+
+        [HttpGet]
+        [Route("LabourerJobReport/{labourerId}")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<LabourerJobDetailedReportVM>> GetLabourerJobDetailedReport(int labourerId, DateTime fromDate, DateTime toDate, int count = 20, int page = 1)
+        {
+            try
+            {
+                var result = _labourerJobsRepo.GetCompanyInvoiceDetails(labourerId, fromDate, toDate, count, page);
+                return Ok(new { result = result.Item2, totalRows = result.Item1 });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+
 
         // POST: api/LabourerJobs
         [HttpPost]
@@ -88,6 +104,7 @@ namespace RecruitmentSystemAPI.Controllers
                 return StatusCode(500, new { message = e.Message });
             }
         }
+
 
         [HttpPut("{labourerJobId}")]
         [Authorize(Roles = "Company, Admin")]
