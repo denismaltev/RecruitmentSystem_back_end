@@ -26,8 +26,8 @@ namespace RecruitmentSystemAPI.Controllers
 
         public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo)
         {
-            _context          = context;
-            _userManager      = userManager;
+            _context = context;
+            _userManager = userManager;
             _labourerJobsRepo = labourerJobsRepo;
         }
 
@@ -37,7 +37,7 @@ namespace RecruitmentSystemAPI.Controllers
         {
             int totalRows;
             var result = _labourerJobsRepo.GetLabourerJobsByUserRole(User, count, page, jobId, labourerId, companyId, out totalRows, fromDate, toDate);
-            return Ok(new {result, totalRows});
+            return Ok(new { result, totalRows });
         }
 
         // GET: api/LabourerJobs/
@@ -99,7 +99,38 @@ namespace RecruitmentSystemAPI.Controllers
                 _labourerJobsRepo.UpdateLabourerJob(userId, labourerJobId, User.IsInRole("Admin"), qualityRating, safetyRating);
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetInvoices")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<InvoiceVM>> GetInvoices(DateTime fromDate, DateTime toDate, int? companyId = null, int count = 20, int page = 1)
+        {
+            try
+            {
+                var result = _labourerJobsRepo.GetInvoices(fromDate, toDate, companyId, count, page);
+                return Ok(new { result = result.Item2, totalRows = result.Item1 });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+        [HttpGet]
+        [Route("GetInvoices/{companyId}")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<InvoiceDetailsVM>> GetCompanyInvoiceDetails(int companyId, DateTime fromDate, DateTime toDate, int count = 20, int page = 1)
+        {
+            try
+            {
+                var result = _labourerJobsRepo.GetCompanyInvoiceDetails(companyId,fromDate, toDate, count, page);
+                return Ok(new { result = result.Item2, totalRows = result.Item1 });
+            }
+            catch (Exception e)
             {
                 return StatusCode(500, new { message = e.Message });
             }
