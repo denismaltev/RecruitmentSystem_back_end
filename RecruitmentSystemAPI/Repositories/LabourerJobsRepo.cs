@@ -172,6 +172,40 @@ namespace RecruitmentSystemAPI.Repositories
             }
         }
 
+        public (int, IEnumerable<InvoiceVM>) GetInvoices(DateTime fromDate, DateTime toDate, int? companyId, int count, int page)
+        {
+            var query = _context.LabourerJobs.Where(l => l.Date.Date >= fromDate && l.Date.Date <= toDate.Date && l.QualityRating.HasValue).Include(l => l.Job).ThenInclude(j => j.Company).Where(l => !companyId.HasValue || l.Job.CompanyId == companyId.Value)
+                .OrderBy(l => l.Date).GroupBy(l => l.Job.Company);
+            var totalRows = query.Count();
+            var result = query.Skip(count * (page - 1)).Take(count).ToDictionary(l => l.Key, l => l.ToList()).Select(l => new InvoiceVM
+            {
+                CompanyId = l.Key.Id,
+                CompanyEmail = l.Key.Email,
+                CompanyName = l.Key.Name,
+                CompanyPhone = l.Key.Phone,
+                TotalToInvoice = l.Value.Sum(a => a.ChargeAmount * 8)
+            });
+            return (totalRows, result);
+        }
+
+        public (int, IEnumerable<InvoiceDetailsVM>) GetCompanyInvoiceDetails(int companyId, DateTime fromDate, DateTime toDate, int count, int page)
+        {
+            var query = _context.LabourerJobs.Where(l => l.Date.Date >= fromDate && l.Date.Date <= toDate.Date && l.QualityRating.HasValue).Include(l => l.Labourer).ThenInclude(l => l.User).Include(l => l.Skill).Include(l => l.Job)
+                .Where(l => l.Job.CompanyId == companyId).OrderBy(l=>l.Date);
+            var totalRows = query.Count();
+            var result = query.Skip(count * (page - 1)).Take(count).Select(l => new InvoiceDetailsVM
+            {
+                ChargeAmount = l.ChargeAmount,
+                Date = l.Date,
+                JobTitle = l.Job.Title,
+                LabourerEmail = l.Labourer.User.Email,
+                LabourerName = $"{l.Labourer.FirstName} {l.Labourer.LastName}",
+                LabourerPhone = l.Labourer.Phone,
+                SkillName = l.Skill.Name
+            });
+            return (totalRows, result);
+        }
+
         private void UpdateLabourerRating(int labourerId)
         {
             var avgQualityRating = _context.LabourerJobs.Where(lj => lj.LabourerId == labourerId && lj.QualityRating.HasValue).Select(lj=>lj.QualityRating.Value).ToList().DefaultIfEmpty().Average();
