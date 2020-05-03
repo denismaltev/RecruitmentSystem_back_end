@@ -40,6 +40,18 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(new { result, totalRows });
         }
 
+        // GET: api/LabourerJobs/
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Route("LabourerJobReport")]
+        public ActionResult<IEnumerable<LabourerJobReportVM>> GetLabourerJobReport(int count = 20, int page = 1, int? labourerId = null, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            int totalRows;
+            var result = _labourerJobsRepo.GetLabourerJobReport(User, count, page, labourerId, out totalRows, fromDate, toDate);
+            return Ok(new { result, totalRows });
+        }
+       
+
         // POST: api/LabourerJobs
         [HttpPost]
         [Authorize(Roles = "Labourer")] //TODO: consider to remove the function, bc there is no option to add labourer's job from client
