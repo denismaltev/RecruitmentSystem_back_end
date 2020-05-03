@@ -58,7 +58,7 @@ namespace RecruitmentSystemAPI.Controllers
         {
             try
             {
-                var result = _labourerJobsRepo.GetCompanyInvoiceDetails(labourerId, fromDate, toDate, count, page);
+                var result = _labourerJobsRepo.GetLabourerJobDetailedReport(labourerId, fromDate, toDate, count, page);
                 return Ok(new { result = result.Item2, totalRows = result.Item1 });
             }
             catch (Exception e)
