@@ -243,7 +243,7 @@ namespace RecruitmentSystemAPI.Repositories
                 Date = l.Date,
                 JobTitle = l.Job.Title,
                 CompanyName = l.Job.Company.Name,
-                CompanyPhone = l.Job.Company.Email,
+                CompanyPhone = l.Job.Company.Phone,
                 SkillName = l.Skill.Name
             });
             return (totalRows, result);
