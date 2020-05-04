@@ -9,8 +9,9 @@ namespace RecruitmentSystemAPI.ViewModels
     {
         public int LabourerId { get; set; }
         public string LabourerFullName { get; set; }
+        public string LabourerPhone { get; set; }
+        public string LabourerEmail { get; set; }
         public decimal TotalWage { get; set; }
-        public List<BaseJobsVM> Jobs { get; set; }
 
     }
 }

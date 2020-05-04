@@ -219,21 +219,34 @@ namespace RecruitmentSystemAPI.Repositories
         public IEnumerable<LabourerJobReportVM> GetLabourerJobReport(ClaimsPrincipal user, int count, int page, int? labourerId, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var query = _context.LabourerJobs
-                .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate) && (!labourerId.HasValue || l.LabourerId == labourerId))
+                .Where(l => (!fromDate.HasValue || l.Date >= fromDate) && (!toDate.HasValue || l.Date <= toDate) && (l.QualityRating.HasValue) && (!labourerId.HasValue || l.LabourerId == labourerId))
                 .Include(l => l.Labourer).Include(l => l.Job).GroupBy(l => l.Labourer).AsQueryable();
             totalRows = query.Count();
             return query.Skip(count * (page - 1)).Take(count).ToDictionary(l => l.Key, l => l.ToList()).Select(l => new LabourerJobReportVM
             {
                 LabourerId = l.Key.Id,
                 LabourerFullName = $"{l.Key.FirstName} {l.Key.LastName}",
-                TotalWage = l.Value.Sum(j=>j.WageAmount * 8),
-                Jobs = l.Value.GroupBy(j => j.Job).Select(j => new BaseJobsVM
-                {
-                    WageAmount = j.Sum(a => a.WageAmount * 8),
-                    JobId = j.Key.Id,
-                    JobTitle = j.Key.Title
-                }).ToList()
+                LabourerPhone = l.Key.Phone,
+                LabourerEmail = _context.Users.Where(U => U.Id == l.Key.UserId).Select(le => le.Email).FirstOrDefault(),
+                TotalWage = l.Value.Sum(j => j.WageAmount * 8),
+            }) ;
+        }
+
+        public (int, IEnumerable<LabourerJobDetailedReportVM>) GetLabourerJobDetailedReport(int labourerId, DateTime fromDate, DateTime toDate, int count, int page)
+        {
+            var query = _context.LabourerJobs.Where(l => l.Date.Date >= fromDate && l.Date.Date <= toDate.Date && l.QualityRating.HasValue)
+                .Where(l => l.LabourerId == labourerId).OrderBy(l => l.Date);
+            var totalRows = query.Count();
+            var result = query.Skip(count * (page - 1)).Take(count).Select(l => new LabourerJobDetailedReportVM
+            {
+                WageAmount = l.WageAmount,
+                Date = l.Date,
+                JobTitle = l.Job.Title,
+                CompanyName = l.Job.Company.Name,
+                CompanyPhone = l.Job.Company.Phone,
+                SkillName = l.Skill.Name
             });
+            return (totalRows, result);
         }
     }
 }
