@@ -133,5 +133,14 @@ namespace RecruitmentSystemAPI.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("GetJobsDDL")]
+        [Authorize(Roles = "Company")]
+        public ActionResult<Dictionary<int, string>> GetJobsDDL(int? labourerId)
+        {
+            var userId = _userManager.GetUserId(User);
+            var result = _jobRepo.GetJobsDDL(userId, labourerId);
+            return Ok(result);
+        }
     }
 }

@@ -43,9 +43,11 @@ namespace RecruitmentSystemAPI.Controllers
         // GET: api/Labourers
         [HttpGet]
         [Route("GetLabourersDDL")]
-        public ActionResult<IEnumerable<BaseLabourersVM>> GetLabourersDDL()
+        [Authorize(Roles = "Admin, Company")]
+        public ActionResult<IEnumerable<BaseLabourersVM>> GetLabourersDDL(int? jobId = null)
         {
-            var labourers = _labourerRepo.GetLabourersDDL();
+            var userId = _userManager.GetUserId(User);
+            var labourers = _labourerRepo.GetLabourersDDL(User.IsInRole("Admin"), userId, jobId);
             return Ok(labourers);
         }
 

@@ -133,6 +133,18 @@ namespace RecruitmentSystemAPI.Repositories
             }).FirstOrDefault();
         }
 
+        public Dictionary<int, string> GetJobsDDL(string userId, int? labourerId)
+        {
+            var companyId = _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId;
+            var query = _context.Jobs.Where(j => j.CompanyId == companyId);
+            if (labourerId.HasValue)
+            {
+                query = query.Include(j => j.LabourerJobs).Where(j => j.LabourerJobs.Any(l => l.LabourerId == labourerId));
+            }
+            var result = query.OrderByDescending(j => j.EndDate).ToDictionary(j => j.Id, j => j.Title);
+            return result;
+        }
+
         public void UpdateJob(JobVM jobVM)
         {
             var job = _context.Jobs.FirstOrDefault(c => c.Id == jobVM.Id);
