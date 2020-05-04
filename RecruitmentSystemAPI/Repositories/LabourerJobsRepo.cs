@@ -111,11 +111,12 @@ namespace RecruitmentSystemAPI.Repositories
 
             if (daysAfterJobDate > 14)
             {
-                
+
                 throw new Exception("You are not allowed to change the rating after 14 days");
             }
 
-            else {
+            else
+            {
 
                 //update rating in labourerjobs table
                 jobToRate.JobRating = rating;
@@ -134,13 +135,12 @@ namespace RecruitmentSystemAPI.Repositories
 
                 //update rating in companies table
                 var CompanyToRate = _context.Companies.Where(c => c.Id == jobInTable.CompanyId).FirstOrDefault();
-                var allJobWithSameCompanyId = _context.Jobs.Where(j => j.CompanyId == jobInTable.CompanyId).Select(j => j.Rating).Where(v => v!= 0 && v != null).ToArray();
+                var allJobWithSameCompanyId = _context.Jobs.Where(j => j.CompanyId == jobInTable.CompanyId).Select(j => j.Rating).Where(v => v != 0 && v != null).ToArray();
                 var newCompanyRating = (float)allJobWithSameCompanyId.Average();
                 CompanyToRate.Rating = newCompanyRating;
                 _context.Update(CompanyToRate);
                 _context.SaveChanges();
-            }
-           
+            }          
         
         }
 
@@ -154,17 +154,34 @@ namespace RecruitmentSystemAPI.Repositories
             var labourerJob = query.FirstOrDefault();
             if (labourerJob != null)
             {
-                if (qualityRating.HasValue)
+                var jobDate = labourerJob.Date;
+                var today = DateTime.Today;
+                var daysAfterJobDate = (today - jobDate).TotalDays;
+
+                if (daysAfterJobDate > 14)
                 {
-                    labourerJob.QualityRating = qualityRating.Value;
+
+                    throw new Exception("You are not allowed to rate the job after 14 days!");
                 }
-                if (safetyRating.HasValue)
+                else if (daysAfterJobDate < 0)
                 {
-                    labourerJob.SafetyRating = safetyRating.Value;
+
+                    throw new Exception("You are not allowed to rate the job which is not done yet!");
                 }
-                _context.Update(labourerJob);
-                _context.SaveChanges();
-                UpdateLabourerRating(labourerJob.LabourerId);
+                else
+                {
+                    if (qualityRating.HasValue)
+                    {
+                        labourerJob.QualityRating = qualityRating.Value;
+                    }
+                    if (safetyRating.HasValue)
+                    {
+                        labourerJob.SafetyRating = safetyRating.Value;
+                    }
+                    _context.Update(labourerJob);
+                    _context.SaveChanges();
+                    UpdateLabourerRating(labourerJob.LabourerId);
+                }
             }
             else
             {
