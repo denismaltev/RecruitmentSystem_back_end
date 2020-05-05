@@ -81,7 +81,25 @@ namespace RecruitmentSystemAPI.Repositories
                 LabourerPhone = l.Labourer.Phone
             });
         }
-        
+
+        public IEnumerable<ProfitReportVM> GetAnnualProfitReport()
+        {
+            List<ProfitReportVM> result = new List<ProfitReportVM>();
+            for(var month = DateTime.Today.AddMonths(-11); month <= DateTime.Today; month = month.AddMonths(1))
+            {
+                var fromDate = new DateTime(month.Year, month.Month, 1);
+                var toDate = fromDate.AddMonths(1).AddDays(-1);
+                var monthlyProfit = _context.LabourerJobs.Where(l => l.Date.Date >= fromDate.Date && l.Date.Date <= toDate.Date && l.QualityRating.HasValue).Sum(l => (l.ChargeAmount - l.WageAmount) * 8);
+                result.Add(new ProfitReportVM
+                {
+                    FromDate = fromDate,
+                    ToDate = toDate,
+                    TotalProfit = monthlyProfit
+                });
+            }
+            return result;
+        }
+
         public LabourerJobVM AddLabourerJob(LabourerJobVM labourerJobVM, string userId)
         {
             var labourerSkill = _context.LabourerSkills.Where(ls => ls.SkillId == labourerJobVM.SkillId.Value).Include(ls => ls.Labourer).Where(ls => ls.Labourer.UserId == userId).FirstOrDefault();
