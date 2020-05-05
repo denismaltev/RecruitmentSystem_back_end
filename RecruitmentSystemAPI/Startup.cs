@@ -42,6 +42,7 @@ namespace RecruitmentSystemAPI
             services.AddScoped<LabourerRepo>();
             services.AddScoped<SkillsRepo>();
             services.AddScoped<SystemUserRepo>();
+            services.AddScoped<IncidentReportsRepo>();
 
             services.AddHostedService<ScheduledJob>();
 

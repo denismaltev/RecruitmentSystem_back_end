@@ -26,6 +26,8 @@ namespace RecruitmentSystemAPI.Models
         public virtual DbSet<LabourerSkill> LabourerSkills { get; set; }
         public virtual DbSet<Labourer> Labourers { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }
+        public virtual DbSet<IncidentReport> IncidentReports { get; set; }
+        public virtual DbSet<LabourerIncidentReport> LabourerIncidentReports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -251,6 +253,34 @@ namespace RecruitmentSystemAPI.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.PayAmount).HasColumnType("decimal(18, 0)");
+            });
+
+            modelBuilder.Entity<IncidentReport>(entity =>
+            {
+                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+                entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+
+                entity.HasOne(e => e.Job)
+                    .WithMany(p => p.IncidentReports)
+                    .HasForeignKey(d => d.JobId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_IncidentReports_Jobs");
+            });
+
+            modelBuilder.Entity<LabourerIncidentReport>(entity =>
+            {
+                entity.HasOne(d => d.Labourer)
+                     .WithMany(p => p.IncidentReports)
+                     .HasForeignKey(d => d.LabourerId)
+                     .OnDelete(DeleteBehavior.ClientSetNull)
+                     .HasConstraintName("FK_IncidentReports_Labourers");
+
+                entity.HasOne(d => d.IncidentReport)
+                    .WithMany(p => p.LabourerIncidentReports)
+                    .HasForeignKey(d => d.IncidentReportId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LabourerIncidentReports_IncidentReports");
             });
 
             SeedData(modelBuilder);

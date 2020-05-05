@@ -55,15 +55,28 @@ namespace RecruitmentSystemAPI.Repositories
         }
 
 
-        public IQueryable<BaseLabourersVM> GetLabourersDDL()
+        public IQueryable<BaseLabourersVM> GetLabourersDDL(bool isAdmin, string userId, int? jobId)
         {
-            return _context.Labourers.Select(l => new BaseLabourersVM
+            if (!isAdmin)
             {
-                Id = l.Id,
-                FullName = l.FirstName +" "+l.LastName +" - "+l.Phone,
-                IsActive = l.IsActive
+                var companyId = _context.CompanyUsers.FirstOrDefault(cu => cu.UserId == userId).CompanyId;
+                return _context.Labourers.Where(l => _context.LabourerJobs.Include(j => j.Job).Where(j => (!jobId.HasValue || j.JobId == jobId) && j.Job.CompanyId == companyId).Any(j => j.LabourerId == l.Id)).Select(l => new BaseLabourersVM
+                {
+                    Id = l.Id,
+                    FullName = l.FirstName + " " + l.LastName + " - " + l.Phone,
+                    IsActive = l.IsActive
+                });
+            }
+            else
+            {
+                return _context.Labourers.Select(l => new BaseLabourersVM
+                {
+                    Id = l.Id,
+                    FullName = l.FirstName + " " + l.LastName + " - " + l.Phone,
+                    IsActive = l.IsActive
 
-            }) ;
+                });
+            }
         }
 
         
