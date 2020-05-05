@@ -17,12 +17,19 @@ namespace RecruitmentSystemAPI.Repositories
             _userManager = userManager;
         }
 
-        public IQueryable<LabourerVM> GetLabourers(int count, int page, out int totalRows)
+        public IQueryable<LabourerVM> GetLabourers(int count, int page, out int totalRows, bool? orderByTopRated)
         {
-            var labourers = _context.Labourers.Include(l => l.User).AsQueryable();
-            totalRows = labourers.Count();
-            return labourers.Skip(count * (page - 1)).Take(count)
-
+            var query = _context.Labourers.Include(l => l.User).AsQueryable();
+            totalRows = query.Count();
+            if (orderByTopRated.HasValue && orderByTopRated.Value)
+            {
+                query = query.OrderByDescending(l => l.QualityRating);
+            }
+            else
+            {
+                query = query.OrderByDescending(l => l.Id);
+            }
+            return query.Skip(count * (page - 1)).Take(count)
                .Select(l => new LabourerVM
             {
                 Id = l.Id,
