@@ -51,8 +51,8 @@ namespace RecruitmentSystemAPI.Controllers
             int totalRows;
             if (!companyId.HasValue)
             {
-                var result = _jobRepo.GetCompanyJobsByUserId(userId);
-                return Ok(new { result});
+                var result = _jobRepo.GetCompanyJobsByUserId(userId, count, page, out totalRows, fromDate, toDate);
+                return Ok(new { result, totalRows });
             }
             else
             {
