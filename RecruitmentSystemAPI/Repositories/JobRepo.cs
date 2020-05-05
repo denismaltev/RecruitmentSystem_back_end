@@ -33,16 +33,21 @@ namespace RecruitmentSystemAPI.Repositories
             });
         }
 
-        public List<JobVM> GetCompanyJobsByUserId(string userId)
+        public List<JobVM> GetCompanyJobsByUserId(string userId, int count, int page, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
         {
+
             var jobs = _context.CompanyUsers
                 .Where(cu => cu.UserId == userId)
                 .Include(cu => cu.Company)
                 .ThenInclude(c => c.Jobs)
                 .Select(c => c.Company.Jobs)
-                .FirstOrDefault();
-            //if(jobs == null) 
-            return jobs.Select(j => new JobVM
+                .FirstOrDefault().Where(cId => (!fromDate.HasValue || cId.StartDate >= fromDate)
+                  && (!toDate.HasValue || cId.EndDate < toDate)).AsQueryable();
+
+            totalRows = jobs.Count();
+             
+            return jobs.OrderByDescending(cId => cId.StartDate).Skip(count * (page - 1)).Take(count)
+                .Select(j => new JobVM
             {
                 Id = j.Id,
                 CompanyId = j.CompanyId,
