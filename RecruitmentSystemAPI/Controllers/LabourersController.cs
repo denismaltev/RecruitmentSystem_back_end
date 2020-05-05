@@ -19,13 +19,11 @@ namespace RecruitmentSystemAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class LabourersController : ControllerBase
     {
-        private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
         private readonly LabourerRepo _labourerRepo;
 
         public LabourersController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerRepo labourerRepo)
         {
-            _context = context;
             _userManager = userManager;
             _labourerRepo = labourerRepo;
         }

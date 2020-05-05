@@ -20,13 +20,11 @@ namespace RecruitmentSystemAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class LabourerJobsController : ControllerBase
     {
-        private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
         private readonly LabourerJobsRepo _labourerJobsRepo;
 
         public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo)
         {
-            _context = context;
             _userManager = userManager;
             _labourerJobsRepo = labourerJobsRepo;
         }

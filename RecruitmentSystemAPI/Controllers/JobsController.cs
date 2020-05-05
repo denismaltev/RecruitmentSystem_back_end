@@ -19,13 +19,11 @@ namespace RecruitmentSystemAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class JobsController : ControllerBase
     {
-        private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
         private readonly JobRepo _jobRepo;
 
         public JobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, JobRepo jobRepo)
         {
-            _context = context;
             _userManager = userManager;
             _jobRepo = jobRepo;
         }
@@ -136,10 +134,10 @@ namespace RecruitmentSystemAPI.Controllers
 
         [HttpGet("GetJobsDDL")]
         [Authorize(Roles = "Company")]
-        public ActionResult<Dictionary<int, string>> GetJobsDDL(int? labourerId)
+        public ActionResult<Dictionary<int, string>> GetJobsDDL()
         {
             var userId = _userManager.GetUserId(User);
-            var result = _jobRepo.GetJobsDDL(userId, labourerId);
+            var result = _jobRepo.GetJobsDDL(userId);
             return Ok(result);
         }
     }

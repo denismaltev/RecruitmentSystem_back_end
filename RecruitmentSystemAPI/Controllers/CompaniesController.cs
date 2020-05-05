@@ -19,13 +19,11 @@ namespace RecruitmentSystemAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CompaniesController : ControllerBase
     {
-        private readonly RecruitmentSystemContext _context;
         private readonly UserManager<SystemUser> _userManager;
         private readonly CompanyRepo _companyRepo;
 
         public CompaniesController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, CompanyRepo companyRepo)
         {
-            _context = context;
             _userManager = userManager;
             _companyRepo = companyRepo;
         }

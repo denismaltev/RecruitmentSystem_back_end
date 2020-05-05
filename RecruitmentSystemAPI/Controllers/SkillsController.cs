@@ -18,11 +18,9 @@ namespace RecruitmentSystemAPI.Controllers
     [ApiController]
     public class SkillsController : ControllerBase
     {
-        private readonly RecruitmentSystemContext _context;
         private readonly SkillsRepo _skillsRepo;
         public SkillsController(RecruitmentSystemContext context, SkillsRepo skillsRepo)
         {
-            _context = context;
             _skillsRepo = skillsRepo;
         }
 
