@@ -5,8 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RecruitmentSystemAPI.Models;
+using RecruitmentSystemAPI.Services;
 
 namespace RecruitmentSystemAPI
 {
@@ -14,11 +18,27 @@ namespace RecruitmentSystemAPI
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = CreateWebHostBuilder(args).Build();
+
+            using(var scope = host.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                try
+                {
+                    var userManager = serviceProvider.GetRequiredService<UserManager<SystemUser>>();
+                    Seeder.Seed(userManager);
+                }
+                catch
+                {
+                }
+            }
+
+            host.Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
+        }
     }
 }
