@@ -30,11 +30,43 @@ namespace RecruitmentSystemAPI.Controllers
         [HttpGet]
         [Route("AnnualProfitReport")]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<ProfitReportVM>> AnnualProfitReport()
+        public ActionResult<IEnumerable<ChartReportVM>> AnnualProfitReport()
         {
             try
             {
                 var result = _labourerJobsRepo.GetAnnualProfitReport();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("CurrentMonthExpenses")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<ChartReportVM>> CurrentMonthExpenses()
+        {
+            try
+            {
+                var result = _labourerJobsRepo.GetCurrentMonthExpenses();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("CurrentMonthIncome")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<ChartReportVM>> CurrentMonthIncome()
+        {
+            try
+            {
+                var result = _labourerJobsRepo.GetCurrentMonthIncome();
                 return Ok(result);
             }
             catch (Exception e)

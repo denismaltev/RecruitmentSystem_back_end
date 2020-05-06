@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace RecruitmentSystemAPI.ViewModels
 {
-    public class ProfitReportVM
+    public class ChartReportVM
     {
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
-        public decimal TotalProfit { get; set; }
+        public decimal Amount { get; set; }
     }
 }

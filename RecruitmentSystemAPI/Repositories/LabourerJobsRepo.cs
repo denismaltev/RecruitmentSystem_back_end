@@ -81,25 +81,7 @@ namespace RecruitmentSystemAPI.Repositories
                 LabourerPhone = l.Labourer.Phone
             });
         }
-
-        public IEnumerable<ProfitReportVM> GetAnnualProfitReport()
-        {
-            List<ProfitReportVM> result = new List<ProfitReportVM>();
-            for(var month = DateTime.Today.AddMonths(-11); month <= DateTime.Today; month = month.AddMonths(1))
-            {
-                var fromDate = new DateTime(month.Year, month.Month, 1);
-                var toDate = fromDate.AddMonths(1).AddDays(-1);
-                var monthlyProfit = _context.LabourerJobs.Where(l => l.Date.Date >= fromDate.Date && l.Date.Date <= toDate.Date && l.QualityRating.HasValue).Sum(l => (l.ChargeAmount - l.WageAmount) * 8);
-                result.Add(new ProfitReportVM
-                {
-                    FromDate = fromDate,
-                    ToDate = toDate,
-                    TotalProfit = monthlyProfit
-                });
-            }
-            return result;
-        }
-
+        
         public LabourerJobVM AddLabourerJob(LabourerJobVM labourerJobVM, string userId)
         {
             var labourerSkill = _context.LabourerSkills.Where(ls => ls.SkillId == labourerJobVM.SkillId.Value).Include(ls => ls.Labourer).Where(ls => ls.Labourer.UserId == userId).FirstOrDefault();
@@ -282,6 +264,60 @@ namespace RecruitmentSystemAPI.Repositories
                 SkillName = l.Skill.Name
             });
             return (totalRows, result);
+        }
+
+        public IEnumerable<ChartReportVM> GetAnnualProfitReport()
+        {
+            List<ChartReportVM> result = new List<ChartReportVM>();
+            for (var month = DateTime.Today.AddMonths(-11); month <= DateTime.Today; month = month.AddMonths(1))
+            {
+                var fromDate = new DateTime(month.Year, month.Month, 1);
+                var toDate = fromDate.AddMonths(1).AddDays(-1);
+                var monthlyProfit = _context.LabourerJobs.Where(l => l.Date.Date >= fromDate.Date && l.Date.Date <= toDate.Date && l.QualityRating.HasValue).Sum(l => (l.ChargeAmount - l.WageAmount) * 8);
+                result.Add(new ChartReportVM
+                {
+                    FromDate = fromDate,
+                    ToDate = toDate,
+                    Amount = monthlyProfit
+                });
+            }
+            return result;
+        }
+
+        public IEnumerable<ChartReportVM> GetCurrentMonthExpenses()
+        {
+            List<ChartReportVM> result = new List<ChartReportVM>();
+            var fromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var toDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, fromDate.AddMonths(1).AddDays(-1).Day);
+            for (var day = fromDate; day <= toDate; day = day.AddDays(1))
+            {
+                var expenses = _context.LabourerJobs.Where(l => l.Date.Date >= day && l.Date.Date < day.AddDays(1)).Sum(l => l.WageAmount * 8);
+                result.Add(new ChartReportVM
+                {
+                    FromDate = day,
+                    ToDate = day,
+                    Amount = expenses
+                });
+            }
+            return result;
+        }
+
+        public IEnumerable<ChartReportVM> GetCurrentMonthIncome()
+        {
+            List<ChartReportVM> result = new List<ChartReportVM>();
+            var fromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var toDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, fromDate.AddMonths(1).AddDays(-1).Day);
+            for (var day = fromDate; day <= toDate; day = day.AddDays(1))
+            {
+                var income = _context.LabourerJobs.Where(l => l.Date.Date >= day && l.Date.Date < day.AddDays(1)).Sum(l => l.ChargeAmount * 8);
+                result.Add(new ChartReportVM
+                {
+                    FromDate = day,
+                    ToDate = day,
+                    Amount = income
+                });
+            }
+            return result;
         }
     }
 }
