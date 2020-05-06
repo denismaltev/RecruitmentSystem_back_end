@@ -23,7 +23,7 @@ namespace RecruitmentSystemAPI.Controllers
         private readonly UserManager<SystemUser> _userManager;
         private readonly LabourerJobsRepo _labourerJobsRepo;
 
-        public LabourerJobsController(RecruitmentSystemContext context, UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo)
+        public LabourerJobsController(UserManager<SystemUser> userManager, LabourerJobsRepo labourerJobsRepo)
         {
             _userManager = userManager;
             _labourerJobsRepo = labourerJobsRepo;

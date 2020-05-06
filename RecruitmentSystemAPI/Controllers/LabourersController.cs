@@ -31,10 +31,10 @@ namespace RecruitmentSystemAPI.Controllers
         // GET: api/Labourers
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<LabourerVM>> GetLabourers(int count = 20, int page = 1)
+        public ActionResult<IEnumerable<LabourerVM>> GetLabourers(int count = 20, int page = 1, bool? orderByTopRated = false)
         {
             int totalRows;
-            var result = _labourerRepo.GetLabourers(count, page, out totalRows);
+            var result = _labourerRepo.GetLabourers(count, page, out totalRows, orderByTopRated);
             return Ok(new { result, totalRows });
         }
 

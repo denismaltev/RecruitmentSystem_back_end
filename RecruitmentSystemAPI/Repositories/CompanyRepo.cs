@@ -19,9 +19,9 @@ namespace RecruitmentSystemAPI.Repositories
             return _context.CompanyUsers.Where(cu => cu.UserId == userId).FirstOrDefault()?.CompanyId;
         }
 
-        public IQueryable<CompanyVM> GetCompanies(int count, int page, out int totalRows)
+        public IQueryable<CompanyVM> GetCompanies(int count, int page, out int totalRows, bool? orderByTopRated)
         {
-            var companies = _context.Companies.Select(c => new CompanyVM
+            var query = _context.Companies.Select(c => new CompanyVM
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -35,8 +35,16 @@ namespace RecruitmentSystemAPI.Repositories
                 Rating = c.Rating
             }).AsQueryable();
 
-            totalRows = companies.Count();
-            return companies.OrderByDescending(c => c.Id).Skip(count * (page - 1)).Take(count);
+            totalRows = query.Count();
+            if (orderByTopRated.HasValue && orderByTopRated.Value)
+            {
+                query = query.OrderByDescending(c => c.Rating);
+            }
+            else
+            {
+                query = query.OrderByDescending(c => c.Id);
+            }
+            return query.Skip(count * (page - 1)).Take(count);
 
         }
 
