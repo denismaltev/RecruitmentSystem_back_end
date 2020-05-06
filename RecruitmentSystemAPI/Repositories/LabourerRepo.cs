@@ -70,7 +70,7 @@ namespace RecruitmentSystemAPI.Repositories
                 return _context.Labourers.Where(l => _context.LabourerJobs.Include(j => j.Job).Where(j => (!jobId.HasValue || j.JobId == jobId) && j.Job.CompanyId == companyId).Any(j => j.LabourerId == l.Id)).Select(l => new BaseLabourersVM
                 {
                     Id = l.Id,
-                    FullName = l.FirstName + " " + l.LastName + " - " + l.Phone,
+                    FullName = l.FirstName + " " + l.LastName,
                     IsActive = l.IsActive
                 });
             }
@@ -79,7 +79,7 @@ namespace RecruitmentSystemAPI.Repositories
                 return _context.Labourers.Select(l => new BaseLabourersVM
                 {
                     Id = l.Id,
-                    FullName = l.FirstName + " " + l.LastName + " - " + l.Phone,
+                    FullName = l.FirstName + " " + l.LastName,
                     IsActive = l.IsActive
 
                 });
