@@ -212,7 +212,7 @@ namespace RecruitmentSystemAPI.Repositories
             var totalRows = query.Count();
             var result = query.Skip(count * (page - 1)).Take(count).Select(l => new InvoiceDetailsVM
             {
-                ChargeAmount = l.ChargeAmount,
+                ChargeAmount = l.ChargeAmount * 8,
                 Date = l.Date,
                 JobTitle = l.Job.Title,
                 LabourerEmail = l.Labourer.User.Email,
