@@ -264,16 +264,10 @@ namespace RecruitmentSystemAPI.Repositories
             return jobVM;
         }
 
-        //
         public IQueryable<JobRatingVM> GetAllCompanyJobsRatingReport(int? companyId, int count, int page, out int totalRows)
         {
             
             var query = _context.Jobs.Where(l => !companyId.HasValue || l.CompanyId == companyId.Value).AsQueryable();
-            //if (companyId.HasValue)
-            //{
-            //    query = query.Where(l => l.CompanyId == companyId);
-            //}
-
             totalRows = query.Count();
             var resultBeforeGrouping = query.Skip(count * (page - 1)).Take(count).Select(j => new JobRatingVM
             {
@@ -283,7 +277,12 @@ namespace RecruitmentSystemAPI.Repositories
                 Rating = j.Rating
             });
 
-            return resultBeforeGrouping;
+                // Check if we already have elements with the same companyId and jobtitle
+                //get average
+                //assign average
+                //remove repeatitive data
+
+                return resultBeforeGrouping;
         }
     }
 }
