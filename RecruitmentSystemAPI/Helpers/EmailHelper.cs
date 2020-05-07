@@ -19,22 +19,43 @@ namespace RecruitmentSystemAPI.Helpers
 
         public EmailHelper(EmailSettings emailSettings)
         {
-
             this.emailSettings = emailSettings;
         }
 
-        public void StartMailing(RecruitmentSystemContext dbContext, Job job, List<LabourerJob> labourerJobs)
+        public void SendSchedulesByEmail(RecruitmentSystemContext dbContext, Job job, List<LabourerJob> labourerJobs)
         {
             this.dbContext = dbContext;
             this.job = job;
             this.labourerJobs = labourerJobs;
             this.company = dbContext.Companies.FirstOrDefault(c => c.Id == job.CompanyId);
             this.labourersContactList = GetLabourersContactList();
-            BuildEmailBodyForCompanyThenSend();
-            BuildEmailBodyForLabourersThenSend();
+            BuildEmailToCompanies();
+            BuildEmailToLabourers();
         }
 
-        public void BuildEmailBodyForCompanyThenSend()
+        public void SendIncidenReportNotificationToAdmin(RecruitmentSystemContext dbContext, int reportId)
+        {
+            var adminRoleId = dbContext.Roles.Where(r => r.Name == "Admin").Select(r => r.Id).FirstOrDefault();
+            if (!string.IsNullOrEmpty(adminRoleId))
+            {
+                var adminUser = dbContext.Users.FirstOrDefault(u => dbContext.UserRoles.Where(ur => ur.RoleId == adminRoleId).Select(ur => ur.UserId).Contains(u.Id));
+                if (adminUser != null)
+                {
+                    var report = dbContext.IncidentReports.Where(r => r.Id == reportId).Include(r => r.Job).ThenInclude(j => j.Company).FirstOrDefault();
+                    if (report != null)
+                    {
+                        var subject = "New incident report notofication";
+                        var emailBodyText = $"New incident report has been submited by {report.Job.Company.Name}. The incident occurred on {report.Date.ToString("dddd, dd MMMM yyyy")} during the job: {report.Job.Title}.\n";
+                        emailBodyText += $"Summary: {report.Summary}";
+                        var emailBodyHtml = $"<p>New incident report has been submited by {report.Job.Company.Name}.</p><p>The incident occurred on {report.Date.ToString("dddd, dd MMMM yyyy")} during the job: {report.Job.Title}.</p><p>Summary: {report.Summary}</p>";
+                        EmailSender emailSender = new EmailSender(emailSettings);
+                        emailSender.SendMail(adminUser.Email, subject, emailBodyText, emailBodyHtml);
+                    }
+                }
+            }
+        }
+
+        private void BuildEmailToCompanies()
         {
             string scheduleOfAssignedLabourers = "";
             string subject = "[RecruitmentSystem]: The schedule for your job was created.";
@@ -46,11 +67,14 @@ namespace RecruitmentSystemAPI.Helpers
                 {
                     scheduleOfAssignedLabourers += $"<p> {lj.Date.ToString("dddd, dd MMMM yyyy")} ";
                     contact = labourersContactList.Find(lc => lc.id == lj.LabourerId);
-                    if (contact != null) {
+                    if (contact != null)
+                    {
                         scheduleOfAssignedLabourers += $"{contact.name} </p>";
-                    } else {
+                    }
+                    else
+                    {
                         scheduleOfAssignedLabourers += " N/A </p>";
-                    } 
+                    }
                 }
                 string text = $"Dear {company.Name}. The schedule for your job {job.Title} was created.";
                 string html = @"<p>Dear " + company.Name + ".</p><p> The schedule for your job " + job.Title + " was created.</p>" +
@@ -58,10 +82,10 @@ namespace RecruitmentSystemAPI.Helpers
                               "  End Date: " + job.EndDate.ToString("dddd, dd MMMM yyyy") + "</p>" +
                              "<p> Schedule:</p><hr />" + scheduleOfAssignedLabourers + "<p> Congratulations! </p>";
                 emailSender.SendMail(company.Email, subject, text, html);
-            } 
+            }
         }
 
-        public void BuildEmailBodyForLabourersThenSend()
+        private void BuildEmailToLabourers()
         {
             if (labourersContactList != null)
             {
@@ -75,7 +99,7 @@ namespace RecruitmentSystemAPI.Helpers
                                     ".</p><hr /><p> Details </p><hr /><p> Company: " + company.Name + "</p>" +
                                    "<p> Job description: " + job.Description + "</p><p> Location: " +
                                    job.Country + " " + job.Province + " " + job.City + " " + job.Address + "</p>" +
-                                   "<hr /><p> Your schedule:</p><hr /><p>" + getJobScheduleForLaborerByLaborerId(laborer.id) +
+                                   "<hr /><p> Your schedule:</p><hr /><p>" + BuildLabourerSchedule(laborer.id) +
                                    "</p><hr /><p> Congratulations! </p>";
 
                     emailSender.SendMail(laborer.email, subject, text, html);
@@ -83,11 +107,11 @@ namespace RecruitmentSystemAPI.Helpers
             }
         }
 
-        public String getJobScheduleForLaborerByLaborerId(int laborerId)
+        private string BuildLabourerSchedule(int laborerId)
         {
             if (labourerJobs != null)
             {
-                String result = "";
+                string result = "";
                 foreach (var labourerJob in labourerJobs)
                 {
                     if (labourerJob.LabourerId == laborerId)
@@ -100,7 +124,7 @@ namespace RecruitmentSystemAPI.Helpers
             return "";
         }
 
-        public List<Contact> GetLabourersContactList()
+        private List<Contact> GetLabourersContactList()
         {
             return dbContext.Labourers
                 .Where(l => l.LabourerJobs.Any(lj => lj.LabourerId == l.Id))
