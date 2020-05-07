@@ -20,13 +20,15 @@ namespace RecruitmentSystemAPI
         {
             var host = CreateWebHostBuilder(args).Build();
 
-            using(var scope = host.Services.CreateScope())
+            using (var scope = host.Services.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
                 try
                 {
+                    var dbContext = serviceProvider.GetService<RecruitmentSystemContext>();
                     var userManager = serviceProvider.GetRequiredService<UserManager<SystemUser>>();
-                    Seeder.Seed(userManager);
+                    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                    Seeder.Initialize(dbContext, userManager, roleManager);
                 }
                 catch
                 {

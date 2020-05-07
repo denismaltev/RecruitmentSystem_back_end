@@ -31,7 +31,7 @@ namespace RecruitmentSystemAPI.Services
             });
         }
 
-        private void MatchLabourersForTheNearestTwoWeeks(Job job, RecruitmentSystemContext dbContext, IOptions<EmailSettings> emailSettings)
+        public void MatchLabourersForTheNearestTwoWeeks(Job job, RecruitmentSystemContext dbContext, IOptions<EmailSettings> emailSettings)
         {
             var startDate = DateTime.Now.AddDays(1); //from tomorrow
             var nextSunday = DateHelper.GetDayOfWeekDate(DateTime.Today, DayOfWeek.Sunday);
@@ -82,7 +82,10 @@ namespace RecruitmentSystemAPI.Services
                 }
             }
             // send emails
-            new EmailHelper(emailSettings.Value).StartMailing(dbContext, job, labourerJobsList);
+            if (emailSettings != null)
+            {
+                new EmailHelper(emailSettings.Value).StartMailing(dbContext, job, labourerJobsList);
+            }
         }
     }
 }
