@@ -283,7 +283,7 @@ namespace RecruitmentSystemAPI.Models
                     .HasConstraintName("FK_LabourerIncidentReports_IncidentReports");
             });
 
-            SeedData(modelBuilder);
+            //SeedData(modelBuilder);
         }
 
         private void SeedData(ModelBuilder modelBuilder)
