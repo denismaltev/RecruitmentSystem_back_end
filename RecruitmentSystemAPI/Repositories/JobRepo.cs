@@ -263,5 +263,25 @@ namespace RecruitmentSystemAPI.Repositories
             new AutoSchedule(_serviceScopeFactory).MatchLabourers(job);
             return jobVM;
         }
+
+        public IQueryable<JobRatingVM> GetAllCompanyJobsRatingReport(int? companyId, int count, int page, out int totalRows, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            
+            var query = _context.Jobs
+                 .Where(l => (!fromDate.HasValue || l.StartDate>= fromDate) && (!toDate.HasValue || l.EndDate <= toDate) && (!companyId.HasValue || l.CompanyId == companyId.Value))
+                 .AsQueryable();
+            totalRows = query.Count();
+            var resultBeforeGrouping = query.OrderByDescending(l => l.StartDate).Skip(count * (page - 1)).Take(count).Select(j => new JobRatingVM
+            {
+                CompanyId = j.CompanyId,
+                CompanyName = j.Company.Name,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
+                Title = j.Title,
+                Rating = j.Rating
+            });
+
+                return resultBeforeGrouping;
+        }
     }
 }
