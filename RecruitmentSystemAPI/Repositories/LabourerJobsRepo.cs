@@ -269,7 +269,7 @@ namespace RecruitmentSystemAPI.Repositories
         public IEnumerable<ChartReportVM> GetAnnualProfitReport()
         {
             List<ChartReportVM> result = new List<ChartReportVM>();
-            for (var month = DateTime.Today.AddMonths(-11); month <= DateTime.Today; month = month.AddMonths(1))
+            for (var month = DateTime.Today.AddMonths(-12); month < DateTime.Today; month = month.AddMonths(1))
             {
                 var fromDate = new DateTime(month.Year, month.Month, 1);
                 var toDate = fromDate.AddMonths(1).AddDays(-1);
