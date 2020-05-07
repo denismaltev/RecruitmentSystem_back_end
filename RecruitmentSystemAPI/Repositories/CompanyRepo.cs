@@ -14,9 +14,10 @@ namespace RecruitmentSystemAPI.Repositories
         {
         }
 
-        public int? GetUserCompanyId(string userId)
+        public (int?, string) GetUserCompanyId(string userId)
         {
-            return _context.CompanyUsers.Where(cu => cu.UserId == userId).FirstOrDefault()?.CompanyId;
+            var user = _context.CompanyUsers.Where(cu => cu.UserId == userId).Include(c => c.Company).FirstOrDefault();
+            return (user?.CompanyId, user?.Company?.Name);
         }
 
         public IQueryable<CompanyVM> GetCompanies(int count, int page, out int totalRows, bool? orderByTopRated)
