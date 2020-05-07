@@ -275,6 +275,8 @@ namespace RecruitmentSystemAPI.Repositories
             {
                 CompanyId = j.CompanyId,
                 CompanyName = j.Company.Name,
+                StartDate = j.StartDate,
+                EndDate = j.EndDate,
                 Title = j.Title,
                 Rating = j.Rating
             });
