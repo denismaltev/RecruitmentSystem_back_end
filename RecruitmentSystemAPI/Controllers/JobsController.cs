@@ -41,6 +41,24 @@ namespace RecruitmentSystemAPI.Controllers
             return Ok(new { result, totalRows });
         }
 
+        [HttpGet("allRatings")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<JobRatingVM>> GetAllCompanyJobsRatingReport(int? companyId = null, int count = 20, int page = 1)
+        {
+            int totalRows;
+            try
+            {
+                var result = _jobRepo.GetAllCompanyJobsRatingReport(companyId, count, page, out totalRows);
+                return Ok(new { result, totalRows });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+ 
+        }
+
+
         // Get all jobs for ONE company
         //GET: api/Jobs
         [HttpGet]

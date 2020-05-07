@@ -263,5 +263,27 @@ namespace RecruitmentSystemAPI.Repositories
             new AutoSchedule(_serviceScopeFactory).MatchLabourers(job);
             return jobVM;
         }
+
+        //
+        public IQueryable<JobRatingVM> GetAllCompanyJobsRatingReport(int? companyId, int count, int page, out int totalRows)
+        {
+            
+            var query = _context.Jobs.Where(l => !companyId.HasValue || l.CompanyId == companyId.Value).AsQueryable();
+            //if (companyId.HasValue)
+            //{
+            //    query = query.Where(l => l.CompanyId == companyId);
+            //}
+
+            totalRows = query.Count();
+            var resultBeforeGrouping = query.Skip(count * (page - 1)).Take(count).Select(j => new JobRatingVM
+            {
+                CompanyId = j.CompanyId,
+                CompanyName = j.Company.Name,
+                Title = j.Title,
+                Rating = j.Rating
+            });
+
+            return resultBeforeGrouping;
+        }
     }
 }
