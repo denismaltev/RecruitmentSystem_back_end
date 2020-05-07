@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using RecruitmentSystemAPI.Helpers;
 using RecruitmentSystemAPI.Models;
 using RecruitmentSystemAPI.ViewModels;
 using System;
@@ -10,9 +12,10 @@ namespace RecruitmentSystemAPI.Repositories
 {
     public class IncidentReportsRepo : BaseRepo
     {
-        public IncidentReportsRepo(RecruitmentSystemContext context) : base(context)
+        IOptions<EmailSettings> _emailSettings;
+        public IncidentReportsRepo(RecruitmentSystemContext context, IOptions<EmailSettings> emailSettings) : base(context)
         {
-
+            _emailSettings = emailSettings;
         }
 
         public (int, IEnumerable<IncidentReportVM>) GetIncidentReports(string userId, bool isAdmin, int? companyId, int count, int page, DateTime? fromDate, DateTime? toDate)
@@ -129,6 +132,9 @@ namespace RecruitmentSystemAPI.Repositories
                 }
                 _context.SaveChanges();
                 incidentReportVM.Id = report.Id;
+
+                new EmailHelper(_emailSettings.Value).SendIncidenReportNotificationToAdmin(_context, report.Id);
+
                 return incidentReportVM;
             }
             return null;

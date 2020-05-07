@@ -84,7 +84,7 @@ namespace RecruitmentSystemAPI.Services
             // send emails
             if (emailSettings != null)
             {
-                new EmailHelper(emailSettings.Value).StartMailing(dbContext, job, labourerJobsList);
+                new EmailHelper(emailSettings.Value).SendSchedulesByEmail(dbContext, job, labourerJobsList);
             }
         }
     }
