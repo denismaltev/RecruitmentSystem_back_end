@@ -89,7 +89,7 @@ namespace RecruitmentSystemAPI.Controllers
             {
                 var userId = _userManager.GetUserId(User);
 
-                if (_labourerRepo.GetUserLabourerId(userId).HasValue)
+                if (_labourerRepo.GetUserLabourerId(userId).Item1.HasValue)
                 {
                     return BadRequest(new { message = "Labourer already exist" });
                 }

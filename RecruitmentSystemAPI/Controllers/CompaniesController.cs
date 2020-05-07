@@ -103,7 +103,7 @@ namespace RecruitmentSystemAPI.Controllers
                 try
                 {
                     var userId = _userManager.GetUserId(User);
-                    if (_companyRepo.GetUserCompanyId(userId).HasValue)
+                    if (_companyRepo.GetUserCompanyId(userId).Item1.HasValue)
                     {
                         return BadRequest(new { message = "Company already exist" });
                     }
