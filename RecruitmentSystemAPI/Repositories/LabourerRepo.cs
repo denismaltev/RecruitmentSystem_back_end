@@ -222,9 +222,10 @@ namespace RecruitmentSystemAPI.Repositories
             }
         }
 
-        public int? GetUserLabourerId(string userId)
+        public (int?, string) GetUserLabourerId(string userId)
         {
-            return _context.Labourers.Where(l => l.UserId == userId).FirstOrDefault()?.Id;
+            var labourer = _context.Labourers.Where(l => l.UserId == userId).FirstOrDefault();
+            return (labourer?.Id, labourer?.FirstName);
         }
 
         private Weekdays ConvertWeekdaysToEnum(LabourerVM labourerVM)
