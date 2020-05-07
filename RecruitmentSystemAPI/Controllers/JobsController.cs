@@ -43,12 +43,12 @@ namespace RecruitmentSystemAPI.Controllers
 
         [HttpGet("allRatings")]
         [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<JobRatingVM>> GetAllCompanyJobsRatingReport(int? companyId = null, int count = 20, int page = 1)
+        public ActionResult<IEnumerable<JobRatingVM>> GetAllCompanyJobsRatingReport(int? companyId = null, int count = 20, int page = 1, DateTime? fromDate = null, DateTime? toDate = null)
         {
             int totalRows;
             try
             {
-                var result = _jobRepo.GetAllCompanyJobsRatingReport(companyId, count, page, out totalRows);
+                var result = _jobRepo.GetAllCompanyJobsRatingReport(companyId, count, page, out totalRows, fromDate, toDate);
                 return Ok(new { result, totalRows });
             }
             catch (Exception e)
