@@ -74,16 +74,21 @@ namespace RecruitmentSystemAPI.Controllers
             var tokenString = GenerateJSONWebToken(user);
             var userRole = _userRepo.GetUserRoleName(user.Id);
             int? profileId = null;
+            string userName = "Admin";
             if (userRole?.ToLower() == "company")
             {
-                profileId = _companyRepo.GetUserCompanyId(user.Id);
+                var companyUser = _companyRepo.GetUserCompanyId(user.Id);
+                profileId = companyUser.Item1;
+                userName = companyUser.Item2;
             }
             else if (userRole?.ToLower() == "labourer")
             {
-                profileId = _labourerRepo.GetUserLabourerId(user.Id);
+                var labourer = _labourerRepo.GetUserLabourerId(user.Id);
+                profileId = labourer.Item1;
+                userName = labourer.Item2;
             }
 
-            return Ok(new { token = tokenString, username = user.UserName, role = userRole?.ToLower(), profileId = profileId, status = "OK" });
+            return Ok(new { token = tokenString, username = userName, role = userRole?.ToLower(), profileId = profileId, status = "OK" });
         }
 
         [HttpPost]
