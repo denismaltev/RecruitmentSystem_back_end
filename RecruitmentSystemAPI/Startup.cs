@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using RecruitmentSystemAPI.Models;
 using RecruitmentSystemAPI.Repositories;
 using RecruitmentSystemAPI.Services;
@@ -72,6 +75,23 @@ namespace RecruitmentSystemAPI
                     });
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Recruitment System API",
+                    Description = "British Columbia Institute of Technology Industry Project",
+                    TermsOfService = new Uri("https://www.bcit.ca/study/programs/699ccertt"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Anna Berman, Denis Maltev, Gina Carpenter, Sara Banaeirad, and Tasnuva Haque.",
+                        Email = string.Empty,
+                        Url = new Uri("https://www.bcit.ca/study/programs/699ccertt#staff"),
+                    }
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -84,6 +104,10 @@ namespace RecruitmentSystemAPI
             }
             app.UseCors("AllowAll");
             app.UseAuthentication();
+            app.UseSwagger(); app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Recruitment System API V1"); c.RoutePrefix = string.Empty;
+            });
             app.UseMvc();
         }
     }
