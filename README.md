@@ -1,5 +1,5 @@
 # Recruit Me API
-# https://recruitmentsystemapi.azurewebsites.net
+# https://recruitment-system-api.azurewebsites.net
 A full-service labour recruitment system helping companies find skilled labourers and skilled tradespeople find work
 British Columbia Institute of Technology Industry Project by Anna Berman, Denis Maltev, Gina Carpenter, Sara Banaeirad, and Tasnuva Haque.
 
